@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simbiat — Proposed Website Scope | Zulzidan</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        color: #252525;
+        background: #eaeae7;
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        width: 794px;
+        height: 1122px;
+        padding: 46px 56px 62px;
+        margin: 20px auto;
+        background: white;
+        position: relative;
+        break-after: page;
+      }
+      .page:last-child {
+        break-after: auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 45px;
+        border-bottom: 1px solid #deded9;
+        margin-bottom: 24px;
+        padding-bottom: 15px;
+      }
+      .logo {
+        width: 135px;
+        height: auto;
+        max-height: 27px;
+        object-fit: contain;
+        object-position: left center;
+      }
+      .status {
+        font-size: 9px;
+        color: #64645e;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      footer {
+        position: absolute;
+        bottom: 30px;
+        left: 56px;
+        right: 56px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #deded9;
+        padding-top: 12px;
+        color: #666;
+        font-size: 9px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: 39px;
+        line-height: 1.15;
+        font-weight: 500;
+        letter-spacing: -1.4px;
+        margin: 12px 0 17px;
+      }
+      h2 {
+        font-size: 21px;
+        line-height: 1.25;
+        letter-spacing: -0.5px;
+        font-weight: 500;
+        margin: 21px 0 10px;
+      }
+      h3 {
+        font-size: 13px;
+        line-height: 1.4;
+        font-weight: 600;
+        margin: 0 0 7px;
+      }
+      p,
+      li {
+        font-size: 11.5px;
+        line-height: 1.65;
+        color: #565651;
+      }
+      p + p {
+        margin-top: 9px;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        font-size: 9px;
+        letter-spacing: 1.7px;
+        color: #62625d;
+      }
+      .intro {
+        font-size: 13px;
+        line-height: 1.7;
+        max-width: 620px;
+      }
+      .note {
+        padding: 16px 19px;
+        border: 1px solid #deded6;
+        border-radius: 5px;
+        background: #f5f5f1;
+        margin-top: 16px;
+      }
+      .note p {
+        font-size: 11px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .card {
+        padding: 17px 18px;
+        border: 1px solid #e0e0da;
+        border-radius: 5px;
+      }
+      .card p {
+        font-size: 11px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+        table-layout: fixed;
+      }
+      th {
+        text-align: left;
+        font-size: 9px;
+        color: #65655f;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        background: #f4f4f0;
+        padding: 11px 12px;
+        font-weight: 500;
+      }
+      td {
+        vertical-align: top;
+        border-bottom: 1px solid #e3e3dd;
+        padding: 10px 12px;
+        color: #565651;
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      td:first-child {
+        color: #282828;
+        font-weight: 500;
+      }
+      th:first-child,
+      td:first-child {
+        width: 29%;
+      }
+      code {
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        color: #68685f;
+      }
+      ul {
+        padding-left: 18px;
+        margin: 9px 0 0;
+      }
+      li {
+        margin-bottom: 6px;
+      }
+      .small {
+        font-size: 10px;
+        line-height: 1.7;
+        color: #66665f;
+      }
+      .flow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-block: 1px solid #deded8;
+        padding: 18px 0;
+        margin-top: 23px;
+        font-size: 11px;
+      }
+      .flow b {
+        font-weight: 400;
+        color: #777;
+      }
+      .cover {
+        background: #f7f7f3;
+      }
+      .cover h1 {
+        font-size: 57px;
+        margin-top: 24px;
+        letter-spacing: -2px;
+      }
+      .cover h1 span {
+        display: block;
+        color: #74746b;
+      }
+      .cover .eyebrow {
+        margin-top: 59px;
+      }
+      .cover-meta {
+        margin-top: 32px;
+        padding-top: 21px;
+        border-top: 1px solid #d9d9d1;
+      }
+      .cover-meta p {
+        font-size: 11px;
+      }
+      .contents {
+        list-style: none;
+        padding: 0;
+        margin-top: 18px;
+      }
+      .contents li {
+        margin: 0;
+      }
+      .contents a {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #dfdfd6;
+        text-decoration: none;
+        color: #333;
+        font-size: 12px;
+      }
+      .contents span {
+        color: #777;
+        font-size: 10px;
+      }
+      .checklist {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 24px;
+        padding: 0;
+        margin: 17px 0 0;
+      }
+      .checklist li {
+        display: flex;
+        gap: 10px;
+        margin: 0;
+        font-size: 11px;
+      }
+      .checklist li::before {
+        content: "";
+        width: 11px;
+        height: 11px;
+        border: 1px solid #99998f;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+      .questions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 25px;
+        margin-top: 21px;
+      }
+      .question {
+        display: flex;
+        gap: 10px;
+        border-bottom: 1px solid #e1e1da;
+        padding-bottom: 11px;
+      }
+      .question > span {
+        font-size: 9px;
+        color: #75756b;
+        padding-top: 3px;
+      }
+      .question h3 {
+        font-size: 11px;
+        margin-bottom: 4px;
+      }
+      .question p {
+        font-size: 10px;
+        line-height: 1.6;
+      }
+      .compact li {
+        font-size: 11px;
+        line-height: 1.6;
+        margin-bottom: 7px;
+      }
+      .review-steps {
+        counter-reset: steps;
+        list-style: none;
+        padding: 0;
+      }
+      .review-steps li {
+        display: flex;
+        gap: 13px;
+        margin-bottom: 10px;
+      }
+      .review-steps li::before {
+        counter-increment: steps;
+        content: counter(steps, decimal-leading-zero);
+        font-size: 10px;
+        color: #727267;
+        margin-top: 3px;
+      }
+      #commercial h2 {
+        margin-top: 17px;
+      }
+      #commercial .flow {
+        margin-top: 15px;
+        padding-block: 13px;
+      }
+      #review h2 {
+        margin-top: 17px;
+      }
+      #review .review-steps p {
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      #review .review-steps h3 {
+        margin-bottom: 4px;
+      }
+      #review .note {
+        padding: 12px 16px;
+        margin-top: 12px;
+      }
+      @media print {
+        html,
+        body {
+          background: white;
+        }
+        .page {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page cover" id="overview">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">Prepared for Simbiat · Website project</div>
+      <h1>A thoughtful store.<span>A clear starting point.</span></h1>
+      <p class="intro">
+        Proposed e-commerce website scope, prepared following our discovery
+        conversation on September 11, 2026.
+      </p>
+      <div class="cover-meta grid">
+        <div>
+          <h3>Prepared for</h3>
+          <p>Simbiat Sanni<br />African food items &amp; snacks</p>
+        </div>
+        <div>
+          <h3>Prepared by</h3>
+          <p>Muhammad Zulzidan<br />zulzidan.com · zulzdn@gmail.com</p>
+        </div>
+      </div>
+      <h2>Project objective</h2>
+      <p>
+        Create a professional, mobile-friendly store for approximately 15
+        initial products across five categories. Customers should be able to
+        discover authentic African foods and snacks, shop through a clear
+        checkout flow, and explore recipes and helpful articles.
+      </p>
+      <p>
+        The proposed approach prioritizes a manageable launch, budget
+        transparency, and careful handling of customer information. The final
+        business name, branding, catalog, and production platform will be
+        confirmed together.
+      </p>
+      <nav aria-label="Document contents">
+        <ul class="contents">
+          <li>
+            <a href="#storefront"
+              >The storefront &amp; shopping journey<span>02</span></a
+            >
+          </li>
+          <li>
+            <a href="#content"
+              >Content, management &amp; handoff<span>03</span></a
+            >
+          </li>
+          <li>
+            <a href="#security">Security &amp; ongoing care<span>04</span></a>
+          </li>
+          <li>
+            <a href="#commercial"
+              >Budget, payment &amp; timing<span>05</span></a
+            >
+          </li>
+          <li>
+            <a href="#decisions"
+              >Materials &amp; decisions to confirm<span>06</span></a
+            >
+          </li>
+          <li>
+            <a href="#review">Boundaries &amp; next steps<span>07</span></a>
+          </li>
+        </ul>
+      </nav>
+      <div class="note">
+        <p>
+          <strong>Read alongside “Simbiat — Visual Prototype.”</strong> The
+          visual PDF shows proposed layouts; this document explains their
+          intended scope. Both are discussion drafts. Neither establishes a
+          final price, approved design, production architecture, or
+          authorization to begin paid development.
+        </p>
+      </div>
+      <footer>
+        <span>Zulzidan · Prepared for Simbiat</span
+        ><span>September 13, 2026 · Draft 01</span><span>01 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="storefront">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">01 · Customer experience</div>
+      <h1>The storefront &amp;<br />shopping journey.</h1>
+      <p class="intro">
+        A simple product-led experience, with a small initial catalog and room
+        to grow. Guest checkout is the proposed starting point; customer
+        accounts are not yet included.
+      </p>
+      <div class="flow">
+        <span>Discover</span><b>→</b><span>Browse</span><b>→</b
+        ><span>Product</span><b>→</b><span>Bag</span><b>→</b
+        ><span>Checkout</span><b>→</b><span>Confirmation</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Proposed area</th>
+            <th>Intended deliverable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Home page<br /><code>/</code></td>
+            <td>
+              Introduce the business and sourcing story; feature categories,
+              selected products, recipes, and articles. Newsletter signup is
+              shown as an optional integration pending confirmation.
+            </td>
+          </tr>
+          <tr>
+            <td>Product catalog<br /><code>/shop</code></td>
+            <td>
+              Approximately 15 initial products in approximately five editable
+              categories, with product cards, category browsing, search, and
+              straightforward sorting.
+            </td>
+          </tr>
+          <tr>
+            <td>Product details<br /><code>/shop/[slug]</code></td>
+            <td>
+              Product photography, description, approved pricing, available
+              options, quantity, product information, preparation guidance, and
+              relevant products or recipes.
+            </td>
+          </tr>
+          <tr>
+            <td>Shopping bag<br /><code>/cart</code></td>
+            <td>
+              Add products, preserve selected options, change quantities, remove
+              items, and review a summary before checkout.
+            </td>
+          </tr>
+          <tr>
+            <td>Checkout<br /><code>/checkout</code></td>
+            <td>
+              Guest contact and shipping details, an agreed delivery
+              calculation, and integration with an approved payment provider.
+              Shipping and tax rules must be defined before pricing this work.
+            </td>
+          </tr>
+          <tr>
+            <td>Order confirmation<br /><code>/order-confirmation</code></td>
+            <td>
+              A post-purchase summary and clear next steps. Confirmation email
+              content, delivery service, and fulfillment notifications remain to
+              be agreed.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Product options need one clarification</h2>
+      <p>
+        Small, medium, and large sizes were discussed. Vegan and vegetarian
+        distinctions were also discussed for two products. We will confirm
+        whether these are separate products or selectable versions of one
+        product. Dietary suitability, ingredients, allergens, and size-specific
+        prices must be supplied or approved by Simbiat.
+      </p>
+      <div class="note">
+        <p>
+          <strong>Prototype assumption:</strong> All current product names,
+          stock labels, prices, pack sizes, and dietary options are examples. No
+          real purchase can be completed. Final shipping and tax are not
+          calculated in the prototype.
+        </p>
+      </div>
+      <footer>
+        <span>Zulzidan · Simbiat website scope</span
+        ><span>Customer experience</span><span>02 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="content">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">02 · Content &amp; operations</div>
+      <h1>More than a product shelf.</h1>
+      <p class="intro">
+        Recipes and a separate blog help customers understand the products and
+        learn about the business. Routine updates should be manageable without
+        requesting a new development task each time.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Proposed area</th>
+            <th>Intended deliverable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Recipes<br /><code>/recipes · /recipes/[slug]</code></td>
+            <td>
+              A browsable collection and recipe detail pages with ingredients,
+              instructions, time, servings, and relevant product links. Free
+              access is the current assumption; paid recipes need a separate
+              decision.
+            </td>
+          </tr>
+          <tr>
+            <td>Blog / Journal<br /><code>/blog · /blog/[slug]</code></td>
+            <td>
+              A separate customer-facing section for ingredient guides, sourcing
+              stories, cultural content, and business updates. Recipes and
+              articles may share a content platform behind the scenes.
+            </td>
+          </tr>
+          <tr>
+            <td>About &amp; contact<br /><code>/about · /contact</code></td>
+            <td>
+              Client-approved story and sourcing copy; an inquiry form; approved
+              business email and phone details. A simple WhatsApp contact link
+              is an option to confirm.
+            </td>
+          </tr>
+          <tr>
+            <td>Site search<br /><code>/search</code></td>
+            <td>
+              Search across products, recipes, and articles. Final search
+              behavior and platform will match the agreed catalog and content
+              requirements.
+            </td>
+          </tr>
+          <tr>
+            <td>Policy pages</td>
+            <td>
+              Format approved shipping, privacy, and terms content. Confirm
+              whether a separate returns/refunds page is needed. Current policy
+              screens are placeholders.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Proposed management &amp; launch foundations</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Content management</h3>
+          <p>
+            Routine editing of products, categories, recipes, and blog posts
+            through an agreed content system. Confirm editing roles, stock
+            management, and initial content-entry quantities.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Search &amp; measurement</h3>
+          <p>
+            Basic technical SEO foundations such as page metadata and readable
+            URLs. Agree any analytics and privacy choices. Search rankings,
+            traffic, and sales are not promised.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Responsive implementation</h3>
+          <p>
+            Desktop and mobile layouts, clear navigation, usable forms, and
+            appropriate accessibility checks for the agreed pages and shopping
+            journey.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Deployment &amp; handoff</h3>
+          <p>
+            Setup on an approved host, production configuration, agreed launch
+            checks, and practical guidance for routine updates. Account
+            ownership and access will be documented.
+          </p>
+        </div>
+      </div>
+      <div class="note">
+        <p>
+          <strong>Scope confirmation:</strong> The exact CMS, order-management
+          workflow, analytics service, hosting provider, handoff format, and
+          quantity of initial recipes/articles are not yet decided. The
+          prototype technology does not commit the production stack.
+        </p>
+      </div>
+      <footer>
+        <span>Zulzidan · Simbiat website scope</span
+        ><span>Content &amp; operations</span><span>03 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="security">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">03 · Security &amp; support</div>
+      <h1>Care for the information.<br />Plan for the upkeep.</h1>
+      <p class="intro">
+        Your concern includes customer names, addresses, and order information
+        as well as card details. The production plan should address all of these
+        from the start.
+      </p>
+      <h2>Proposed security approach</h2>
+      <ul>
+        <li>
+          <strong>Use an established payment provider.</strong> Stripe was
+          discussed as an option, with Shopify also mentioned. Final selection,
+          fees, and integration are subject to review. Full card details should
+          be processed by the provider and not stored by the custom application.
+        </li>
+        <li>
+          <strong>Collect only necessary customer information.</strong> Agree
+          what is required for purchases, fulfillment, and inquiries, who may
+          access it, and how long it needs to be retained.
+        </li>
+        <li>
+          <strong>Restrict customer and administrative access.</strong> Plan
+          appropriate access controls and verification that one customer cannot
+          view another customer’s information. Use an established approach for
+          administrative sign-in and account protection.
+        </li>
+        <li>
+          <strong>Confirm operational responsibilities.</strong> Document who
+          manages updates, backups and recovery, monitoring, provider accounts,
+          and the response to reported problems.
+        </li>
+      </ul>
+      <div class="note">
+        <p>
+          <strong>Clear expectations:</strong> Security is a design and
+          operational priority, not an absolute guarantee. Using a provider does
+          not itself establish who is responsible for every possible incident.
+          Provider terms and the project agreement must be reviewed before
+          launch; no transfer of liability is promised here.
+        </p>
+      </div>
+      <h2>Maintenance is separate from adding features</h2>
+      <p>
+        Even when the agreed customer flow stays the same, ongoing technical
+        care must be planned. Website upkeep and provider charges should be
+        explained separately from optional improvements or new functionality.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Arrangement to confirm</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Launch support</td>
+            <td>
+              Any included post-launch support period, defect reporting process,
+              coverage, and response expectations. No duration has been agreed.
+            </td>
+          </tr>
+          <tr>
+            <td>Routine maintenance</td>
+            <td>
+              Who performs updates, checks, backups/recovery work, and technical
+              support; whether this is a recurring plan or separately scheduled
+              work.
+            </td>
+          </tr>
+          <tr>
+            <td>Content changes</td>
+            <td>
+              Which updates Simbiat can make directly and what assistance is
+              available. Any included editing allowance needs an explicit
+              agreement.
+            </td>
+          </tr>
+          <tr>
+            <td>New features</td>
+            <td>
+              Changes beyond the agreed scope will be assessed for cost and
+              timing before work starts. Unlimited revisions or lifetime support
+              are not assumed.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top: 17px">
+        Maintenance pricing and responsibilities remain open. This document does
+        not promise that the website will operate indefinitely without updates,
+        renewals, or ongoing costs.
+      </p>
+      <footer>
+        <span>Zulzidan · Simbiat website scope</span
+        ><span>Security &amp; ongoing care</span><span>04 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="commercial">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">04 · Commercial planning</div>
+      <h1>Keep the launch manageable.<br />Make the costs clear.</h1>
+      <p class="intro">
+        Budget is a primary constraint. A preliminary price range should be
+        provided early so you can assess affordability before committing to paid
+        development or an extended design process.
+      </p>
+      <h2>Pricing status</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Cost item</th>
+            <th>Current position</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Preliminary build range</td>
+            <td>
+              <strong>To be provided by Zulzidan.</strong> No amount was agreed
+              in the discovery conversation. This scope draft is not a
+              quotation.
+            </td>
+          </tr>
+          <tr>
+            <td>Final development fee</td>
+            <td>
+              <strong>To be agreed</strong> after confirming the launch
+              features, integrations, content-entry work, and delivery
+              responsibilities.
+            </td>
+          </tr>
+          <tr>
+            <td>Third-party costs</td>
+            <td>
+              Itemize any domain, hosting, CMS, email, analytics, paid services,
+              and payment-processing charges applicable to the selected setup.
+              Amounts, billing frequency, and payer are still to be confirmed.
+            </td>
+          </tr>
+          <tr>
+            <td>Maintenance / support</td>
+            <td>
+              <strong>To be agreed separately.</strong> Clarify what is included
+              with the build, any recurring fee, and charges for additional
+              work.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Project payment arrangements</h2>
+      <p>
+        Split payments were discussed, with an initial payment before
+        development and a later payment on completion. The number of
+        installments, amounts, percentages, milestones, and due dates remain to
+        be agreed in the proposal. PayPal was discussed for paying Zulzidan;
+        this is separate from the store’s customer payment provider.
+      </p>
+      <h2>Preliminary timing</h2>
+      <div class="note">
+        <h3>Approximately one month — indicative only</h3>
+        <p>
+          The discovery conversation referenced around 30 days for a basic
+          e-commerce implementation when the scope is settled and materials and
+          feedback arrive promptly. This is not a fixed launch date or a
+          commitment for every feature shown in the prototype.
+        </p>
+      </div>
+      <p style="margin-top: 15px">
+        Confirm the desired launch window around incoming inventory from
+        Nigeria. A practical schedule will depend on agreed scope and payment
+        terms, availability of branding and product content, provider setup,
+        review rounds, and testing.
+      </p>
+      <div class="flow">
+        <span>Confirm scope &amp; budget</span><b>→</b
+        ><span>Prepare &amp; build</span><b>→</b><span>Review &amp; test</span
+        ><b>→</b><span>Launch &amp; handoff</span>
+      </div>
+      <p class="small" style="margin-top: 17px">
+        If the proposed scope exceeds the available budget, agree a smaller
+        launch or later phase before work begins. Any change affecting the
+        approved scope, price, or timeline should be reviewed together first.
+      </p>
+      <footer>
+        <span>Zulzidan · Simbiat website scope</span
+        ><span>Budget &amp; timing · Amounts not yet agreed</span
+        ><span>05 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="decisions">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">05 · Before final pricing</div>
+      <h1>The details to confirm.</h1>
+      <p class="intro">
+        These decisions may affect scope, timing, one-time costs, and ongoing
+        fees. They do not all need an answer in your first reply.
+      </p>
+      <div class="questions">
+        <div class="question">
+          <span>01</span>
+          <div>
+            <h3>Budget &amp; launch window</h3>
+            <p>
+              Confirm an affordable range and the desired launch date around
+              incoming inventory.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>02</span>
+          <div>
+            <h3>Shipping regions</h3>
+            <p>Which locations will the store serve?</p>
+          </div>
+        </div>
+        <div class="question">
+          <span>03</span>
+          <div>
+            <h3>Shipping calculation</h3>
+            <p>Flat rate, weight, order value, or another method?</p>
+          </div>
+        </div>
+        <div class="question">
+          <span>04</span>
+          <div>
+            <h3>Sales tax</h3>
+            <p>
+              What requirements and calculation approach must the implementation
+              support?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>05</span>
+          <div>
+            <h3>Inventory &amp; product options</h3>
+            <p>
+              Stock tracking, sold-out behavior, sizes, and dietary products
+              versus variants.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>06</span>
+          <div>
+            <h3>Guest checkout / accounts</h3>
+            <p>
+              Is guest checkout sufficient? Customer accounts are not currently
+              assumed.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>07</span>
+          <div>
+            <h3>Coupons &amp; promotions</h3>
+            <p>Are discount codes required at launch? Which rules?</p>
+          </div>
+        </div>
+        <div class="question">
+          <span>08</span>
+          <div>
+            <h3>Newsletter &amp; analytics</h3>
+            <p>
+              Which email and measurement integrations, if any, should be
+              included?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>09</span>
+          <div>
+            <h3>Order management</h3>
+            <p>
+              Who fulfills orders? What notifications, cancellation, and refund
+              workflow are needed?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>10</span>
+          <div>
+            <h3>Free or paid recipes</h3>
+            <p>
+              Free content is shown. Paid access or recipe sales would need a
+              separate scope.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>11</span>
+          <div>
+            <h3>WhatsApp contact</h3>
+            <p>
+              A simple business link or a deeper integration? Manual WhatsApp
+              checkout is not assumed.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>12</span>
+          <div>
+            <h3>Providers &amp; ownership</h3>
+            <p>
+              Payment provider, host, CMS, domain, account owners, and
+              administrative access.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>13</span>
+          <div>
+            <h3>Policy pages</h3>
+            <p>
+              Confirm shipping, returns/refunds, privacy, terms, and who
+              supplies approved wording.
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>14</span>
+          <div>
+            <h3>Initial content entry</h3>
+            <p>
+              How many recipes and articles? Who supplies, approves, and enters
+              the content?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>15</span>
+          <div>
+            <h3>Historical Shopify data</h3>
+            <p>
+              Does any customer, order, or product information need migration?
+            </p>
+          </div>
+        </div>
+        <div class="question">
+          <span>16</span>
+          <div>
+            <h3>Support &amp; payment terms</h3>
+            <p>
+              Included support, future maintenance, fee installments,
+              milestones, and review rounds.
+            </p>
+          </div>
+        </div>
+      </div>
+      <h2>Client-provided materials</h2>
+      <ul class="checklist">
+        <li>Business name, logo, SVG if available</li>
+        <li>Brand colors / existing guidelines</li>
+        <li>Product photography</li>
+        <li>Product names and descriptions</li>
+        <li>Prices, sizes, and dietary details</li>
+        <li>Ingredients, allergens, usage, storage</li>
+        <li>Shipping rules and policy wording</li>
+        <li>Business email, phone, WhatsApp</li>
+        <li>Initial recipes and blog content</li>
+        <li>Approved business and sourcing story</li>
+      </ul>
+      <footer>
+        <span>Zulzidan · Simbiat website scope</span
+        ><span>Open decisions &amp; client materials</span><span>06 / 07</span>
+      </footer>
+    </section>
+
+    <section class="page" id="review">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Proposed Scope — For Review</span
+        >
+      </header>
+      <div class="eyebrow">06 · Scope boundaries &amp; review</div>
+      <h1>A shared understanding<br />before we begin.</h1>
+      <p class="intro">
+        The prototype is a discussion tool. A visible screen or button does not
+        automatically include every possible integration or workflow behind it.
+      </p>
+      <h2>Not included unless separately agreed</h2>
+      <div class="grid">
+        <ul class="compact">
+          <li>Subscriptions or recurring payments</li>
+          <li>Paid recipe access or digital-product sales</li>
+          <li>Marketplace / multiple vendors</li>
+          <li>Loyalty programs or advanced accounts</li>
+          <li>Wholesale portals</li>
+          <li>Complex warehouse management</li>
+          <li>Multi-currency or multi-language</li>
+        </ul>
+        <ul class="compact">
+          <li>Native mobile applications</li>
+          <li>Advanced ERP integrations</li>
+          <li>Custom payment processing</li>
+          <li>Shipping carrier API integrations</li>
+          <li>Complex automated marketing</li>
+          <li>Historical data migration</li>
+          <li>Ongoing ads, SEO campaigns, or content production</li>
+        </ul>
+      </div>
+      <p class="small" style="margin-top: 15px">
+        Brand identity design, new photography, policy drafting, unlimited
+        revisions, and indefinite support are not assumed. Any extra services,
+        quantities, integrations, or recurring work need an explicit agreement.
+      </p>
+      <h2>How to review the visual attachment</h2>
+      <p>
+        The 23-page visual overview shows the opening views of 18 screens, a
+        payment detail, and selected mobile previews. The optional complete
+        reference shows full desktop layouts. Product and content detail screens
+        represent reusable templates, not a promise of unlimited initial content
+        entry.
+      </p>
+      <p>
+        The <code>/scope</code> and <code>/prototype</code> screens are
+        presentation aids for this discussion. They are not proposed public
+        production pages. The final customer-facing store name and branding will
+        use the approved business identity.
+      </p>
+      <h2>Next steps</h2>
+      <ol class="review-steps">
+        <li>
+          <div>
+            <h3>Review the proposed experience</h3>
+            <p>
+              Identify what feels right, what is missing, and anything you would
+              prefer to simplify or defer.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Check affordability early</h3>
+            <p>
+              Zulzidan provides a preliminary build range and an outline of
+              recurring costs and support options. Confirm a viable direction
+              before paid development.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Resolve the scope and commercial details</h3>
+            <p>
+              Agree launch features, providers, content responsibilities, fee
+              milestones, support, review limits, and an achievable timeline.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3>Approve the proposal and begin</h3>
+            <p>
+              Proceed after the final scope and project terms are agreed and the
+              agreed initial payment and required materials are in place.
+            </p>
+          </div>
+        </li>
+      </ol>
+      <p class="small" style="margin-top: 14px">
+        <strong>For review only.</strong> Features may change before scope and
+        pricing are finalized. No fixed fee, payment amount, launch date, or
+        lifetime support has been agreed.
+      </p>
+      <footer>
+        <span>Zulzidan · zulzidan.com · zulzdn@gmail.com</span
+        ><span>Proposed Scope — For Review</span><span>07 / 07</span>
+      </footer>
+    </section>
+  </body>
+</html>
