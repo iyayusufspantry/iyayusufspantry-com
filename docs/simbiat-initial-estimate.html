@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simbiat — Initial Website Estimate | Zulzidan</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        color: #252525;
+        background: #eaeae7;
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        width: 794px;
+        height: 1122px;
+        padding: 46px 56px 62px;
+        margin: 20px auto;
+        background: white;
+        position: relative;
+        break-after: page;
+      }
+      .page:last-child {
+        break-after: auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 45px;
+        border-bottom: 1px solid #deded9;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+      }
+      .logo {
+        width: 135px;
+        max-height: 27px;
+        object-fit: contain;
+        object-position: left center;
+      }
+      .status,
+      .eyebrow {
+        font-size: 9px;
+        color: #64645e;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+      }
+      footer {
+        position: absolute;
+        bottom: 30px;
+        left: 56px;
+        right: 56px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #deded9;
+        padding-top: 12px;
+        color: #666;
+        font-size: 9px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: 37px;
+        line-height: 1.16;
+        font-weight: 500;
+        letter-spacing: -1.2px;
+        margin: 12px 0 17px;
+      }
+      h2 {
+        font-size: 19px;
+        line-height: 1.25;
+        font-weight: 500;
+        margin: 20px 0 9px;
+      }
+      h3 {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 5px;
+      }
+      p,
+      li {
+        font-size: 11.5px;
+        line-height: 1.6;
+        color: #565651;
+      }
+      p + p {
+        margin-top: 8px;
+      }
+      .intro {
+        font-size: 13px;
+        line-height: 1.65;
+      }
+      .small {
+        font-size: 10px;
+        line-height: 1.55;
+      }
+      .price {
+        font-size: 38px;
+        line-height: 1.2;
+        letter-spacing: -1px;
+        color: #252525;
+        margin: 7px 0;
+      }
+      .note {
+        padding: 15px 18px;
+        border: 1px solid #deded6;
+        border-radius: 5px;
+        background: #f5f5f1;
+        margin-top: 15px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .card {
+        border: 1px solid #deded9;
+        border-radius: 5px;
+        padding: 14px 16px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-top: 12px;
+      }
+      th {
+        text-align: left;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        background: #f4f4f0;
+        padding: 10px 11px;
+        color: #65655f;
+      }
+      td {
+        vertical-align: top;
+        border-bottom: 1px solid #e3e3dd;
+        padding: 10px 11px;
+        font-size: 11px;
+        line-height: 1.55;
+        color: #565651;
+      }
+      td:first-child {
+        color: #282828;
+      }
+      .scope th:first-child,
+      .scope td:first-child {
+        width: 27%;
+      }
+      .costs th:first-child,
+      .costs td:first-child {
+        width: 28%;
+      }
+      .costs th:nth-child(2),
+      .costs td:nth-child(2) {
+        width: 22%;
+      }
+      .totals td:last-child {
+        width: 28%;
+        text-align: right;
+        white-space: nowrap;
+      }
+      ul {
+        padding-left: 18px;
+        margin: 8px 0 0;
+      }
+      li {
+        margin-bottom: 5px;
+      }
+      a {
+        color: #383833;
+        text-decoration: underline;
+      }
+      .sources {
+        margin-top: 12px;
+      }
+      #ongoing td {
+        padding-block: 8px;
+      }
+      #ongoing h2 {
+        margin: 15px 0 7px;
+      }
+      #ongoing p {
+        line-height: 1.5;
+      }
+      #ongoing .note {
+        margin-top: 12px;
+        padding: 10px 16px;
+      }
+      @media print {
+        html,
+        body {
+          background: white;
+        }
+        .page {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page" id="estimate">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Initial estimate · For discussion</span
+        >
+      </header>
+      <div class="eyebrow">
+        Prepared for Simbiat Sanni · 16 September 2026 · USD
+      </div>
+      <h1>Your website.<br />An initial investment guide.</h1>
+      <p class="intro">
+        Based on the proposed scope and visual direction you reviewed, this
+        estimate covers a working online store with recipes, a blog, and tools
+        to manage your products and content.
+      </p>
+      <div class="note">
+        <div class="eyebrow">
+          Estimated one-time website build · Referral pricing
+        </div>
+        <div class="price">US$700–1,000</div>
+        <p>
+          Includes the launch work below, two rounds of consolidated revisions,
+          handoff, and 30 days of support for defects in the delivered work.
+          Recurring services and optional maintenance are separate.
+        </p>
+      </div>
+      <h2>What the build includes</h2>
+      <table class="scope">
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Included launch work</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Design &amp; storefront</td>
+            <td>
+              Apply your branding to the reviewed direction; responsive home,
+              shop, product, about, contact, and policy pages; product
+              categories, filtering, and sorting.
+            </td>
+          </tr>
+          <tr>
+            <td>Catalog &amp; shopping</td>
+            <td>
+              Enter up to 15 products in five categories, with up to six
+              variants per product; cart, Stripe-hosted guest checkout, verified
+              payment confirmation, and order emails.
+            </td>
+          </tr>
+          <tr>
+            <td>Store operations</td>
+            <td>
+              Product editing and a protected order/stock screen for one owner;
+              stock deduction on confirmed payment, sold-out protection, manual
+              fulfillment status; one US shipping zone with a flat rate and
+              agreed Stripe tax settings.
+            </td>
+          </tr>
+          <tr>
+            <td>Recipes &amp; blog</td>
+            <td>
+              Editable recipe and article templates; initial entry of up to six
+              free recipes and five blog posts from supplied content; search
+              across products, recipes, and articles.
+            </td>
+          </tr>
+          <tr>
+            <td>Contact &amp; discovery</td>
+            <td>
+              Contact form delivery to one inbox, an optional simple WhatsApp
+              link, basic technical SEO, and one agreed basic analytics
+              integration with appropriate privacy settings.
+            </td>
+          </tr>
+          <tr>
+            <td>Testing &amp; launch</td>
+            <td>
+              Shopping-flow, mobile, accessibility, and access-control checks;
+              domain connection, deployment, one 60-minute training session, and
+              a short editing guide.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>How to read this range</h2>
+      <p>
+        This introductory referral range assumes the reviewed design, supplied
+        content, and the launch limits above. Final stock, shipping, tax, and
+        editing requirements determine the fixed price. We will agree that price
+        before development; additions are quoted separately.
+      </p>
+      <footer>
+        <span>Zulzidan · Simbiat website estimate</span
+        ><span>Preliminary · No payment due</span><span>01 / 03</span>
+      </footer>
+    </section>
+    <section class="page" id="assumptions">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Scope assumptions &amp; proposed terms</span
+        >
+      </header>
+      <div class="eyebrow">The basis for this estimate</div>
+      <h1>A clear launch scope.<br />A practical schedule.</h1>
+      <h2>Custom website with Stripe payments</h2>
+      <p>
+        The website will use Stripe for payments. Product and content editing,
+        inventory, and order records are separate parts of the build. The
+        proposed setup uses Vercel hosting, Contentful for product/editorial
+        content, Neon Free for private store data, and Gmail for order/contact
+        email. Supabase Free is a database alternative. Hosting and CMS account
+        plans still need confirmation.
+      </p>
+      <p>
+        Stripe Checkout collects payment and delivery details using its
+        supported layout. The website confirms an order only after verifying
+        payment with Stripe. One protected owner screen covers orders and stock;
+        refunds use the Stripe dashboard. Customer/order information stays out
+        of the public content system. Protected owner sign-in and database
+        access controls are included.
+      </p>
+      <h2>Launch assumptions &amp; your materials</h2>
+      <ul>
+        <li>
+          One US store, USD pricing, guest checkout, one stock location and one
+          owner. Manual packing, shipping, and fulfillment updates. Confirm
+          states served, stock rules, flat shipping rate, and Stripe tax
+          configuration before the final quote.
+        </li>
+        <li>
+          You supply the logo, brand choices, product photos, accurate prices
+          and variants, final recipes/articles, business details, and approved
+          shipping, returns, privacy, and terms text. Formatting up to four
+          policy pages is included.
+        </li>
+        <li>
+          You own the domain and service accounts, pay provider bills directly,
+          and complete payment-provider verification. Required editing access
+          and account roles will be confirmed before selecting the plan.
+        </li>
+        <li>
+          Two rounds of consolidated feedback cover the agreed design and
+          functionality. Extra content, redesigns, or new requirements are
+          priced before work starts.
+        </li>
+      </ul>
+      <h2>Timing &amp; payment proposal</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Approximately 4–6 weeks</h3>
+          <p>
+            From the agreed start date, after the initial payment, essential
+            content, and account access are available. Allow time for design
+            review, integrations, content entry, testing, and launch approval.
+            Delayed materials or decisions may move the schedule.
+          </p>
+        </div>
+        <div class="card">
+          <h3>50% to begin · 50% before launch</h3>
+          <p>
+            At this range, each installment would be US$350–500. The balance
+            follows your review and acceptance of the completed staging site.
+            Exact amounts and milestones will appear in the final proposal.
+          </p>
+        </div>
+      </div>
+      <h2>Customer information &amp; handoff</h2>
+      <p>
+        Card entry stays with the payment provider. The build includes
+        restricted administrative access, server-side protection of secrets,
+        safe handling of customer information, and documented recovery
+        procedures. We will confirm who manages updates and recovery after
+        launch. No website can guarantee that a security incident will never
+        occur.
+      </p>
+      <h2>Outside this estimate</h2>
+      <p>
+        Historical Shopify data migration; paid recipes or digital downloads;
+        subscriptions; customer accounts; loyalty or wholesale features;
+        carrier-rate integrations; custom tax logic; multiple
+        currencies/languages; advanced inventory systems; newsletter or
+        marketing automation; content writing, photography, legal drafting, and
+        ongoing campaigns. Other exclusions in the reviewed scope continue to
+        apply.
+      </p>
+      <footer>
+        <span>Zulzidan · Simbiat website estimate</span
+        ><span>Final scope and terms to be agreed</span><span>02 / 03</span>
+      </footer>
+    </section>
+    <section class="page" id="ongoing">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Ongoing costs &amp; next steps</span
+        >
+      </header>
+      <div class="eyebrow">Beyond the initial build · All amounts in USD</div>
+      <h1>Plan for running costs.</h1>
+      <p class="intro">
+        Use free starter services where suitable. Hosting and Contentful costs
+        remain unresolved; the monthly total will be confirmed before
+        development. Provider information checked on 16 September 2026.
+      </p>
+      <table class="costs">
+        <thead>
+          <tr>
+            <th>Cost</th>
+            <th>Planning amount</th>
+            <th>Basis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Database</td>
+            <td>$0 starter plan</td>
+            <td>
+              Neon Free within quotas; confirm storage and recovery needs.
+              Supabase Free is an alternative. Upgrades are separate.
+              <a
+                href="https://neon.com/blog/how-to-make-the-most-of-neons-free-plan"
+                >Neon Free</a
+              >.
+            </td>
+          </tr>
+          <tr>
+            <td>Storefront hosting</td>
+            <td>Confirm account plan</td>
+            <td>
+              Vercel Pro from $20/month. Existing paid hosting may reduce
+              incremental cost. Hobby is for personal, noncommercial use.
+              <a href="https://vercel.com/docs/plans/hobby">Plan terms</a>.
+            </td>
+          </tr>
+          <tr>
+            <td>Content management</td>
+            <td>Confirm account plan</td>
+            <td>
+              New Contentful Free account: testing/learning only. Production
+              requires a suitable plan; published Lite pricing is $300/month.
+              <a href="https://www.contentful.com/help/admin/usage/usage-limit/"
+                >Plan terms</a
+              >. <a href="https://www.contentful.com/pricing/">Pricing</a>.
+            </td>
+          </tr>
+          <tr>
+            <td>Order / contact email</td>
+            <td>$0 added subscription</td>
+            <td>
+              Existing consumer Gmail via SMTP, within sending limits and
+              app-password eligibility. No separate email subscription.
+              <a href="https://support.google.com/accounts/answer/185833"
+                >Google guidance</a
+              >.
+            </td>
+          </tr>
+          <tr>
+            <td>Payment processing</td>
+            <td>No standard monthly fee</td>
+            <td>
+              Stripe US domestic cards: 2.9% + $0.30 per successful transaction.
+              International cards, other methods, and tax tools may cost more.
+              <a href="https://stripe.com/pricing">Stripe pricing</a>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top: 9px">
+        <strong
+          >Domain allowance: $20–30/year; verify the actual renewal.</strong
+        >
+        Hosting and CMS plans still need pricing. Taxes, processing fees,
+        postage, Stripe Tax, paid upgrades, and extra usage are separate. The
+        complete monthly total will be confirmed before development.
+      </p>
+      <h2>Included support &amp; optional maintenance</h2>
+      <p>
+        <strong>Included:</strong> 30 calendar days after launch to correct
+        defects in the agreed delivered functionality. New features, new
+        content, and third-party changes are outside this support period’s
+        coverage.
+      </p>
+      <p>
+        <strong
+          >Optional: $60/month, billed monthly after the included support
+          period.</strong
+        >
+        Up to two hours per month for routine updates, basic store/form checks,
+        review of the agreed backup process, and small fixes or edits. Unused
+        time does not roll over. Additional work is proposed at $30/hour with
+        approval first; urgent response and round-the-clock monitoring are
+        excluded.
+      </p>
+      <p class="small">
+        Without maintenance, arrange updates and recovery separately. New
+        features are quoted separately.
+      </p>
+      <h2>Budget items to confirm</h2>
+      <table class="totals">
+        <tbody>
+          <tr>
+            <td>One-time website build</td>
+            <td><strong>$700–1,000</strong></td>
+          </tr>
+          <tr>
+            <td>Monthly hosting and Contentful, before optional maintenance</td>
+            <td><strong>To confirm</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small" style="margin-top: 8px">
+        Free plans have usage and recovery limits. Gmail can temporarily limit
+        sending. Services may start billing during development.
+      </p>
+      <div class="note">
+        <h3>Next step: check the budget together</h3>
+        <p>
+          If this range works for you, we can confirm the platform, shipping/tax
+          settings, content, and support choice, then issue a fixed proposal. If
+          it exceeds your budget, we can prioritize a smaller first release and
+          price the remaining features as a later phase.
+        </p>
+      </div>
+      <footer>
+        <span>Zulzidan · zulzidan.com · zulzdn@gmail.com</span
+        ><span>Initial estimate · For discussion</span><span>03 / 03</span>
+      </footer>
+    </section>
+  </body>
+</html>

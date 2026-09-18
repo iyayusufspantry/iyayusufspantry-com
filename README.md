@@ -60,6 +60,10 @@ All 15 products, six recipes, and five articles have working detail pages. Unkno
 
 ### PDF attachments
 
+- **[Website development proposal](artifacts/pdf/Simbiat-Website-Proposal.pdf)** — current two-page proposal with the updated US$500 build fee, two US$250 payments via Wise, launch scope, timing, and support. Work begins on receipt of the deposit; separate running costs will be confirmed before purchasing services. Use the [payment email](docs/simbiat-proposal-email.md) to share the updated proposal and bank details. Edit [the proposal source](docs/simbiat-website-proposal.html) and regenerate with `node scripts/export-proposal-pdf.mjs`. The earlier estimates below are historical references, not the current offer.
+
+- **[Initial website estimate](artifacts/pdf/Simbiat-Initial-Website-Estimate.pdf)** — three A4 pages covering the proposed build range, scope assumptions, payment milestones, support, and running costs. Pricing and platform choices are provisional. See the [email draft](docs/simbiat-estimate-email.md) and [internal calculation notes](docs/simbiat-estimate-working-notes.md). Edit [the estimate source](docs/simbiat-initial-estimate.html) and regenerate with `node scripts/export-estimate-pdf.mjs`.
+
 - **[Proposed written scope](artifacts/pdf/Simbiat-Proposed-Website-Scope.pdf)** — seven portrait A4 pages with Zulzidan branding and the meeting clarifications. Covers deliverables, exclusions, security, maintenance, budget, payment, timing, and open decisions. This is a draft for review; pricing and commercial terms remain unagreed.
 
 Edit [the written scope source](docs/simbiat-proposed-scope.html) and regenerate it with `npm run export:scope`. The exporter checks page overflow and saves the PDF, a portable HTML companion, and layout proofs in `artifacts/pdf/`.

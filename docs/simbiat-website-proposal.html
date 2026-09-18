@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simbiat — Website Development Proposal | Zulzidan</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        color: #252525;
+        background: #eaeae7;
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        width: 794px;
+        height: 1122px;
+        padding: 46px 56px 62px;
+        margin: 20px auto;
+        background: white;
+        position: relative;
+        break-after: page;
+      }
+      .page:last-child {
+        break-after: auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 45px;
+        border-bottom: 1px solid #deded9;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+      }
+      .logo {
+        width: 135px;
+        max-height: 27px;
+        object-fit: contain;
+        object-position: left center;
+      }
+      .status,
+      .eyebrow {
+        font-size: 9px;
+        color: #64645e;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+      }
+      footer {
+        position: absolute;
+        bottom: 30px;
+        left: 56px;
+        right: 56px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #deded9;
+        padding-top: 12px;
+        color: #666;
+        font-size: 9px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      h1 {
+        font-size: 37px;
+        line-height: 1.16;
+        font-weight: 500;
+        letter-spacing: -1.2px;
+        margin: 12px 0 17px;
+      }
+      h2 {
+        font-size: 19px;
+        line-height: 1.25;
+        font-weight: 500;
+        margin: 20px 0 9px;
+      }
+      h3 {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-bottom: 5px;
+      }
+      p,
+      li {
+        font-size: 11.5px;
+        line-height: 1.6;
+        color: #565651;
+      }
+      p + p {
+        margin-top: 8px;
+      }
+      .intro {
+        font-size: 13px;
+        line-height: 1.65;
+      }
+      .small {
+        font-size: 10px;
+        line-height: 1.55;
+      }
+      .price {
+        font-size: 38px;
+        line-height: 1.2;
+        letter-spacing: -1px;
+        color: #252525;
+        margin: 7px 0;
+      }
+      .note {
+        padding: 15px 18px;
+        border: 1px solid #deded6;
+        border-radius: 5px;
+        background: #f5f5f1;
+        margin-top: 15px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .card {
+        border: 1px solid #deded9;
+        border-radius: 5px;
+        padding: 14px 16px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-top: 12px;
+      }
+      th {
+        text-align: left;
+        font-size: 9px;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        background: #f4f4f0;
+        padding: 10px 11px;
+        color: #65655f;
+      }
+      td {
+        vertical-align: top;
+        border-bottom: 1px solid #e3e3dd;
+        padding: 10px 11px;
+        font-size: 11px;
+        line-height: 1.55;
+        color: #565651;
+      }
+      td:first-child {
+        color: #282828;
+      }
+      th:first-child,
+      td:first-child {
+        width: 26%;
+      }
+      .costs th:first-child,
+      .costs td:first-child {
+        width: 23%;
+      }
+      .costs th:nth-child(2),
+      .costs td:nth-child(2) {
+        width: 22%;
+      }
+      ul,
+      ol {
+        padding-left: 18px;
+        margin: 8px 0 0;
+      }
+      li {
+        margin-bottom: 5px;
+      }
+      a {
+        color: #383833;
+        text-decoration: underline;
+      }
+      #delivery h2,
+      #costs h2 {
+        margin-top: 16px;
+      }
+      #delivery td,
+      #costs td {
+        padding-block: 8px;
+      }
+      #delivery h2 {
+        margin-top: 13px;
+      }
+      #costs p {
+        line-height: 1.5;
+      }
+      #costs .note {
+        padding: 12px 16px;
+      }
+      @media print {
+        html,
+        body {
+          background: white;
+        }
+        .page {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page" id="overview">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Website proposal · Updated fee</span
+        >
+      </header>
+      <div class="eyebrow">
+        For Simbiat Sanni · By Zulzidan · 18 September 2026
+      </div>
+      <h1>Website development proposal.</h1>
+      <p class="intro">
+        A welcoming online store for African foods and snacks, bringing
+        products, recipes, and stories together. Based on the reviewed scope and
+        visual direction, with practical tools for day-to-day store management.
+      </p>
+      <div class="note">
+        <div class="eyebrow">
+          Website build fee · Reduced to fit your budget
+        </div>
+        <div class="price">US$500</div>
+        <p>
+          A reduced fee to help you get your business online within your
+          starting budget, keeping the scope below.
+        </p>
+        <p>
+          <strong
+            >Payment via Wise: US$250 (50%) to begin,
+            and US$250 (50%) after final website approval, before launch.</strong
+          >
+        </p>
+        <p>
+          Includes the work below, two rounds of revisions, training, and 30
+          days of support for faults in the delivered website. Service
+          subscriptions and transaction fees are separate.
+        </p>
+      </div>
+      <h2>Included in the proposal</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Included</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Storefront</td>
+            <td>
+              Home, shop, product, about, and contact pages using the business
+              branding, with layouts for phones, tablets, and computers. Product
+              filtering and sorting.
+            </td>
+          </tr>
+          <tr>
+            <td>Product catalogue</td>
+            <td>
+              Setup of up to 15 products in five categories, with up to six
+              variants per product. Tools to edit descriptions, photos, and
+              prices.
+            </td>
+          </tr>
+          <tr>
+            <td>Shopping &amp; orders</td>
+            <td>
+              A cart, guest checkout through Stripe, order confirmation and
+              emails. One owner login to review orders, adjust stock, and mark
+              orders fulfilled; protection against selling unavailable stock.
+            </td>
+          </tr>
+          <tr>
+            <td>Recipes &amp; blog</td>
+            <td>
+              Editable recipe and article pages, with up to six recipes and five
+              blog posts entered from supplied content. Search across products,
+              recipes, and articles.
+            </td>
+          </tr>
+          <tr>
+            <td>Contact &amp; policies</td>
+            <td>
+              A contact form to one inbox, an optional WhatsApp link, and up to
+              four supplied policy pages: shipping, returns, privacy, and terms.
+            </td>
+          </tr>
+          <tr>
+            <td>Launch &amp; training</td>
+            <td>
+              Basic search-engine setup and analytics, mobile/accessibility and
+              checkout checks, domain connection, launch, one 60-minute training
+              session, and a short editing guide.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Expected timing</h2>
+      <p>
+        <strong>Approximately 4–6 weeks</strong> from the agreed start date,
+        once the initial payment, essential content, and account access are
+        available. Delivery includes design review, store development, testing,
+        and a final review with Simbiat before launch.
+      </p>
+      <p class="small" style="margin-top: 12px">
+        This fee covers one US store, USD pricing, one stock location, one
+        owner, one flat-rate shipping zone, and agreed Stripe tax settings. The
+        states served and store rules will be confirmed before starting. Stripe
+        handles card entry; owner access and order information will be
+        protected.
+      </p>
+      <footer>
+        <span>Zulzidan · Simbiat website proposal</span
+        ><span>Build fee and included work</span><span>01 / 02</span>
+      </footer>
+    </section>
+    <section class="page" id="details">
+      <header>
+        <img class="logo" src="assets/zulzidan-logo.png" alt="Zulzidan" /><span
+          class="status"
+          >Project details</span
+        >
+      </header>
+      <h1>Project details.</h1>
+      <h2>1. Confirm the setup and running costs</h2>
+      <p>
+        The <strong>US$500 fee covers the one-time website build</strong>.
+        Running costs cover hosting, any paid content-management, database or
+        email services, domain registration and renewals, and Stripe processing
+        fees. These provider charges are separate from the build fee.
+      </p>
+      <div class="note">
+        <h3>Running costs confirmed before purchase</h3>
+        <p>
+          We will confirm an affordable hosting and content-management setup,
+          any free-plan limits, and all required service costs before purchasing
+          or subscribing. <strong>No paid service has been selected.</strong>
+        </p>
+        <p>
+          Free hosting is not yet confirmed. Vercel’s free Hobby plan is for
+          personal, noncommercial use and cannot host this store, even with low
+          traffic. The domain’s registration and renewal prices will be
+          confirmed for the chosen name before purchase.
+        </p>
+        <p class="small">
+          <a href="https://vercel.com/docs/plans/hobby">Vercel Hobby terms</a>.
+          Checked 18 September 2026. Applicable taxes, postage, paid upgrades,
+          and extra usage are additional.
+        </p>
+      </div>
+      <p class="small" style="margin-top: 9px">
+        <strong>Wise payments:</strong> both US$250 installments will be paid
+        via Wise for conversion and deposit to Muhammad Zulzidan M’s Bank Jago
+        account in Indonesia (IDR). Recipient details are in the accompanying email;
+        the exchange rate and any transfer fee will be shown by Wise at payment.
+      </p>
+      <h2>2. Prepare content and account access</h2>
+      <p>
+        Simbiat will supply the logo, brand preferences, product photos and
+        details, prices, recipes/articles, contact information, and approved
+        policies. Simbiat will also confirm shipping and tax requirements,
+        provide account access, and complete Stripe account verification. Delays
+        in materials or feedback may move the launch date.
+      </p>
+      <h2>3. Review and launch</h2>
+      <p>
+        Two rounds of revisions are included. We check the pages, test
+        successful and failed purchases, verify stock and order records, and
+        confirm that Simbiat can edit content and manage orders. Corrections
+        required to deliver the agreed work are included. Preview links and
+        progress updates will be shared by email at each review stage. After
+        Simbiat’s approval and payment of the remaining US$250, we launch and hand
+        over the source files, guide, account details, and recovery notes.
+      </p>
+      <h2>4. Support after launch</h2>
+      <p>
+        <strong>30 days of fault correction are included.</strong> Further
+        support can be arranged when needed. An optional US$60/month plan covers
+        up to two hours of updates, routine checks, and small edits; unused
+        hours do not carry over. This plan starts only if separately agreed.
+        Additional work is quoted before it starts. If
+        ongoing support is not selected, responsibility for updates and recovery
+        will be agreed before handover.
+      </p>
+      <h2>Scope limits</h2>
+      <p>
+        The package covers the launch described on page 1. Customer accounts,
+        subscriptions, paid recipes, wholesale/multi-vendor features, carrier
+        integrations, advanced inventory or tax systems, historical data
+        migration, marketing automation, content creation, and extra pages or
+        features are outside this fee. Other exclusions in the reviewed scope
+        still apply. Any additions receive a separate quote before work begins.
+      </p>
+      <p style="margin-top: 15px">
+        <strong>Next step:</strong> pay the initial US$250 via Wise to the bank
+        account provided in the accompanying email. Work begins as soon as the
+        deposit is received.
+      </p>
+      <footer>
+        <span>Zulzidan · zulzidan.com · zulzdn@gmail.com</span
+        ><span>Updated build fee · US$500</span><span>02 / 02</span>
+      </footer>
+    </section>
+  </body>
+</html>
