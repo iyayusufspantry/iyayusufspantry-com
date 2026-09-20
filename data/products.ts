@@ -1,4 +1,5 @@
 // MOCK DATA ONLY. Names, pricing, dietary labels, availability, and sizes need client approval.
+import { findVariant } from "@/lib/commerce/catalog";
 export type Product = {
   slug: string;
   name: string;
@@ -197,6 +198,16 @@ export const money = (value: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
     value,
   );
-export function productPrice(product: Product, size?: string) {
-  return product.price * (size === "Large" ? 2 : size === "Medium" ? 1.5 : 1);
+export function productPrice(
+  product: Product,
+  size?: string,
+  dietary?: string,
+) {
+  const variant = findVariant(
+    product.slug,
+    size ?? product.sizes?.[0] ?? "Standard",
+    dietary ?? product.dietary?.[0] ?? "Standard",
+  );
+  if (!variant) throw new Error("Unknown product variant");
+  return variant.priceCents / 100;
 }

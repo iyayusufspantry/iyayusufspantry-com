@@ -63,12 +63,10 @@ try {
     "decisions",
     "review",
   ]) {
-    await page
-      .locator(`#${id}`)
-      .screenshot({
-        path: path.join(output, `scope-written-${id}-proof.png`),
-        caret: "initial",
-      });
+    await page.locator(`#${id}`).screenshot({
+      path: path.join(output, `scope-written-${id}-proof.png`),
+      caret: "initial",
+    });
   }
   // Portable HTML companion for editing/review without the original logo directory.
   await writeFile(

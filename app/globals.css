@@ -1,13 +1,28 @@
 @import "tailwindcss";
 @import "../styles/prototype.css";
+@import "../styles/foundations.css";
+@import "../styles/brand.css";
+/* Utility colors share the storefront's brand palette. */
 @theme inline {
-  --color-background: #ffffff;
-  --color-foreground: #202020;
-  --color-border: #e5e5e5;
-  --color-muted: #f6f6f5;
-  --color-muted-foreground: #686868;
-  --color-primary: #202020;
+  --color-background: #fcfaf5;
+  --color-foreground: #29325f;
+  --color-border: #d9e2d9;
+  --color-muted: #f0f4e9;
+  --color-muted-foreground: #586760;
+  --color-primary: #087862;
   --color-primary-foreground: #ffffff;
-  --font-sans: Arial, Helvetica, sans-serif;
-  --color-neutral-500: #686868;
+  --color-brand-green: #06ad8f;
+  --color-brand-deep: #075e4e;
+  --color-brand-mint: #e7f4ec;
+  --font-sans: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  --color-neutral-50: #f8faf4;
+  --color-neutral-100: #f0f4e9;
+  --color-neutral-200: #d9e2d9;
+  --color-neutral-300: #b8c9bf;
+  --color-neutral-400: #708579;
+  --color-neutral-500: #586760;
+  --color-neutral-600: #4c5e56;
+  --color-neutral-700: #3b4f47;
+  --color-neutral-800: #29325f;
+  --color-neutral-900: #29325f;
 }

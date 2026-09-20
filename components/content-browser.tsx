@@ -14,6 +14,7 @@ import {
   SearchField,
 } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import { brandPhotos } from "@/data/brand-assets";
 export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
@@ -36,7 +37,7 @@ export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
         eyebrow={
           isRecipe
             ? "FROM THE PANTRY TO THE PLATE"
-            : "THE SIMBIAT JOURNAL · BLOG"
+            : "THE PANTRY JOURNAL · BLOG"
         }
         title={
           isRecipe
@@ -52,7 +53,7 @@ export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
       {showFeatured && (
         <article className="featured-article">
           <Link href={`/blog/${posts[0].slug}`}>
-            <MockImage label="Featured story photography" kind="article" />
+            <MockImage photo={brandPhotos.assortment} kind="article" />
           </Link>
           <div>
             <span className="eyebrow">

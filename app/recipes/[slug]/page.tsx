@@ -55,7 +55,7 @@ export default async function Page({
         </div>
       </header>
       <MockImage
-        label="Recipe photography"
+        label={recipe.category}
         kind="recipe"
         className="editorial-hero"
       />
@@ -97,7 +97,7 @@ export default async function Page({
         className="section border-t border-neutral-200"
       >
         <SectionHeading
-          eyebrow="FROM THE SIMBIAT PANTRY"
+          eyebrow="FROM IYA YUSUF'S PANTRY"
           title="Shop the ingredients"
           description="Sample products to connect inspiration with your shopping bag."
         />

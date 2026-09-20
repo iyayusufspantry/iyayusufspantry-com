@@ -8,6 +8,7 @@ import { posts } from "../data/posts";
 for (const screen of [
   ...prototypeScreens,
   { name: "Screen directory", href: "/prototype" },
+  { name: "Client product photography", href: "/shop/palm-oil" },
 ]) {
   test(`${screen.name}: layout, accessibility, and screenshot`, async ({
     page,
@@ -45,6 +46,17 @@ for (const screen of [
       overflow,
       "Page should fit the viewport without horizontal scrolling",
     ).toBe(false);
+    // Full-page captures include below-the-fold client photography. Decode
+    // every image before capture so lazy loading cannot leave blank panels.
+    await page.locator("img").evaluateAll(async (images) => {
+      await Promise.all(
+        images.map(async (image) => {
+          if (!(image instanceof HTMLImageElement)) return;
+          image.loading = "eager";
+          await image.decode();
+        }),
+      );
+    });
     await page.screenshot({
       path: `artifacts/screenshots/${testInfo.project.name}/${screen.href === "/" ? "home" : screen.href.slice(1).replaceAll("/", "-")}.png`,
       fullPage: true,
@@ -65,6 +77,30 @@ for (const screen of [
     expect(errors).toEqual([]);
   });
 }
+
+test("client product gallery fits small phones and tablets", async ({
+  page,
+}) => {
+  for (const width of [320, 768]) {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto("/shop/palm-oil");
+    await expect(page.locator(".product-main-image img")).toBeVisible();
+    await page.locator(".product-main-image img").evaluate(async (image) => {
+      if (image instanceof HTMLImageElement) await image.decode();
+    });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await page.getByRole("button", { name: "View serving image" }).click();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+});
 
 test("all sample detail pages and missing slugs resolve correctly", async ({
   request,

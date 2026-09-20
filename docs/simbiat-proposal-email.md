@@ -23,8 +23,7 @@ Any ongoing maintenance from me after the included 30 days of fault support woul
 
 I’m looking forward to working with you.
 
-Best regards,
-Zulzidan
+Best regards, Zulzidan
 
 ---
 

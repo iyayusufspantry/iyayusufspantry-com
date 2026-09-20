@@ -1,0 +1,107 @@
+# Simbiat development log
+
+## 21 September 2026 — Sticky storefront header
+
+- Made the shared header stick to the top while scrolling, with its existing cream background and responsive logo/navigation. The prototype notice scrolls away above it.
+- Added anchor and checkout-summary offsets to keep content clear of the header. The mobile menu scrolls within short viewports.
+- Validation: formatting passed; browser checks passed at 1440, 390, and 667 px, including mobile menu navigation, horizontal overflow, page errors, recipe anchor positioning, and checkout summary clearance. Captures are in `artifacts/support/sticky-header/`.
+
+## 20 September 2026 — Zustand cart migration
+
+- Installed Zustand 5.0.15 and updated both npm and pnpm lockfiles. Replaced the custom module-level cart snapshot and listener set with a Zustand store factory and persistence middleware.
+- Each `CartProvider` owns a stable store instance. Zustand selectors subscribe the header to the item count and add-to-cart controls to a stable action; cart, summary, checkout, and confirmation views select the values they use. Toasts remain in the UI hooks and local controls retain React state.
+- Preserved the `simbiat-scope-cart-v1` session key and raw-array format, with delayed restoration after hydration. Validation discards unknown variants and extra fields, merges duplicate selections, and caps quantities at 99. Only item selections persist; blocked storage, malformed JSON, and quota errors leave an operational in-memory cart.
+- Added regression coverage for store isolation, deferred restoration, legacy data, quantity validation, persistence field filtering, and browser behavior with invalid/disabled/full storage.
+- Validation: production build/TypeScript, ESLint, formatting, frozen pnpm install, and **84 desktop/mobile tests passed** (42.7 seconds). Existing navigation, cart calculations, refresh persistence, checkout privacy, accessibility, and screenshot checks passed. Full output: [validation log](../artifacts/zustand-validation.log).
+
+## 20 September 2026 — Complete storefront brand theme
+
+- Applied Iya Yusuf's Pantry branding across the homepage, catalogue, product galleries, cart, checkout, confirmation, recipes, journal, about/contact, policies, scope, and owner preview. Shared colors now use cream, mint, lime, and logo navy, with `#06ad8f` accents and darker `#087862` for readable buttons and text. Added serif headings, softer cards, rounded controls, and a navy footer.
+- Inspected all client reference images and added explicit [photo mappings](../data/brand-assets.ts). The homepage now features the supplied assortment and an editorial photo gallery; the story/journal use relevant pantry photos. Only clearly labeled red palm oil is mapped to a sample product. Unconfirmed product and recipe photography retains styled, clearly identified placeholders.
+- Added the shared [brand stylesheet](../styles/brand.css), converted previous neutral CSS colors to shared variables, and aligned Tailwind utilities with the palette. Existing catalogue prices, stock, and checkout behavior remain illustrative.
+- Corrected footer contrast, photo-gallery minimum widths, and tablet layout after browser review. Screenshot checks now decode all images before capture; added coverage for the photographed product and 320/768 px gallery behavior.
+- Made the test/screenshot commands call the installed `@playwright/test` CLI directly after the existing Windows shim selected a different Playwright installation. Excluded generated artifacts and Playwright reports from ESLint so repeated checks lint project source only.
+- Validation: production build and TypeScript, ESLint, formatting, and the full **74-test desktop/mobile suite** passed. Screen checks include automated WCAG A/AA checks, image loading, page errors, and overflow. Additional checks at 320, 390, 768, and 1440 px cover the homepage, shop, photographed product, and checkout.
+- Review the refreshed [screenshot gallery](../artifacts/screenshots/index.html): 48 full-page captures (24 desktop and 24 mobile). The original foundation milestone archive and earlier proposal PDFs remain historical records. Local development preview is available at `http://localhost:3000`.
+
+## 20 September 2026 — Site logo application
+
+- Confirmed the horizontal logo is used in the shared header and footer. Added the matching cart symbol as the SVG browser icon and replaced the starter favicon; both regenerate with the brand assets script.
+- Updated default/page-template titles, the metadata description, and footer copyright to Iya Yusuf's Pantry.
+- Validation: targeted ESLint and TypeScript checks passed. Desktop/mobile browser checks confirmed both logos load, SVG/ICO endpoints return successfully, and no horizontal overflow. Confirmed the homepage and shop page titles use the business name; refreshed the branding homepage/footer captures.
+
+## 20 September 2026 — Reconstructed logo assets
+
+- Rebuilt the supplied Iya Yusuf's Pantry logo as portable SVG geometry: cart, rounded path lettering, and transparent background. The lettering is a manual approximation, not the original font; flat lime/navy supporting colors preserve the reference while the lettering and rear cart panel use the confirmed `#06ad8f` green.
+- Added stacked, horizontal, and cart-only SVGs plus transparent PNGs at 3× resolution in [public/brand](../public/brand/README.md). The original JPEG is preserved. Regenerate with `node scripts/export-brand-assets.mjs`.
+- Applied the horizontal SVG to the storefront header and footer with accessible home-link labels and responsive sizing.
+- Validation: targeted ESLint and TypeScript checks passed. Browser checks at 320, 390, 768, and 1440 px confirmed both logos load and no horizontal overflow; mobile navigation opens/closes and no browser page errors were reported. Checked vector geometry stays inside each viewBox and contains no bitmap, live text, or script elements.
+- Visually reviewed the [side-by-side logo sheet](../artifacts/branding/index.html), [desktop homepage](../artifacts/branding/home-1440.png), and [mobile homepage](../artifacts/branding/home-390.png). Assets are ready for client visual review; the previous milestone screenshot archive remains historical.
+
+## 20 September 2026 — Client branding and setup context
+
+- Captured the latest email decisions in [client context](client-context.md), including the confirmed brand color `#06ad8f` and supplied [Iya Yusuf's Pantry logo](../public/assets/1789861951268blob.jpg).
+- Inspected the logo: shopping-cart graphic, green lettering, and a visible gray grid background in the JPEG. Font choice is delegated to the developer.
+- The email confirms receipt of the US$250 deposit on 19 September. Domain expiry is the client's suspicion; the full domain and registration status still need verification.
+- Recorded the requested business Google account name, desired domain-based email, Stripe setup guidance, and outstanding product information. Logo and color supersede the pending-branding status recorded at the start of the foundation milestone below.
+- Documentation update only; storefront branding and external account setup remain future work.
+
+## pnpm startup fix
+
+- Reported failure: `pnpm install` and `pnpm dev` stopped with `ERR_PNPM_IGNORED_BUILDS` for `unrs-resolver@1.12.2`.
+- Cause: `pnpm-workspace.yaml` contained the undecided value `unrs-resolver: set this to true or false`. pnpm 11 checks dependencies before running scripts, so the unresolved install decision also blocked development startup.
+- Inspected the dependency chain (`eslint-config-next` → TypeScript import resolver → `unrs-resolver`) and its native-binding preparation script. Set only `allowBuilds.unrs-resolver` to `true`; retained the lockfile versions and other package policies. Reference: [pnpm 11 build settings](https://github.com/pnpm/pnpm.io/blob/main/blog/releases/11.0.md).
+- Validation: `pnpm install --frozen-lockfile` passed and ran the dependency's postinstall successfully; `pnpm lint` passed; `pnpm dev --hostname 127.0.0.1 --port 3101` reached Ready. Desktop/mobile homepage smoke checks both returned HTTP 200 with no browser page errors.
+- Captured [desktop](../artifacts/support/pnpm-startup/desktop.png) and [mobile](../artifacts/support/pnpm-startup/mobile.png) startup screenshots separately from the foundation milestone archive.
+- The earlier package-manager migration and ESLint deprecation warnings were not the startup blocker. No dependency upgrade was needed for this fix.
+
+## 20 September 2026 — Foundation milestone 01
+
+The client has paid the initial installment (reported by the project owner). Brand assets, domain choice, product content, business Google account, and Stripe access are pending. This milestone builds and tests locally without subscribing to services.
+
+### Starting point
+
+- Read the current proposal and the local Next.js 16.3.5 server/client, route-handler, data-security, and environment-variable guides.
+- Existing prototype: 15 products, recipes and blog, browser cart, mock checkout, and scope pages. No production database, authentication, CMS, payment, or email connection.
+- Baseline production build and 36 desktop/mobile screenshot and accessibility checks passed.
+- Preserved baseline at `artifacts/milestones/01-foundations/before/` (including the offline gallery).
+- Existing edits to `docs/simbiat-proposal-email.md` and untracked pnpm files are outside this milestone and are preserved.
+
+### Implementation
+
+- Explicit variant IDs and prices in integer USD cents replace runtime size multipliers. Values are still samples, not client-approved prices.
+- Server cart review recalculates sample prices and checks sample stock. It accepts variant IDs and quantities only; customer fields, browser prices, malformed inputs, and excessive requests are rejected.
+- Reusable pure order transitions cover reservations, payment matching/retries, cancellation, stock adjustment, and fulfillment. They are not a database or verified payment integration.
+- Owner preview at `/prototype/owner` supports order filters, fulfillment of paid sample orders, cancelling unpaid reservations, stock editing, availability filters, and resetting the workspace. Data exists only in component memory.
+- Checkout can check sample availability without submitting contact/address fields. Payment and final totals remain disabled/unavailable.
+- Cart restoration validates entries, combines duplicate variants, and removes unexpected fields from restored selections.
+- Screenshot review revealed the offscreen skip link appearing in a scrolled mobile capture. Added clipping while unfocused, retained keyboard visibility, and verified Enter moves focus to main content.
+- Added a three-page progress PDF exporter and an archive command that preserves screenshots, the HTML test report, documentation, and file hashes. Two existing PDF exporter scripts received formatting-only fixes to satisfy the repository-wide formatting check.
+
+### Validation and evidence
+
+| Check                        | Result                                                                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint`               | Passed                                                                                                                      |
+| `npm run type-check`         | Passed; final production build also completed TypeScript validation                                                         |
+| `npm run format:check`       | Passed                                                                                                                      |
+| `npm run build`              | Passed; 46 static generation entries plus dynamic shop/review routes                                                        |
+| `npm test`                   | **70 passed** across desktop and mobile (final run: 48.6 seconds)                                                           |
+| Browser accessibility/layout | All screen checks passed; no reported WCAG A/AA violations, horizontal overflow, or page/console errors in the screen suite |
+| Progress PDF                 | Three pages; image decode and page/footer overflow checks passed; proof images visually reviewed                            |
+| Intake CSV                   | Header and sample row both have 18 columns                                                                                  |
+
+The final screenshot set contains **46 PNGs**: 23 desktop and 23 mobile captures. This includes the original screens, the new owner page, owner opening/edited states, and full/detail checkout review states. Manually reviewed owner desktop/mobile, the checkout summary, and all three report proofs. The repeatable capture command is `npm run screenshots`; `npm test` also produces the complete capture set.
+
+Evidence:
+
+- [Before gallery](../artifacts/milestones/01-foundations/before/index.html) — 36 baseline screenshots, captured before implementation.
+- [Current gallery](../artifacts/screenshots/index.html) — 46 final screenshots.
+- [Progress PDF](../artifacts/pdf/Simbiat-Foundation-Progress.pdf) — milestone summary and review images.
+- [Final milestone gallery](../artifacts/milestones/01-foundations/after/screenshots/index.html), [test report](../artifacts/milestones/01-foundations/after/test-report/index.html), and [manifest](../artifacts/milestones/01-foundations/after/manifest.json) — preserved review evidence with SHA-256 hashes.
+
+The automated rules tests cover invalid/duplicate quantities, browser-price rejection, unavailable variants, reservation rollback and sequential overselling, payment amount/currency matching and duplicate handling, cancellation release, late-payment rejection, stock adjustment limits, owner interactions, request privacy, API failure/retry, cart restoration, and keyboard skip navigation. Concurrent database behavior and real provider integrations remain untested because those adapters are not implemented yet.
+
+### Next dependencies
+
+Connect approved content, transactional storage, owner authentication, Stripe, and email in later integration work. Confirm shipping destination/rate rules, tax settings, initial stock, and service costs before enabling purchases. See [foundation architecture](production-foundations.md) and [content model](content-model.md).

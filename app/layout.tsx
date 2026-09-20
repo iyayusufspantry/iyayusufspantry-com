@@ -4,11 +4,11 @@ import { SiteHeader, SiteFooter } from "@/components/site-shell";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {
-    default: "Simbiat — A taste of home",
-    template: "%s | Simbiat Prototype",
+    default: "Iya Yusuf's Pantry — A taste of home",
+    template: "%s | Iya Yusuf's Pantry",
   },
   description:
-    "A visual project-scope prototype for Simbiat. Sample products, content, and checkout; no real orders or payments.",
+    "A visual project-scope prototype for Iya Yusuf's Pantry. Sample products, content, and checkout; no real orders or payments.",
   robots: { index: false, follow: false },
 };
 export default function RootLayout({

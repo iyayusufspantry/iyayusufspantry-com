@@ -5,6 +5,7 @@ import { posts } from "@/data/posts";
 import { products } from "@/data/products";
 import { BlogCard, MockImage, SectionHeading } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import { journalPhotos } from "@/data/brand-assets";
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
 }
@@ -42,7 +43,8 @@ export default async function Page({
         </span>
       </header>
       <MockImage
-        label="Editorial photography"
+        label={post.category}
+        photo={journalPhotos[post.slug]}
         kind="article"
         className="editorial-hero"
       />

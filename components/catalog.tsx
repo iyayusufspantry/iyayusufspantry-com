@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   ArrowUpRight,
   Plus,
   Clock,
-  ImageIcon,
+  BookOpen,
   Package,
   Wheat,
   Cookie,
@@ -18,12 +19,17 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/components/cart-provider";
+import { useAddToCart } from "@/components/cart-provider";
 import { categories } from "@/data/categories";
 import { money, products, type Product } from "@/data/products";
 import type { Recipe } from "@/data/recipes";
 import type { Post } from "@/data/posts";
 import { cn } from "@/lib/utils";
+import {
+  productPhotos,
+  journalPhotos,
+  type BrandPhoto,
+} from "@/data/brand-assets";
 
 const icons = {
   snacks: Cookie,
@@ -37,16 +43,45 @@ export function MockImage({
   kind = "product",
   className,
   index = 0,
+  photo,
 }: {
   label?: string;
   kind?: "product" | "hero" | "recipe" | "story" | "article";
   className?: string;
   index?: number;
+  photo?: BrandPhoto;
 }) {
+  const suppliedPhoto =
+    photo ?? (kind === "product" ? productPhotos[label] : undefined);
+  const Illustration =
+    kind === "recipe" ? CookingPot : kind === "article" ? BookOpen : Sprout;
+  if (suppliedPhoto) {
+    return (
+      <div
+        className={cn("mock-image brand-photograph", `mock-${kind}`, className)}
+      >
+        <Image
+          src={suppliedPhoto.src}
+          alt={suppliedPhoto.alt}
+          fill
+          sizes={
+            kind === "hero" ||
+            kind === "story" ||
+            className?.includes("product-main-image") ||
+            className?.includes("editorial-hero")
+              ? "(max-width: 1000px) 100vw, 60vw"
+              : "(max-width: 767px) 50vw, 33vw"
+          }
+          className="brand-photo"
+          preload={kind === "hero"}
+        />
+      </div>
+    );
+  }
   return (
     <div
       role="img"
-      aria-label={`${label} — prototype placeholder`}
+      aria-label={`${label} — illustrative preview, photography pending`}
       className={cn(
         "mock-image",
         `mock-${kind}`,
@@ -55,17 +90,12 @@ export function MockImage({
       )}
     >
       <div className="mock-image-center">
-        <ImageIcon
-          strokeWidth={1}
-          size={kind === "hero" || kind === "story" ? 40 : 27}
-        />
+        <span className="illustration-frame" aria-hidden="true">
+          <Illustration strokeWidth={1.2} size={46} />
+        </span>
         <span>{label}</span>
       </div>
-      <span className="mock-image-caption">
-        {kind === "hero" || kind === "story"
-          ? "Final photography to be supplied by client"
-          : "PHOTOGRAPHY PLACEHOLDER"}
-      </span>
+      <span className="mock-image-caption">PHOTO COMING SOON</span>
       {kind === "hero" && (
         <>
           <span className="image-corner top-left" />
@@ -153,7 +183,7 @@ export function ProductCard({
   product: Product;
   index?: number;
 }) {
-  const { add } = useCart();
+  const add = useAddToCart();
   return (
     <article className="product-card">
       <Link
@@ -219,7 +249,7 @@ export function RecipeCard({
         href={`/recipes/${recipe.slug}`}
         aria-label={`Read ${recipe.title}`}
       >
-        <MockImage label="Recipe photography" kind="recipe" index={index} />
+        <MockImage label={recipe.category} kind="recipe" index={index} />
       </Link>
       <div className="flex items-center justify-between gap-3 pt-5">
         <span className="eyebrow mb-0!">{recipe.category}</span>
@@ -256,7 +286,12 @@ export function BlogCard({ post, index = 0 }: { post: Post; index?: number }) {
   return (
     <article className="editorial-card">
       <Link href={`/blog/${post.slug}`} aria-label={`Read ${post.title}`}>
-        <MockImage label="Editorial photography" kind="article" index={index} />
+        <MockImage
+          label={post.category}
+          kind="article"
+          index={index}
+          photo={journalPhotos[post.slug]}
+        />
       </Link>
       <span className="eyebrow mt-5">{post.category}</span>
       <h3>

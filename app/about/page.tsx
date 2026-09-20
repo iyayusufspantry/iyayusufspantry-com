@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Heart, Sprout, Globe } from "lucide-react";
 import { MockImage, PageHeading } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import { brandPhotos } from "@/data/brand-assets";
 export const metadata = { title: "Our story" };
 export default function Page() {
   return (
@@ -12,10 +13,7 @@ export default function Page() {
         description="Authentic African food, familiar connections, and a thoughtful place to discover something good."
       />
       <div className="about-hero">
-        <MockImage
-          kind="story"
-          label="Simbiat’s story & sourcing photography"
-        />
+        <MockImage kind="story" photo={brandPhotos.assortment} />
         <div className="story-copy">
           <span className="eyebrow">MEET THE BUSINESS</span>
           <h2>
@@ -23,10 +21,10 @@ export default function Page() {
             <br />a little closer.
           </h2>
           <p>
-            Simbiat owns a small business selling authentic African food items
-            and snacks in the United States. With approximately three years in
-            business, she is exploring a more professional, thoughtfully
-            structured online store.
+            Simbiat owns Iya Yusuf&apos;s Pantry, a business selling authentic
+            African food items and snacks in the United States. With
+            approximately three years in business, she is exploring a more
+            professional, thoughtfully structured online store.
           </p>
           <p>
             Some products are imported directly from Nigeria. Her work with
@@ -71,7 +69,7 @@ export default function Page() {
         <span className="eyebrow">FROM OUR PANTRY TO YOURS</span>
         <h2>A little taste of home awaits.</h2>
         <p>
-          Explore the sample collection and imagine what the final Simbiat store
+          Explore the sample collection and imagine what Iya Yusuf&apos;s Pantry
           could become.
         </p>
         <Button asChild>

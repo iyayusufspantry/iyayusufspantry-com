@@ -18,10 +18,11 @@ import {
   SectionHeading,
   RecipeCard,
 } from "@/components/catalog";
-import { useCart } from "@/components/cart-provider";
+import { useAddToCart } from "@/components/cart-provider";
 import { products, money, productPrice, type Product } from "@/data/products";
 import { categories } from "@/data/categories";
 import { recipes } from "@/data/recipes";
+import { productPhotos } from "@/data/brand-assets";
 export function ProductVariantSelector({
   label,
   options,
@@ -59,7 +60,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const [dietary, setDietary] = useState(product.dietary?.[0] ?? "Standard");
   const [quantity, setQuantity] = useState(1);
   const [image, setImage] = useState(0);
-  const { add } = useCart();
+  const add = useAddToCart();
   const router = useRouter();
   const category = categories.find((c) => c.slug === product.category)!;
   const recipe = recipes.find((r) => r.slug === product.recipe);
@@ -92,12 +93,18 @@ export function ProductDetail({ product }: { product: Product }) {
                 aria-label={`View ${label.toLowerCase()} image`}
                 aria-pressed={image === i}
               >
-                <MockImage label={label} index={i} />
+                <MockImage
+                  label={label}
+                  index={i}
+                  photo={i === 0 ? productPhotos[product.name] : undefined}
+                />
               </button>
             ))}
           </div>
           <p className="fine-print mt-4">
-            Prototype imagery · Client photography will complete this gallery.
+            {productPhotos[product.name]
+              ? "Client reference photo · Current packaging and additional views are being confirmed."
+              : "Illustrative preview · Product photography is being prepared."}
           </p>
         </div>
         <div className="product-detail-copy">
@@ -105,7 +112,7 @@ export function ProductDetail({ product }: { product: Product }) {
           <h1>{product.name}</h1>
           <div className="mt-5 flex items-center gap-4">
             <span className="text-2xl font-medium">
-              {money(productPrice(product, size))}
+              {money(productPrice(product, size, dietary))}
             </span>
             <span className="text-xs text-neutral-500">
               Sample price ·{" "}
@@ -119,7 +126,7 @@ export function ProductDetail({ product }: { product: Product }) {
           </p>
           <div className="my-6 flex items-center gap-2 text-xs">
             <Check size={14} />
-            Available · Demo stock status
+            Sample availability checked at checkout
           </div>
           {product.sizes && (
             <ProductVariantSelector

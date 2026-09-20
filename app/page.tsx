@@ -21,6 +21,7 @@ import { categories } from "@/data/categories";
 import { products } from "@/data/products";
 import { recipes } from "@/data/recipes";
 import { posts } from "@/data/posts";
+import { brandPhotos } from "@/data/brand-assets";
 const values = [
   {
     icon: Sprout,
@@ -49,7 +50,7 @@ export default function Home() {
           </span>
           <h1>
             A taste of home.
-            <br />A world of <span>good food.</span>
+            <br />A pantry full of <span>possibility.</span>
           </h1>
           <p>
             Discover authentic African foods, everyday essentials, and the
@@ -79,10 +80,18 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-visual">
-          <MockImage label="A place for our food story" kind="hero" />
+          <MockImage kind="hero" photo={brandPhotos.assortment} />
+          <div className="hero-stamp" aria-hidden="true">
+            <Sprout size={24} />
+            <span>
+              Rooted
+              <br />
+              in home.
+            </span>
+          </div>
           <div className="hero-photo-note">
-            <span className="size-1.5 rounded-full bg-neutral-400" />
-            Prototype placeholder — final photography to be supplied by client
+            <span className="size-1.5 rounded-full bg-primary" />
+            A look inside Iya Yusuf&apos;s Pantry
             <ArrowUpRight size={13} className="ml-auto shrink-0" />
           </div>
         </div>
@@ -127,10 +136,35 @@ export default function Home() {
           href="/shop"
           action="Shop all products"
         />
-        <ProductGrid items={products.slice(0, 4)} />
+        <ProductGrid
+          items={[products[1], products[7], products[9], products[3]]}
+        />
+      </section>
+      <section className="pantry-gallery section">
+        <SectionHeading
+          eyebrow="FROM OUR SHELVES"
+          title="Familiar little joys."
+          description="A glimpse of the snacks and drinks that have been part of our pantry."
+        />
+        <div className="pantry-photo-grid">
+          {[
+            { photo: brandPhotos.snackJars, caption: "Something to share" },
+            { photo: brandPhotos.coconut, caption: "A little golden crunch" },
+            { photo: brandPhotos.drinks, caption: "A moment to refresh" },
+          ].map(({ photo, caption }) => (
+            <figure key={caption}>
+              <MockImage photo={photo} />
+              <figcaption>{caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="fine-print mt-4">
+          Photos from the client&apos;s collection. Current range and packaging
+          are being confirmed.
+        </p>
       </section>
       <section className="story-section">
-        <MockImage label="The people. The places. The food." kind="story" />
+        <MockImage kind="story" photo={brandPhotos.snackJars} />
         <div className="story-copy">
           <span className="eyebrow">MORE THAN WHAT’S ON THE SHELF</span>
           <h2>
@@ -143,10 +177,11 @@ export default function Home() {
             around the table.
           </p>
           <p>
-            Simbiat brings African food items and snacks to customers in the
-            United States, with some products imported directly from Nigeria.
-            Behind the business is a focus on authentic ingredients and
-            relationships with farmers, fishermen, and suppliers.
+            Iya Yusuf&apos;s Pantry brings African food items and snacks to
+            customers in the United States, with some products imported directly
+            from Nigeria. Behind the business is a focus on authentic
+            ingredients and relationships with farmers, fishermen, and
+            suppliers.
           </p>
           <Link className="text-link mt-5" href="/about">
             Get to know our story
@@ -173,7 +208,7 @@ export default function Home() {
       </section>
       <section className="section border-t border-neutral-200">
         <SectionHeading
-          eyebrow="THE SIMBIAT JOURNAL"
+          eyebrow="THE PANTRY JOURNAL"
           title="Food has a story. Let’s share it."
           description="Ingredients, culture, and the connections that bring us together."
           href="/blog"

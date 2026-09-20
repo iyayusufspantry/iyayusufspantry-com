@@ -1,0 +1,227 @@
+[
+  {
+    "id": "plantain-chips:Small:Vegan",
+    "productSlug": "plantain-chips",
+    "size": "Small",
+    "dietary": "Vegan",
+    "priceCents": 650,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "plantain-chips:Medium:Vegan",
+    "productSlug": "plantain-chips",
+    "size": "Medium",
+    "dietary": "Vegan",
+    "priceCents": 975,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "plantain-chips:Large:Vegan",
+    "productSlug": "plantain-chips",
+    "size": "Large",
+    "dietary": "Vegan",
+    "priceCents": 1300,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Small:Vegetarian",
+    "productSlug": "classic-chin-chin",
+    "size": "Small",
+    "dietary": "Vegetarian",
+    "priceCents": 800,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Small:Vegan",
+    "productSlug": "classic-chin-chin",
+    "size": "Small",
+    "dietary": "Vegan",
+    "priceCents": 800,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Medium:Vegetarian",
+    "productSlug": "classic-chin-chin",
+    "size": "Medium",
+    "dietary": "Vegetarian",
+    "priceCents": 1200,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Medium:Vegan",
+    "productSlug": "classic-chin-chin",
+    "size": "Medium",
+    "dietary": "Vegan",
+    "priceCents": 1200,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Large:Vegetarian",
+    "productSlug": "classic-chin-chin",
+    "size": "Large",
+    "dietary": "Vegetarian",
+    "priceCents": 1600,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "classic-chin-chin:Large:Vegan",
+    "productSlug": "classic-chin-chin",
+    "size": "Large",
+    "dietary": "Vegan",
+    "priceCents": 1600,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "white-garri:Small:Vegan",
+    "productSlug": "white-garri",
+    "size": "Small",
+    "dietary": "Vegan",
+    "priceCents": 1200,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "white-garri:Medium:Vegan",
+    "productSlug": "white-garri",
+    "size": "Medium",
+    "dietary": "Vegan",
+    "priceCents": 1800,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "white-garri:Large:Vegan",
+    "productSlug": "white-garri",
+    "size": "Large",
+    "dietary": "Vegan",
+    "priceCents": 2400,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "ground-egusi:Standard:Vegan",
+    "productSlug": "ground-egusi",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1400,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "suya-spice:Standard:Standard",
+    "productSlug": "suya-spice",
+    "size": "Standard",
+    "dietary": "Standard",
+    "priceCents": 750,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "dried-crayfish:Small:Standard",
+    "productSlug": "dried-crayfish",
+    "size": "Small",
+    "dietary": "Standard",
+    "priceCents": 1600,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "dried-crayfish:Medium:Standard",
+    "productSlug": "dried-crayfish",
+    "size": "Medium",
+    "dietary": "Standard",
+    "priceCents": 2400,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "honey-beans:Standard:Vegan",
+    "productSlug": "honey-beans",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1300,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "palm-oil:Standard:Vegan",
+    "productSlug": "palm-oil",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1100,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "ground-pepper:Standard:Vegan",
+    "productSlug": "ground-pepper",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 600,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "kulikuli:Standard:Vegan",
+    "productSlug": "kulikuli",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 700,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "yam-flour:Standard:Vegan",
+    "productSlug": "yam-flour",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1500,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "ogbono:Standard:Vegan",
+    "productSlug": "ogbono",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1350,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "pepper-soup-spice:Standard:Standard",
+    "productSlug": "pepper-soup-spice",
+    "size": "Standard",
+    "dietary": "Standard",
+    "priceCents": 850,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "dried-hibiscus:Standard:Vegan",
+    "productSlug": "dried-hibiscus",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 900,
+    "currency": "USD",
+    "active": true
+  },
+  {
+    "id": "dried-ugu:Standard:Vegan",
+    "productSlug": "dried-ugu",
+    "size": "Standard",
+    "dietary": "Vegan",
+    "priceCents": 1000,
+    "currency": "USD",
+    "active": true
+  }
+]

@@ -35,7 +35,7 @@ export function PolicyPage({
       sections: [
         [
           "About this prototype",
-          "No checkout, contact, or newsletter details are sent or saved by this application. Only mock cart selections are stored in this browser tab’s session storage to support the walkthrough.",
+          "Contact, address, payment, and newsletter details are not sent or saved by this application. Sample cart selections are stored in this browser tab’s session storage. The optional availability check sends only variant IDs and quantities to this website’s server. The owner preview uses fictional data that resets on refresh.",
         ],
         [
           "Production policy to be supplied",

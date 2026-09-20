@@ -342,14 +342,12 @@ try {
       await document.fonts.ready;
       await Promise.all([...document.images].map((img) => img.decode()));
     });
-    const layouts = await page
-      .locator(".page")
-      .evaluateAll((nodes) =>
-        nodes.map((node) => ({
-          width: node.scrollWidth,
-          height: node.scrollHeight,
-        })),
-      );
+    const layouts = await page.locator(".page").evaluateAll((nodes) =>
+      nodes.map((node) => ({
+        width: node.scrollWidth,
+        height: node.scrollHeight,
+      })),
+    );
     if (
       layouts.some(
         (layout) => layout.width > pageWidth || layout.height > pageHeight,
@@ -379,12 +377,10 @@ try {
       });
     if (!detailed) {
       for (const id of ["index", "home", "payment-detail", "mobile-1"])
-        await page
-          .locator(`#${id}`)
-          .screenshot({
-            path: path.join(output, `${id}-proof.png`),
-            caret: "initial",
-          });
+        await page.locator(`#${id}`).screenshot({
+          path: path.join(output, `${id}-proof.png`),
+          caret: "initial",
+        });
     }
     const bytes = (await stat(path.join(output, filename))).size;
     manifest.push({

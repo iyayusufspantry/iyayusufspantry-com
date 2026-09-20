@@ -171,6 +171,13 @@ export const exclusions = [
 ];
 export const prototypeScreens = [
   {
+    name: "Owner dashboard preview",
+    href: "/prototype/owner",
+    purpose:
+      "Review sample orders, fulfill paid orders, and adjust sample stock.",
+    group: "Business tools",
+  },
+  {
     name: "Homepage",
     href: "/",
     purpose: "Meet the business and discover the collection.",

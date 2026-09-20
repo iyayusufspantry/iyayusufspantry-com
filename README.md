@@ -1,6 +1,16 @@
-# Simbiat · Project Scope Prototype
+# Simbiat · Storefront and Production Foundations
 
-A clickable, neutral e-commerce prototype for a prospective-client scope conversation. This is **not a production store or an approved final design**. No real orders, payments, authentication, emails, database, CMS, or analytics are connected.
+A storefront prototype with the first production foundation milestone underway after receipt of the initial payment. This is **not a production store or an approved final design**. Server-side sample cart review and reusable stock/order rules are implemented; real payments, owner authentication, persistent orders, email, CMS, and analytics remain unconnected.
+
+## Development record
+
+- [Client context](docs/client-context.md): confirmed branding, supplied logo, latest client decisions, and pending domain/account setup.
+- [Development log](docs/development-log.md): changes, validation results, evidence, and pending client dependencies.
+- [Foundation architecture](docs/production-foundations.md): implementation boundaries, API, inventory/order rules, integration checklist, and repeatable validation.
+- [Content model](docs/content-model.md) and [product intake CSV](docs/product-intake.csv): preparation for client content and CMS setup.
+- [Before screenshots](artifacts/milestones/01-foundations/before/index.html) and [current screenshot gallery](artifacts/screenshots/index.html).
+- [Foundation progress PDF](artifacts/pdf/Simbiat-Foundation-Progress.pdf): summary and desktop/mobile review images. Regenerate with `npm run export:foundations` after screenshots.
+- Archive each reviewed milestone with `npm run archive:milestone -- 01-foundations after` (use a new stage name for later captures). Archives live under `artifacts/milestones/` and are Git-ignored.
 
 ## Run locally
 
@@ -16,22 +26,29 @@ Open [http://localhost:3000](http://localhost:3000).
 - **[/scope](http://localhost:3000/scope)** — proposed scope, customer flow, assumptions, security approach, materials, exclusions, and 15 open decisions.
 - **[/prototype](http://localhost:3000/prototype)** — presentation directory linking to every proposed screen.
 - **[/shop](http://localhost:3000/shop)** — 15 sample products across five categories.
+- **[/prototype/owner](http://localhost:3000/prototype/owner)** — fictional order and stock workspace. Changes reset on refresh and do not update the storefront.
 
-No environment variables, secrets, or service accounts are needed. The interface uses local CSS/SVG placeholders and system fonts, so no external photography or font requests are required.
+No environment variables, secrets, or service accounts are needed. The interface uses the reconstructed Iya Yusuf's Pantry SVG logo, local client photography, branded placeholders for missing photos, and system fonts. No external photography or font requests are required.
+
+The storefront theme uses cream, mint, navy, and the confirmed `#06ad8f` green, with a darker green for accessible text and buttons. Shared styling covers commerce, editorial, policies, contact, and owner previews. Edit `styles/brand.css` for the visual theme and `data/brand-assets.ts` for reviewed photo mappings. Supplied assortment photos are editorial references; only clearly labeled red palm oil is mapped to a specific sample product. Current catalogue details and packaging still require client approval.
 
 ## Present the customer flow
 
 1. Open a product, such as `/shop/classic-chin-chin`.
 2. Select a size and dietary option, adjust quantity, and add it to the bag.
 3. Open `/cart`, change quantities, or remove items.
-4. Continue to guest checkout. Use sample contact/shipping details only.
+4. Continue to guest checkout. Use **Check sample availability** to recalculate prices and check sample stock on the server. Only product selections are sent. Use sample contact/shipping details only.
 5. **Place order** shows “Prototype only — no payment was processed.” It does not create an order or navigate automatically.
 6. Use **Preview the order confirmation screen** to continue the demonstration.
-7. Return to `/scope` to review decisions before final pricing.
+7. Open `/prototype/owner` to review sample order fulfillment and stock editing. `/scope` remains the historical scope presentation; the development log records current progress.
 
 The cart, checkout, and screen directory have a **Load sample cart** button. An empty cart is the default. “Buy now” adds the selected configuration and opens the checkout preview.
 
 Mock cart selections survive refreshes within the browser tab through `sessionStorage`. Customer contact, addresses, messages, newsletter addresses, and payment information are never stored or transmitted by the application. There are no card fields. The scope materials checklist is temporary review state, not a submission.
+
+The shared cart uses Zustand with a store per `CartProvider` instance. Components select only the state/actions they need; the header selects the item count. Persistence restores after hydration and preserves existing `simbiat-scope-cart-v1` selections. Invalid entries and extra fields are discarded, duplicate variants are merged, and storage failures leave the in-memory cart usable. Local controls continue to use React state.
+
+The sample review API reads explicit variant prices and fixed sample stock. It creates no orders or reservations, and shipping, tax, and final totals remain uncalculated. The owner preview uses separate component-memory fixtures. The reusable order rules require a transactional persistence adapter and verified payment integration before production use.
 
 ## Screens
 
@@ -111,18 +128,24 @@ Browser tests run against a production build; run `npm run build` after code cha
 
 ## Edit the prototype
 
-| Location                   | Edit here                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| `data/products.ts`         | Sample names, prices, sizes, dietary labels, descriptions, related recipes     |
-| `data/categories.ts`       | Five editable example categories                                               |
-| `data/recipes.ts`          | Sample cooking content and product relationships                               |
-| `data/posts.ts`            | Sample articles, dates, categories, product CTAs                               |
-| `data/scope.ts`            | Proposed capabilities, open questions, materials, exclusions, screen directory |
-| `components/`              | Shared cards, navigation, forms, scope, cart, and checkout UI                  |
-| `components/ui/button.tsx` | Locally owned shadcn/ui button with Radix Slot and CVA                         |
-| `lib/cart-store.ts`        | Browser-only sample cart state and validation                                  |
-| `styles/prototype.css`     | Neutral visual system and responsive layouts                                   |
-| `app/`                     | App Router screens and metadata                                                |
+| Location                       | Edit here                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| `data/products.ts`             | Sample names, prices, sizes, dietary labels, descriptions, related recipes     |
+| `data/categories.ts`           | Five editable example categories                                               |
+| `data/recipes.ts`              | Sample cooking content and product relationships                               |
+| `data/posts.ts`                | Sample articles, dates, categories, product CTAs                               |
+| `data/scope.ts`                | Proposed capabilities, open questions, materials, exclusions, screen directory |
+| `components/`                  | Shared cards, navigation, forms, scope, cart, and checkout UI                  |
+| `components/ui/button.tsx`     | Locally owned shadcn/ui button with Radix Slot and CVA                         |
+| `lib/cart-store.ts`            | Zustand cart factory, selectors, validation, and session persistence           |
+| `data/product-variants.json`   | Explicit sample variant IDs and prices in cents                                |
+| `lib/commerce/`                | Catalogue validation, order/stock transitions, and isolated sample fixtures    |
+| `app/api/cart/review/`         | Server-side sample cart review; no payments or reservations                    |
+| `components/owner-preview.tsx` | Interactive sample owner workspace                                             |
+| `styles/prototype.css`         | Shared component layouts using brand color variables                           |
+| `styles/brand.css`             | Brand palette, typography, component styling, and responsive refinements       |
+| `data/brand-assets.ts`         | Client photography references and explicit product/editorial image mappings    |
+| `app/`                         | App Router screens and metadata                                                |
 
 The project uses Next.js App Router, TypeScript, Tailwind CSS v4, the manually installed shadcn/ui component pattern, Radix Dialog/Slot, Lucide icons, and Sonner notices. Components are locally owned and editable; see the [shadcn manual installation guide](https://ui.shadcn.com/docs/installation/manual).
 
@@ -130,7 +153,7 @@ The project uses Next.js App Router, TypeScript, Tailwind CSS v4, the manually i
 
 - Guest checkout is the default. Customer accounts remain an open decision.
 - Products, categories, pricing, stock, dietary labels, variants, and editorial content are illustrative. Recipe quantities and preparation instructions require review before publication.
-- Medium and large sample variants use 1.5× and 2× the base price to demonstrate variant pricing. These are not approved commercial rules.
+- Sample variant prices are now explicit integer-cent records, initially copied from the prototype's example prices. They are not approved commercial prices; no runtime size multiplier sets a variant's price.
 - Shipping and tax are **not** calculated. Estimated totals show the sample merchandise subtotal and explicitly exclude them.
 - Logo, palette, photography, policies, contact details, prices, and final wording come from the client.
 - Production payment, hosting, CMS, authentication, and analytics choices remain unconfirmed. No final architecture, timeline, or price is implied.

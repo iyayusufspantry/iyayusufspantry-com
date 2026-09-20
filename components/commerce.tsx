@@ -13,7 +13,8 @@ import {
   Mail,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useCart } from "@/components/cart-provider";
+import { useCart, useLoadDemoCart } from "@/components/cart-provider";
+import { selectCartCount, selectCartSubtotal } from "@/lib/cart-store";
 import {
   EmptyState,
   MockImage,
@@ -22,9 +23,12 @@ import {
 } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
 import { money, products, productPrice } from "@/data/products";
+import { CartReview } from "@/components/cart-review";
 
 export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
-  const { subtotal, count, items } = useCart();
+  const items = useCart((state) => state.items);
+  const count = useCart(selectCartCount);
+  const subtotal = useCart(selectCartSubtotal);
   return (
     <aside className="order-summary">
       <div className="flex items-center justify-between">
@@ -46,7 +50,10 @@ export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
                     </span>
                   </div>
                   <span>
-                    {money(productPrice(product, item.size) * item.quantity)}
+                    {money(
+                      productPrice(product, item.size, item.dietary) *
+                        item.quantity,
+                    )}
                   </span>
                 </div>
               );
@@ -81,6 +88,7 @@ export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
       <p className="fine-print">
         Excludes shipping and tax. Final total is not yet calculated.
       </p>
+      {checkout && <CartReview key={JSON.stringify(items)} items={items} />}
       {!checkout && (
         <Button asChild className="mt-6 w-full">
           <Link href="/checkout">
@@ -101,7 +109,12 @@ export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
   );
 }
 export function CartPage() {
-  const { items, ready, count, update, remove, loadDemo } = useCart();
+  const items = useCart((state) => state.items);
+  const ready = useCart((state) => state.ready);
+  const count = useCart(selectCartCount);
+  const update = useCart((state) => state.update);
+  const remove = useCart((state) => state.remove);
+  const loadDemo = useLoadDemoCart();
   return (
     <div className="site-container page-bottom">
       <PageHeading
@@ -162,13 +175,16 @@ export function CartPage() {
                               : ""}
                           </p>
                           <span className="text-xs text-neutral-500">
-                            {money(productPrice(product, item.size))} each ·
-                            Sample price
+                            {money(
+                              productPrice(product, item.size, item.dietary),
+                            )}{" "}
+                            each · Sample price
                           </span>
                         </div>
                         <strong>
                           {money(
-                            productPrice(product, item.size) * item.quantity,
+                            productPrice(product, item.size, item.dietary) *
+                              item.quantity,
                           )}
                         </strong>
                       </div>
@@ -239,7 +255,8 @@ function CheckoutField({
   );
 }
 export function CheckoutPage() {
-  const { items, loadDemo } = useCart();
+  const items = useCart((state) => state.items);
+  const loadDemo = useLoadDemoCart();
   const [attempted, setAttempted] = useState(false);
   return (
     <div className="site-container page-bottom">
@@ -395,13 +412,15 @@ export function CheckoutPage() {
   );
 }
 export function ConfirmationPage() {
-  const { items, subtotal } = useCart();
+  const items = useCart((state) => state.items);
+  const subtotal = useCart(selectCartSubtotal);
   const sampleItems = items.length
     ? items
     : products.slice(0, 3).map((p) => ({
         key: p.slug,
         slug: p.slug,
         size: p.sizes?.[0] ?? "Standard",
+        dietary: p.dietary?.[0] ?? "Standard",
         quantity: 1,
       }));
   const total = items.length
@@ -440,7 +459,10 @@ export function ConfirmationPage() {
                   </span>
                 </div>
                 <span>
-                  {money(productPrice(product, item.size) * item.quantity)}
+                  {money(
+                    productPrice(product, item.size, item.dietary) *
+                      item.quantity,
+                  )}
                 </span>
               </div>
             );

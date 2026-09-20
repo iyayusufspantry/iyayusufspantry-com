@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
@@ -15,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-provider";
+import { selectCartCount } from "@/lib/cart-store";
 
 const navigation = [
   ["Shop", "/shop"],
@@ -33,7 +35,7 @@ export function PrototypeBadge() {
 }
 export function SiteHeader() {
   const pathname = usePathname();
-  const { count } = useCart();
+  const count = useCart(selectCartCount);
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -53,8 +55,19 @@ export function SiteHeader() {
       </div>
       <header className="site-header">
         <div className="site-container flex h-21 items-center justify-between">
-          <Link href="/" aria-label="Simbiat home" className="wordmark">
-            simbiat<span className="wordmark-dot">.</span>
+          <Link
+            href="/"
+            aria-label="Iya Yusuf's Pantry home"
+            className="wordmark"
+          >
+            <Image
+              src="/brand/iya-yusufs-pantry-horizontal.svg"
+              alt="Iya Yusuf's Pantry"
+              width={464}
+              height={104}
+              className="brand-logo"
+              unoptimized
+            />
           </Link>
           <nav
             aria-label="Main navigation"
@@ -167,10 +180,21 @@ export function SiteFooter() {
       <div className="site-container">
         <div className="footer-grid">
           <div>
-            <Link href="/" className="wordmark">
-              simbiat.
+            <Link
+              href="/"
+              aria-label="Iya Yusuf's Pantry home"
+              className="wordmark"
+            >
+              <Image
+                src="/brand/iya-yusufs-pantry-horizontal.svg"
+                alt="Iya Yusuf's Pantry"
+                width={464}
+                height={104}
+                className="brand-logo"
+                unoptimized
+              />
             </Link>
-            <p className="mt-4 max-w-65 text-sm leading-6 text-neutral-500">
+            <p className="mt-4 max-w-65 text-sm leading-6">
               A taste of home.
               <br />A world of good food.
             </p>
@@ -225,7 +249,7 @@ export function SiteFooter() {
           </div>
           <div>
             <h3>A work in progress</h3>
-            <p className="text-sm leading-6 text-neutral-500">
+            <p className="text-sm leading-6">
               Thoughtfully prepared for
               <br />
               our scope conversation.
@@ -239,7 +263,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© 2026 Simbiat · Visual scope prototype</span>
+          <span>© 2026 Iya Yusuf&apos;s Pantry · Visual scope prototype</span>
           <span>
             Sample products, prices, and copy. Final details to be confirmed.
           </span>

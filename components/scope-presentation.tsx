@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/catalog";
-import { useCart } from "@/components/cart-provider";
+import { useLoadDemoCart } from "@/components/cart-provider";
 import {
   openDecisions,
   scopeFeatures,
@@ -454,7 +454,7 @@ export function ScopePage() {
   );
 }
 export function PrototypeDirectory() {
-  const { loadDemo } = useCart();
+  const loadDemo = useLoadDemoCart();
   return (
     <div className="site-container page-bottom">
       <PageHeading
