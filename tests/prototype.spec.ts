@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { prototypeScreens } from "../data/scope";
-import { products } from "../data/products";
-import { recipes } from "../data/recipes";
-import { posts } from "../data/posts";
+import { prototypeScreens } from "../scripts/contentful/fixtures/scope";
+import { products } from "../scripts/contentful/fixtures/products";
+import { recipes } from "../scripts/contentful/fixtures/recipes";
+import { posts } from "../scripts/contentful/fixtures/posts";
 
 for (const screen of [
   ...prototypeScreens,
@@ -93,7 +93,11 @@ test("client product gallery fits small phones and tablets", async ({
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    await page.getByRole("button", { name: "View serving image" }).click();
+    // The gallery now contains the published CMS photos, not three fixed placeholders.
+    await page.locator(".gallery-thumbnails button").last().click();
+    await expect(
+      page.locator(".gallery-thumbnails button").last(),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(
       await page.evaluate(
         () => document.documentElement.scrollWidth <= innerWidth,
@@ -145,9 +149,20 @@ test("variant selections, cart math, refresh persistence, checkout notice, and r
   await expect(
     page.locator('input[name*="card"], input[autocomplete="cc-number"]'),
   ).toHaveCount(0);
-  const submissions: string[] = [];
+  const submissions: URL[] = [];
+  let checkoutDataTransmitted = false;
+  const clerkScript = await page
+    .locator('script[src*="clerk.browser.js"]')
+    .first()
+    .getAttribute("src");
+  expect(clerkScript).toBeTruthy();
+  const clerkOrigin = new URL(clerkScript!, page.url()).origin;
   page.on("request", (request) => {
-    if (request.method() === "POST") submissions.push(request.url());
+    const payload = decodeURIComponent(
+      `${request.url()} ${request.postData() ?? ""}`.replaceAll("+", " "),
+    );
+    if (payload.includes("sample@example.com")) checkoutDataTransmitted = true;
+    if (request.method() === "POST") submissions.push(new URL(request.url()));
   });
   await page
     .getByLabel("Email address", { exact: true })
@@ -156,7 +171,16 @@ test("variant selections, cart math, refresh persistence, checkout notice, and r
   await expect(
     page.getByText("Prototype only — no payment was processed.").first(),
   ).toBeVisible();
-  expect(submissions).toEqual([]);
+  expect(checkoutDataTransmitted).toBe(false);
+  expect(
+    submissions
+      .filter(
+        (url) =>
+          url.origin !== clerkOrigin ||
+          !["/v1/dev_browser", "/v1/environment"].includes(url.pathname),
+      )
+      .map((url) => `${url.origin}${url.pathname}`),
+  ).toEqual([]);
   const stored = await page.evaluate(() =>
     JSON.stringify({
       session: { ...sessionStorage },
@@ -246,11 +270,30 @@ test("scope questions modal keyboard behavior and review checklist", async ({
 test("contact and newsletter are frontend-only demonstrations", async ({
   page,
 }) => {
-  const submissions: string[] = [];
+  const submissions: URL[] = [];
+  let formDataTransmitted = false;
   page.on("request", (request) => {
-    if (request.method() === "POST") submissions.push(request.url());
+    const payload = decodeURIComponent(
+      `${request.url()} ${request.postData() ?? ""}`.replaceAll("+", " "),
+    );
+    if (
+      [
+        "Sample Customer",
+        "sample@example.com",
+        "Sample inquiry for the prototype.",
+      ].some((value) => payload.includes(value))
+    ) {
+      formDataTransmitted = true;
+    }
+    if (request.method() === "POST") submissions.push(new URL(request.url()));
   });
   await page.goto("/contact");
+  const clerkScript = await page
+    .locator('script[src*="clerk.browser.js"]')
+    .first()
+    .getAttribute("src");
+  expect(clerkScript).toBeTruthy();
+  const clerkOrigin = new URL(clerkScript!, page.url()).origin;
   await page.getByLabel("Name", { exact: true }).fill("Sample Customer");
   await page
     .getByLabel("Email address", { exact: true })
@@ -272,7 +315,18 @@ test("contact and newsletter are frontend-only demonstrations", async ({
   await expect(
     page.getByText("Prototype only — newsletter integration is not connected."),
   ).toBeVisible();
-  expect(submissions).toEqual([]);
+  // Clerk initializes its development browser independently of these forms.
+  // Permit only those bootstrap requests, and check all traffic for form data.
+  expect(formDataTransmitted).toBe(false);
+  expect(
+    submissions
+      .filter(
+        (url) =>
+          url.origin !== clerkOrigin ||
+          !["/v1/dev_browser", "/v1/environment"].includes(url.pathname),
+      )
+      .map((url) => `${url.origin}${url.pathname}`),
+  ).toEqual([]);
 });
 
 test("mobile menu and buy now complete their navigation", async ({

@@ -1,5 +1,9 @@
+import { getContent } from "@/lib/content/server";
 import { ShopBrowser } from "@/components/shop-browser";
-export const metadata = { title: "Shop" };
+export async function generateMetadata() {
+  const copy = (await getContent()).copy["app/shop/page.tsx"];
+  return { title: copy["copy-1"] };
+}
 export default async function ShopPage({
   searchParams,
 }: {

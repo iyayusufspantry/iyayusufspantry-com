@@ -1,8 +1,8 @@
 // Browser-only mock selections. Never persist customer, address, or payment data.
 import { createStore } from "zustand/vanilla";
 import { persist, type PersistStorage } from "zustand/middleware";
-import { products, type Product } from "@/data/products";
-import { findVariant } from "@/lib/commerce/catalog";
+import type { Product } from "@/data/products";
+import { type Variant, findVariant } from "@/lib/commerce/catalog";
 
 export type CartItem = {
   key: string;
@@ -13,6 +13,11 @@ export type CartItem = {
 };
 export type CartState = {
   items: CartItem[];
+  catalogue: { products: Product[]; variants: Variant[] };
+  replaceCatalogue: (catalogue: {
+    products: Product[];
+    variants: Variant[];
+  }) => void;
   ready: boolean;
   add: (
     product: Product,
@@ -28,7 +33,10 @@ type SavedCart = Pick<CartState, "items">;
 type CartStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 const storageKey = "simbiat-scope-cart-v1";
 
-function restoreItems(value: unknown): CartItem[] {
+function restoreItems(
+  value: unknown,
+  variants: readonly Variant[],
+): CartItem[] {
   if (!Array.isArray(value)) return [];
   const restored = new Map<string, CartItem>();
   for (const item of value.slice(0, 50)) {
@@ -41,7 +49,7 @@ function restoreItems(value: unknown): CartItem[] {
       !Number.isInteger(item.quantity) ||
       item.quantity < 1 ||
       item.quantity > 99 ||
-      !findVariant(item.slug, item.size, item.dietary)
+      !findVariant(variants, item.slug, item.size, item.dietary)
     )
       continue;
     const previous = restored.get(item.key);
@@ -59,13 +67,17 @@ function restoreItems(value: unknown): CartItem[] {
 // Preserve the existing raw-array format and defer all browser storage access.
 function cartPersistence(
   getStorage: () => CartStorage,
+  getVariants: () => readonly Variant[],
 ): PersistStorage<SavedCart> {
   return {
     getItem(name) {
       try {
         return {
           state: {
-            items: restoreItems(JSON.parse(getStorage().getItem(name) ?? "[]")),
+            items: restoreItems(
+              JSON.parse(getStorage().getItem(name) ?? "[]"),
+              getVariants(),
+            ),
           },
           version: 0,
         };
@@ -77,7 +89,7 @@ function cartPersistence(
       try {
         getStorage().setItem(
           name,
-          JSON.stringify(restoreItems(value.state.items)),
+          JSON.stringify(restoreItems(value.state.items, getVariants())),
         );
       } catch {
         // The in-memory cart remains usable when storage is unavailable.
@@ -94,12 +106,22 @@ function cartPersistence(
 }
 
 export function createCartStore(
+  catalogue: { products: Product[]; variants: Variant[] },
   getStorage: () => CartStorage = () => window.sessionStorage,
 ) {
+  let currentCatalogue = catalogue;
   return createStore<CartState>()(
     persist(
       (set, get) => ({
         items: [],
+        catalogue,
+        replaceCatalogue(next) {
+          currentCatalogue = next;
+          set({
+            catalogue: next,
+            items: restoreItems(get().items, next.variants),
+          });
+        },
         ready: false,
         add(
           product,
@@ -110,7 +132,7 @@ export function createCartStore(
           if (
             !Number.isInteger(quantity) ||
             quantity < 1 ||
-            !findVariant(product.slug, size, dietary)
+            !findVariant(get().catalogue.variants, product.slug, size, dietary)
           )
             return false;
           const key = [product.slug, size, dietary].join(":");
@@ -153,23 +175,30 @@ export function createCartStore(
         },
         loadDemo() {
           set({
-            items: products.slice(0, 3).map((product) => {
-              const size = product.sizes?.[0] ?? "Standard";
-              const dietary = product.dietary?.[0] ?? "Standard";
-              return {
-                key: [product.slug, size, dietary].join(":"),
-                slug: product.slug,
-                size,
-                dietary,
-                quantity: 1,
-              };
-            }),
+            items: get()
+              .catalogue.products.filter((p) =>
+                get().catalogue.variants.some(
+                  (v) => v.productSlug === p.slug && v.active,
+                ),
+              )
+              .slice(0, 3)
+              .map((product) => {
+                const size = product.sizes?.[0] ?? "Standard";
+                const dietary = product.dietary?.[0] ?? "Standard";
+                return {
+                  key: [product.slug, size, dietary].join(":"),
+                  slug: product.slug,
+                  size,
+                  dietary,
+                  quantity: 1,
+                };
+              }),
           });
         },
       }),
       {
         name: storageKey,
-        storage: cartPersistence(getStorage),
+        storage: cartPersistence(getStorage, () => currentCatalogue.variants),
         partialize: (state) => ({ items: state.items }),
         skipHydration: true,
         merge: (saved, current) => ({
@@ -178,6 +207,7 @@ export function createCartStore(
             saved && typeof saved === "object" && "items" in saved
               ? saved.items
               : [],
+            currentCatalogue.variants,
           ),
         }),
       },
@@ -192,7 +222,8 @@ export const selectCartSubtotal = (state: CartState) =>
   state.items.reduce(
     (sum, item) =>
       sum +
-      findVariant(item.slug, item.size, item.dietary)!.priceCents *
+      (findVariant(state.catalogue.variants, item.slug, item.size, item.dietary)
+        ?.priceCents ?? 0) *
         item.quantity,
     0,
   ) / 100;

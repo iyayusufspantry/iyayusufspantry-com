@@ -1,10 +1,25 @@
+import variants from "../scripts/contentful/fixtures/product-variants.json";
 import { test, expect } from "@playwright/test";
 import {
   createCartStore,
   selectCartCount,
   selectCartSubtotal,
 } from "../lib/cart-store";
-import { products } from "../data/products";
+import { products } from "../scripts/contentful/fixtures/products";
+
+test("published price changes update totals and unpublished variants leave the cart", () => {
+  const store = createCartStore({ products, variants }, () => ({
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+  }));
+  store.getState().add(products[0], 2, "Small", "Vegan");
+  const updated = variants.map((v) => ({ ...v, priceCents: 100 }));
+  store.getState().replaceCatalogue({ products, variants: updated });
+  expect(selectCartSubtotal(store.getState())).toBe(2);
+  store.getState().replaceCatalogue({ products, variants: [] });
+  expect(store.getState().items).toEqual([]);
+});
 
 test("cart stores are isolated and defer storage reads until hydration", async () => {
   let reads = 0;
@@ -16,8 +31,8 @@ test("cart stores are isolated and defer storage reads until hydration", async (
     setItem: () => {},
     removeItem: () => {},
   };
-  const first = createCartStore(() => storage);
-  const second = createCartStore(() => storage);
+  const first = createCartStore({ products, variants }, () => storage);
+  const second = createCartStore({ products, variants }, () => storage);
   expect(reads).toBe(0);
   expect(first.getInitialState().items).toEqual([]);
   expect(first.getState().ready).toBe(false);
@@ -46,7 +61,7 @@ test("Zustand restores the legacy cart and persists only valid selection fields"
     { ...item, quantity: 0 },
     { ...item, slug: "missing" },
   ]);
-  const store = createCartStore(() => ({
+  const store = createCartStore({ products, variants }, () => ({
     getItem: () => saved,
     setItem: (_key, value) => {
       saved = value;

@@ -1,6 +1,6 @@
 # Content and product intake
 
-This is the proposed content structure for the client-owned Contentful setup. It is a schema plan, not a connected CMS or an executed migration. It stays within the proposal: up to 15 products, five categories, six variants per product, six recipes, and five initial posts.
+The Contentful integration was completed locally on 21 September 2026: 11 content types, 107 published entries and 16 published assets. The storefront reads only the Delivery API, with server-side mapping and cached reads. See [Contentful integration](contentful-migration.md) for editing instructions and webhook deployment setup. The original intake structure below stays within the proposal: up to 15 products, five categories, six variants per product, six recipes, and five initial posts.
 
 ## Content records
 
@@ -15,7 +15,7 @@ This is the proposed content structure for the client-owned Contentful setup. It
 | Policy              | Policy kind, title, body, effective date                                                                                                          | Shipping, returns, privacy, terms; client-supplied approved text                       |
 | About page          | Headline, business story, approved sourcing claims, photos/alt                                                                                    | Existing narrative remains draft until client confirms facts                           |
 
-Rich text and images will need an explicit renderer/mapping when connected; CMS responses must not be blindly treated as the existing TypeScript objects. Validate incoming slugs, references, prices, currency, allowed media, and publication state on the server. Credentials stay server-side. Stock and orders belong in transactional storage (see the foundation architecture), not in editorial content.
+CMS responses are mapped explicitly in `lib/content/map.ts`. Published references, prices, currency, navigation and media hosts are checked before serving them. The current layouts render article/policy `sections` and page/shared `content.blocks`; duplicate rich-text bodies are import review copies. Credentials stay server-side. Stock and orders belong in transactional storage (see the foundation architecture), not in editorial content.
 
 ## Product handoff
 

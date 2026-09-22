@@ -1,3 +1,7 @@
+import { getContent } from "@/lib/content/server";
 import { ContactPage } from "@/components/contact";
-export const metadata = { title: "Contact" };
+export async function generateMetadata() {
+  const copy = (await getContent()).copy["app/contact/page.tsx"];
+  return { title: copy["copy-1"] };
+}
 export default ContactPage;

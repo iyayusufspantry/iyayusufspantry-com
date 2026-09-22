@@ -1,5 +1,51 @@
 # Simbiat development log
 
+## 21 September 2026 — Account modal visual refinement
+
+- Reworked the native Clerk sign-in/sign-up modal into a centered desktop layout with Contentful pantry photography and the site tagline alongside the form. The image uses Next image optimization; no new local content source was added.
+- Improved form typography, logo alignment, input/button sizing and footer spacing. The background is softly blurred, and screens below 700px use a compact single-column form. Clerk still manages the modal, OAuth, verification, focus and dismissal.
+- Added the missing accessible name to Clerk's portal dialog using the existing Contentful account label. Profile dialogs retain their existing layout.
+- Validation: production build, lint, formatting and all six authentication checks passed. Visual checks at 1440px, 390px and 320px confirmed no horizontal overflow; modal-scoped axe checks reported no violations. Previews: `artifacts/auth-desktop.png`, `artifacts/auth-mobile.png`, `artifacts/auth-small.png`.
+
+## 21 September 2026 — Contentful storefront and revalidation
+
+- Switched the storefront to published Contentful entries/assets with server-only paginated fetching and explicit mapping. Local seed data is now restricted to migration/test fixtures; runtime content does not fall back to it.
+- Connected catalog variants/pricing, categories, editorial content, page/shared copy, metadata, menus, FAQs, policy sections, contact details, homepage selections, logo/icon, brand colors and image references. Preserved Clerk accounts and the existing sample checkout boundary.
+- Published remaining imported drafts, added five editable brand-image links and 31 additional UI/template copy blocks. Round-trip verification passed for all 107 entries, 16 assets and 11 active models.
+- Added a secret-authenticated Contentful webhook with topic/environment checks, bounded input and Delivery API readiness checking. Successful events expire the shared Next.js cache tag and root layout; a 60-second timed refresh provides recovery. Generated the local secret without exposing it.
+- Added repeatable webhook registration tooling. Remote registration and live cloud delivery remain pending the public deployed URL and matching hosting environment variables.
+- Validation: production build, ESLint, formatting, five offline migration tests and Contentful round-trip verification passed. The 104-check desktop/mobile suite passed 102 checks; its two checkout privacy checks then passed on focused rerun after allowing only Clerk's known initialization endpoints while still checking every request for entered checkout data. The run covers all pages, accessibility, cart persistence, CMS mapping and webhook validation. An authenticated request with an actual published Contentful event returned `200 { revalidated: true }` against the production server locally.
+
+## 21 September 2026 — Contentful models and draft data import
+
+- Connected to the user-supplied Contentful space and `master` environment using the environment loader. The user authorized the CMA token after Contentful initially rejected it with `OrganizationAccessGrantRequired`.
+- Created and activated 11 content types, imported 107 draft entries, and uploaded/processed 16 assets. Includes 15 products, five categories, 25 variants, six recipes, five articles, three policies, four FAQs, 21 page records, settings, three navigation menus, and 19 shared-copy records.
+- Preserved existing sample copy, exact variant prices/IDs and references. Added rich-text article/policy review bodies and kept structured source content. Did not import transactional stock/orders, user credentials or private project files.
+- Added repeatable export/plan/import/verify scripts with deterministic IDs, existing-record preservation, source-refresh guards, version checks, retry handling, processing checks and local snapshots. All data remains draft; the storefront has not been switched from local imports to Contentful.
+- Validation: every imported entry field/reference matches the source manifest; all asset byte sizes and processing states match. Re-running import created/updated zero records and preserved all 107 entries. Five offline migration tests, ESLint and formatting passed. Both CMA and Delivery token checks succeeded; the Delivery API correctly reports zero published entries.
+- See [migration documentation](contentful-migration.md) and `artifacts/contentful/verification-report.json` for details and evidence.
+
+## 21 September 2026 — Branded Clerk components
+
+- Used Clerk Core 3's supported `appearance.elements` API to customize its prebuilt components. The older `@clerk/elements` package is deprecated and was not installed; [Clerk's Elements notice](https://clerk.com/docs/guides/customizing-clerk/elements/overview) recommends the newer hooks for fully custom authentication flows.
+- Added a shared appearance configuration in `lib/clerk-appearance.ts` for the brand logo, cream/mint palette, serif headings, white inputs, rounded buttons, and profile/popover styling. Customized the initial sign-in and sign-up copy using Clerk localization overrides. Verification and account-security flows remain handled by Clerk.
+- Redesigned `/sign-in` and `/sign-up` with a reusable responsive introduction, storefront photography on larger screens, and a link back to the shop. Mobile keeps the introduction and account form in a single column.
+- Retained the Clerk attribution and development notice; removed the decorative development grid and darkened the warning color after accessibility checks identified insufficient footer contrast.
+- Validation: production build/TypeScript and lint passed; all six desktop/mobile authentication checks passed; formatting passed. Browser checks showed no horizontal overflow at 390, 768, and 1440 px. Final signup accessibility scans reported no WCAG 2 A/AA violations on desktop and mobile. Review images are in `artifacts/support/clerk-branded/`.
+- Signed-in profile styling is configured through the same provider but still needs review with the user's first authenticated account. This change does not add saved addresses, order history, or administrative authorization.
+
+## 21 September 2026 — Clerk account authentication
+
+- Completed the SDK integration using the user-supplied `.env` after the user chose environment configuration instead of CLI OAuth. Environment files were not opened or printed and remain Git-ignored.
+- Installed `@clerk/nextjs` 7.9.4 and `@clerk/ui` 1.33.1; synchronized npm and pnpm lockfiles. Explicitly disabled optional native WebSocket build scripts and the core-js postinstall in pnpm's build policy; frozen installation passes.
+- Added `ClerkProvider` inside the root body, the shadcn theme with the storefront's CSS variables, and `proxy.ts` with `/__clerk/:path*` exactly once after the API/TRPC matcher. Added `/sign-in` and `/sign-up` pages and modal sign-in/sign-up controls in the desktop header and mobile menu. Signed-in users receive Clerk's account/profile button with sign-out controls.
+- Browsing, guest checkout, and the fictional owner preview remain public. Real owner authorization and persistent customer/order data are not part of this integration. Updated README and privacy preview to distinguish prototype form data from account data handled by Clerk.
+- Changed the Playwright server and base URL to `localhost`: Next.js normalized the loopback IP to localhost in Clerk's rewrite, causing the previous `127.0.0.1` test server configuration to loop.
+- Validation: production build (including TypeScript), standalone type check, lint, formatting, and Git whitespace checks passed. The full 90-test run passed 88 checks; the two contact/newsletter tests incorrectly counted Clerk development-browser initialization as form submission. Updated those assertions to allow only the observed Clerk bootstrap endpoints and check all request payloads for sample form data. All **10 targeted desktop/mobile auth, privacy, and contact/newsletter checks then passed**.
+- Browser checks confirmed real Clerk sign-in/sign-up dialogs and standalone forms, keyboard dismissal, and no horizontal overflow at 390, 768, 1024, and 1440 px. Visually reviewed desktop and mobile captures in `artifacts/support/clerk/`. The existing development server on port 3000 serves the integrated app.
+- `clerk doctor` ran, but its environment parser reported a missing publishable key despite the successful Next.js build and live Clerk forms. CLI account/application-link checks were skipped without OAuth. No account was created during automation; the user should complete their first signup to verify the signed-in profile and sign-out flow.
+- References: [Clerk Next.js quickstart](https://clerk.com/docs/nextjs/getting-started/quickstart), [Clerk themes](https://clerk.com/docs/nextjs/guides/customizing-clerk/appearance-prop/themes), and the installed Next.js proxy/layout guides.
+
 ## 21 September 2026 — Sticky storefront header
 
 - Made the shared header stick to the top while scrolling, with its existing cream background and responsive logo/navigation. The prototype notice scrolls away above it.

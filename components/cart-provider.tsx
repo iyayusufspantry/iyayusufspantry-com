@@ -1,4 +1,5 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import {
   createContext,
   useContext,
@@ -18,13 +19,17 @@ import {
 // Context holds one stable store instance, not a changing cart snapshot.
 const CartContext = createContext<CartStore | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [store] = useState(() => createCartStore());
+  const content = useContent();
+  const [store] = useState(() => createCartStore(content));
   useEffect(() => {
-    if (store.persist.hasHydrated()) return;
-    void Promise.resolve(store.persist.rehydrate()).then(() => {
+    // Hydrate before any persisted write, otherwise refresh could erase the saved cart.
+    void Promise.resolve(
+      store.persist.hasHydrated() ? undefined : store.persist.rehydrate(),
+    ).then(() => {
+      store.getState().replaceCatalogue(content);
       store.setState({ ready: true });
     });
-  }, [store]);
+  }, [store, content]);
   return (
     <CartContext.Provider value={store}>
       {children}
@@ -34,26 +39,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
 }
 
 export function useCart<T>(selector: (state: CartState) => T): T {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/cart-provider.tsx"];
+
   const store = useContext(CartContext);
-  if (!store) throw new Error("CartProvider is required");
+  if (!store) throw new Error(copy["copy-1"]);
   return useStore(store, selector);
 }
 
 export function useAddToCart() {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/cart-provider.tsx"];
+
   const add = useCart((state) => state.add);
   return useCallback(
     (...args: Parameters<CartState["add"]>) => {
-      if (add(...args))
-        toast.success(args[0].name + " added to your sample cart");
+      if (add(...args)) toast.success(args[0].name + " " + copy["copy-2"]);
     },
-    [add],
+    [add, copy],
   );
 }
 
 export function useLoadDemoCart() {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/cart-provider.tsx"];
+
   const loadDemo = useCart((state) => state.loadDemo);
   return useCallback(() => {
     loadDemo();
-    toast("Sample cart loaded");
-  }, [loadDemo]);
+    toast(copy["copy-3"]);
+  }, [loadDemo, copy]);
 }

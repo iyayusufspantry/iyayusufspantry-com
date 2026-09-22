@@ -1,11 +1,12 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowLeft, Package, ClipboardList, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/catalog";
-import { products, money } from "@/data/products";
-import { variants } from "@/lib/commerce/catalog";
+import { money } from "@/data/products";
+
 import {
   adjustStock,
   cancelOrder,
@@ -16,13 +17,6 @@ import {
 } from "@/lib/commerce/orders";
 import { sampleOwnerState } from "@/lib/commerce/sample";
 
-const statusLabels = {
-  pending: "Awaiting payment",
-  paid: "Ready to pack",
-  fulfilled: "Fulfilled",
-  cancelled: "Cancelled",
-};
-
 function StockEditor({
   variantId,
   stock,
@@ -32,6 +26,9 @@ function StockEditor({
   stock: Stock;
   onSave: (quantity: number) => boolean;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/owner-preview.tsx"];
+
   const [draft, setDraft] = useState(String(stock.onHand));
   const [saved, setSaved] = useState(false);
   return (
@@ -42,7 +39,7 @@ function StockEditor({
         if (onSave(draft.trim() ? Number(draft) : NaN)) setSaved(true);
       }}
     >
-      <label htmlFor={`stock-${variantId}`}>On hand</label>
+      <label htmlFor={`stock-${variantId}`}>{copy["copy-5"]}</label>
       <div className="flex gap-2">
         <input
           id={`stock-${variantId}`}
@@ -58,7 +55,7 @@ function StockEditor({
           }}
         />
         <Button size="sm" variant="outline" type="submit">
-          {saved ? "Saved" : "Save stock"}
+          {saved ? copy["copy-6"] : copy["copy-7"]}
         </Button>
       </div>
     </form>
@@ -66,7 +63,16 @@ function StockEditor({
 }
 
 export function OwnerPreview() {
-  const [state, setState] = useState(sampleOwnerState);
+  const { products, variants, copy: allCopy } = useContent();
+  const copy = allCopy["components/owner-preview.tsx"];
+  const statusLabels = {
+    pending: copy["copy-1"],
+    paid: copy["copy-2"],
+    fulfilled: copy["copy-3"],
+    cancelled: copy["copy-4"],
+  };
+
+  const [state, setState] = useState(() => sampleOwnerState(variants));
   const [filter, setFilter] = useState("all");
   const [query, setQuery] = useState("");
   const [stockFilter, setStockFilter] = useState("all");
@@ -81,11 +87,7 @@ export function OwnerPreview() {
       setMessage(success);
       return true;
     } catch (error) {
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Unable to update sample data.",
-      );
+      setMessage(error instanceof Error ? error.message : copy["copy-8"]);
       return false;
     }
   }
@@ -110,23 +112,19 @@ export function OwnerPreview() {
   return (
     <div className="site-container page-bottom owner-preview">
       <PageHeading
-        eyebrow="BUSINESS TOOLS · SAMPLE WORKSPACE"
-        title="Your store, at a glance."
-        description="A place to review orders, prepare deliveries, and keep your shelves up to date."
+        eyebrow={copy["copy-9"]}
+        title={copy["copy-10"]}
+        description={copy["copy-11"]}
       />
       <div className="notice owner-notice">
         <div>
-          <strong>Owner dashboard preview</strong>
-          <p>
-            Fictional orders and stock for review. Changes stay on this page and
-            reset when you refresh. This preview does not update the storefront
-            or accept payments.
-          </p>
+          <strong>{copy["copy-12"]}</strong>
+          <p> {copy["copy-13"]} </p>
         </div>
         <Button
           variant="outline"
           onClick={() => {
-            setState(sampleOwnerState());
+            setState(sampleOwnerState(variants));
             setResetCount(resetCount + 1);
             setFilter("all");
             setStockFilter("all");
@@ -134,30 +132,29 @@ export function OwnerPreview() {
             setMessage("Sample workspace reset.");
           }}
         >
-          <RotateCcw size={15} />
-          Reset sample workspace
+          <RotateCcw size={15} /> {copy["copy-14"]}{" "}
         </Button>
       </div>
       <div className="owner-stats">
         <div>
           <ClipboardList size={20} />
-          <span>Ready to pack</span>
+          <span>{copy["copy-15"]}</span>
           <strong>
             {state.orders.filter((order) => order.status === "paid").length}
           </strong>
-          <p>Paid sample orders</p>
+          <p>{copy["copy-16"]}</p>
         </div>
         <div>
           <Package size={20} />
-          <span>Awaiting payment</span>
+          <span>{copy["copy-17"]}</span>
           <strong>
             {state.orders.filter((order) => order.status === "pending").length}
           </strong>
-          <p>Stock held in reserve</p>
+          <p>{copy["copy-18"]}</p>
         </div>
         <div>
           <Package size={20} />
-          <span>Low or empty stock</span>
+          <span>{copy["copy-19"]}</span>
           <strong>
             {
               Object.values(state.stock).filter(
@@ -165,7 +162,7 @@ export function OwnerPreview() {
               ).length
             }
           </strong>
-          <p>Variants to review</p>
+          <p>{copy["copy-20"]}</p>
         </div>
       </div>
       <p className="owner-feedback" role="status" aria-live="polite">
@@ -174,17 +171,17 @@ export function OwnerPreview() {
       <section aria-labelledby="orders-heading" className="owner-section">
         <div className="owner-section-heading">
           <div>
-            <span className="eyebrow">ORDER BOOK</span>
-            <h2 id="orders-heading">Orders to look after</h2>
+            <span className="eyebrow">{copy["copy-21"]}</span>
+            <h2 id="orders-heading">{copy["copy-22"]}</h2>
           </div>
           <div className="field">
-            <label htmlFor="order-filter">Order status</label>
+            <label htmlFor="order-filter">{copy["copy-23"]}</label>
             <select
               id="order-filter"
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
             >
-              <option value="all">All orders</option>
+              <option value="all">{copy["copy-24"]}</option>
               {Object.entries(statusLabels).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -213,48 +210,43 @@ export function OwnerPreview() {
             />
           ))}
         </div>
-        {!visibleOrders.length && (
-          <p className="notice">No sample orders with this status.</p>
-        )}
+        {!visibleOrders.length && <p className="notice">{copy["copy-25"]}</p>}
       </section>
       <section aria-labelledby="stock-heading" className="owner-section">
         <div className="owner-section-heading">
           <div>
-            <span className="eyebrow">THE STOCKROOM</span>
-            <h2 id="stock-heading">Keep your shelves ready</h2>
+            <span className="eyebrow">{copy["copy-26"]}</span>
+            <h2 id="stock-heading">{copy["copy-27"]}</h2>
           </div>
           <span className="fine-print">
-            {visibleVariants.length} sample variants
+            {visibleVariants.length} {copy["copy-28"]}{" "}
           </span>
         </div>
         <div className="owner-filters">
           <div className="field">
-            <label htmlFor="stock-search">Search stock</label>
+            <label htmlFor="stock-search">{copy["copy-29"]}</label>
             <input
               type="search"
               id="stock-search"
-              placeholder="Product, size, or dietary option"
+              placeholder={copy["copy-30"]}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
           </div>
           <div className="field">
-            <label htmlFor="stock-filter">Availability</label>
+            <label htmlFor="stock-filter">{copy["copy-31"]}</label>
             <select
               id="stock-filter"
               value={stockFilter}
               onChange={(event) => setStockFilter(event.target.value)}
             >
-              <option value="all">All stock</option>
-              <option value="low">Low stock (1–5)</option>
-              <option value="out">Out of stock</option>
+              <option value="all">{copy["copy-32"]}</option>
+              <option value="low">{copy["copy-33"]}</option>
+              <option value="out">{copy["copy-34"]}</option>
             </select>
           </div>
         </div>
-        <p className="fine-print mb-5">
-          Available = on hand minus reserved. Reserved units belong to orders
-          awaiting payment.
-        </p>
+        <p className="fine-print mb-5"> {copy["copy-35"]} </p>
         <div className="owner-stock-list">
           {visibleVariants.map((variant) => {
             const product = products.find(
@@ -271,21 +263,21 @@ export function OwnerPreview() {
                 <div>
                   <h3>{product.name}</h3>
                   <p className="fine-print">
-                    {variant.size} · {variant.dietary} ·{" "}
-                    {money(variant.priceCents / 100)}
+                    {variant.size} {copy["copy-36"]} {variant.dietary}{" "}
+                    {copy["copy-37"]} {money(variant.priceCents / 100)}
                   </p>
                 </div>
                 <div className="stock-counts">
                   <span className="badge">
                     {available === 0
-                      ? "Out of stock"
+                      ? copy["copy-38"]
                       : available <= 5
-                        ? "Low stock"
-                        : "In stock"}
+                        ? copy["copy-39"]
+                        : copy["copy-40"]}
                   </span>
                   <p>
-                    <strong>{available}</strong> available · {stock.reserved}{" "}
-                    reserved
+                    <strong>{available}</strong> {copy["copy-41"]}{" "}
+                    {stock.reserved} {copy["copy-42"]}{" "}
                   </p>
                 </div>
                 <StockEditor
@@ -304,14 +296,11 @@ export function OwnerPreview() {
           })}
         </div>
         {!visibleVariants.length && (
-          <p className="notice">
-            No matching variants. Try another search or availability filter.
-          </p>
+          <p className="notice"> {copy["copy-43"]} </p>
         )}
       </section>
       <Link className="text-link" href="/prototype">
-        <ArrowLeft size={15} />
-        Back to screen directory
+        <ArrowLeft size={15} /> {copy["copy-44"]}{" "}
       </Link>
     </div>
   );
@@ -326,6 +315,15 @@ function OrderCard({
   onFulfill: () => void;
   onCancel: () => void;
 }) {
+  const { products, copy: allCopy } = useContent();
+  const copy = allCopy["components/owner-preview.tsx"];
+  const statusLabels = {
+    pending: copy["copy-1"],
+    paid: copy["copy-2"],
+    fulfilled: copy["copy-3"],
+    cancelled: copy["copy-4"],
+  };
+
   return (
     <article className="owner-order-card" aria-label={order.id}>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -335,7 +333,7 @@ function OrderCard({
       <ul>
         {order.quote.lines.map((line) => (
           <li key={line.variantId}>
-            {line.quantity} ×{" "}
+            {line.quantity} {copy["copy-45"]}{" "}
             {
               products.find((product) => product.slug === line.productSlug)
                 ?.name
@@ -345,20 +343,20 @@ function OrderCard({
         ))}
       </ul>
       <p className="fine-print">
-        Sample merchandise subtotal · {money(order.quote.subtotalCents / 100)}
+        {" "}
+        {copy["copy-46"]} {money(order.quote.subtotalCents / 100)}
       </p>
       <div className="mt-5">
         {order.status === "paid" ? (
-          <Button onClick={onFulfill}>Mark fulfilled</Button>
+          <Button onClick={onFulfill}>{copy["copy-47"]}</Button>
         ) : order.status === "pending" ? (
           <Button variant="outline" onClick={onCancel}>
-            Cancel reservation
+            {" "}
+            {copy["copy-48"]}{" "}
           </Button>
         ) : (
           <span className="fine-print">
-            {order.status === "fulfilled"
-              ? "This sample order has been packed and sent."
-              : "The sample reservation has been released."}
+            {order.status === "fulfilled" ? copy["copy-49"] : copy["copy-50"]}
           </span>
         )}
       </div>

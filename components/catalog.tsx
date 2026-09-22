@@ -1,4 +1,6 @@
 "use client";
+import type { Category } from "@/lib/content/types";
+import { useContent } from "@/components/content-provider";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -20,16 +22,12 @@ import {
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useAddToCart } from "@/components/cart-provider";
-import { categories } from "@/data/categories";
-import { money, products, type Product } from "@/data/products";
+
+import { money, type Product } from "@/data/products";
 import type { Recipe } from "@/data/recipes";
 import type { Post } from "@/data/posts";
 import { cn } from "@/lib/utils";
-import {
-  productPhotos,
-  journalPhotos,
-  type BrandPhoto,
-} from "@/data/brand-assets";
+import { type BrandPhoto } from "@/data/brand-assets";
 
 const icons = {
   snacks: Cookie,
@@ -39,7 +37,7 @@ const icons = {
   specialty: Package,
 };
 export function MockImage({
-  label = "Product photography",
+  label: suppliedlabel,
   kind = "product",
   className,
   index = 0,
@@ -51,6 +49,10 @@ export function MockImage({
   index?: number;
   photo?: BrandPhoto;
 }) {
+  const { productPhotos, copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+  const label = suppliedlabel ?? copy["default-1"];
+
   const suppliedPhoto =
     photo ?? (kind === "product" ? productPhotos[label] : undefined);
   const Illustration =
@@ -81,7 +83,7 @@ export function MockImage({
   return (
     <div
       role="img"
-      aria-label={`${label} — illustrative preview, photography pending`}
+      aria-label={copy["template-2"].replaceAll("{0}", String(label))}
       className={cn(
         "mock-image",
         `mock-${kind}`,
@@ -95,7 +97,7 @@ export function MockImage({
         </span>
         <span>{label}</span>
       </div>
-      <span className="mock-image-caption">PHOTO COMING SOON</span>
+      <span className="mock-image-caption">{copy["copy-2"]}</span>
       {kind === "hero" && (
         <>
           <span className="image-corner top-left" />
@@ -118,6 +120,9 @@ export function SectionHeading({
   href?: string;
   action?: string;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   return (
     <div className="section-heading">
       <div>
@@ -127,7 +132,7 @@ export function SectionHeading({
       </div>
       {href && (
         <Link className="text-link" href={href}>
-          {action ?? "Explore more"}
+          {action ?? copy["copy-3"]}
           <ArrowRight size={16} />
         </Link>
       )}
@@ -158,15 +163,21 @@ export function CategoryCard({
   category,
   index,
 }: {
-  category: (typeof categories)[number];
+  category: Category;
   index: number;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   const Icon = icons[category.icon as keyof typeof icons];
   return (
     <Link href={`/shop?category=${category.slug}`} className="category-card">
       <div className="flex items-start justify-between">
         <Icon strokeWidth={1.25} size={30} />
-        <span className="category-index">0{index + 1}</span>
+        <span className="category-index">
+          {copy["copy-4"]}
+          {index + 1}
+        </span>
       </div>
       <div>
         <h3>{category.name}</h3>
@@ -183,13 +194,16 @@ export function ProductCard({
   product: Product;
   index?: number;
 }) {
+  const { categories, copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   const add = useAddToCart();
   return (
     <article className="product-card">
       <Link
         href={`/shop/${product.slug}`}
         className="product-image-link"
-        aria-label={`View ${product.name}`}
+        aria-label={copy["template-3"].replaceAll("{0}", String(product.name))}
       >
         <MockImage label={product.name} index={index} />
         {product.dietary?.[0] && (
@@ -198,7 +212,11 @@ export function ProductCard({
       </Link>
       <div className="product-meta">
         <span>{categories.find((c) => c.slug === product.category)?.name}</span>
-        {product.sizes && <span>{product.sizes.length} sizes</span>}
+        {product.sizes && (
+          <span>
+            {product.sizes.length} {copy["copy-5"]}
+          </span>
+        )}
       </div>
       <div className="flex items-start justify-between gap-2">
         <h3>
@@ -207,21 +225,24 @@ export function ProductCard({
         <span className="product-price">{money(product.price)}</span>
       </div>
       <p className="product-unit">
-        {product.sizes ? "From " : ""}
-        {product.unit} · Sample price
+        {product.sizes ? copy["copy-6"] : ""}
+        {product.unit} {copy["copy-7"]}{" "}
       </p>
       <div className="product-actions">
         <Link className="text-link text-xs!" href={`/shop/${product.slug}`}>
-          View product <ArrowUpRight size={13} />
+          {" "}
+          {copy["copy-8"]} <ArrowUpRight size={13} />
         </Link>
         <Button
           variant="outline"
           size="sm"
-          aria-label={`Add ${product.name} to cart`}
+          aria-label={copy["template-4"].replaceAll(
+            "{0}",
+            String(product.name),
+          )}
           onClick={() => add(product)}
         >
-          <Plus size={14} />
-          Add to cart
+          <Plus size={14} /> {copy["copy-9"]}{" "}
         </Button>
       </div>
     </article>
@@ -243,13 +264,21 @@ export function RecipeCard({
   recipe: Recipe;
   index?: number;
 }) {
+  const { products, recipePhotos, copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   return (
     <article className="editorial-card">
       <Link
         href={`/recipes/${recipe.slug}`}
-        aria-label={`Read ${recipe.title}`}
+        aria-label={copy["template-5"].replaceAll("{0}", String(recipe.title))}
       >
-        <MockImage label={recipe.category} kind="recipe" index={index} />
+        <MockImage
+          label={recipe.category}
+          kind="recipe"
+          index={index}
+          photo={recipePhotos[recipe.slug]}
+        />
       </Link>
       <div className="flex items-center justify-between gap-3 pt-5">
         <span className="eyebrow mb-0!">{recipe.category}</span>
@@ -267,8 +296,7 @@ export function RecipeCard({
           className="recipe-product-link"
           href={`/shop/${recipe.products[0]}`}
         >
-          <ShoppingBag size={12} />
-          From the pantry:{" "}
+          <ShoppingBag size={12} /> {copy["copy-10"]}{" "}
           {
             products.find((product) => product.slug === recipe.products[0])
               ?.name
@@ -276,16 +304,22 @@ export function RecipeCard({
         </Link>
       )}
       <Link className="text-link mt-4" href={`/recipes/${recipe.slug}`}>
-        View recipe
-        <ArrowUpRight size={14} />
+        {" "}
+        {copy["copy-11"]} <ArrowUpRight size={14} />
       </Link>
     </article>
   );
 }
 export function BlogCard({ post, index = 0 }: { post: Post; index?: number }) {
+  const { journalPhotos, copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   return (
     <article className="editorial-card">
-      <Link href={`/blog/${post.slug}`} aria-label={`Read ${post.title}`}>
+      <Link
+        href={`/blog/${post.slug}`}
+        aria-label={copy["template-6"].replaceAll("{0}", String(post.title))}
+      >
         <MockImage
           label={post.category}
           kind="article"
@@ -299,8 +333,13 @@ export function BlogCard({ post, index = 0 }: { post: Post; index?: number }) {
       </h3>
       <p>{post.description}</p>
       <div className="mt-5 flex items-center justify-between text-xs text-neutral-500">
-        <span>{post.date} · Sample</span>
-        <Link href={`/blog/${post.slug}`} aria-label={`Read ${post.title}`}>
+        <span>
+          {post.date} {copy["copy-12"]}
+        </span>
+        <Link
+          href={`/blog/${post.slug}`}
+          aria-label={copy["template-7"].replaceAll("{0}", String(post.title))}
+        >
           <ArrowUpRight size={17} />
         </Link>
       </div>
@@ -310,19 +349,25 @@ export function BlogCard({ post, index = 0 }: { post: Post; index?: number }) {
 export function QuantitySelector({
   value,
   onChange,
-  label = "Quantity",
+  label: suppliedlabel,
 }: {
   value: number;
   onChange: (value: number) => void;
   label?: string;
 }) {
+  const copy = useContent().copy["components/catalog.tsx"];
+  const label = suppliedlabel ?? copy["default-8"];
+
   return (
     <div className="quantity-selector" role="group" aria-label={label}>
       <button
         type="button"
         disabled={value <= 1}
         onClick={() => onChange(value - 1)}
-        aria-label={`Decrease ${label.toLowerCase()}`}
+        aria-label={copy["template-9"].replaceAll(
+          "{0}",
+          String(label.toLowerCase()),
+        )}
       >
         <Minus size={14} />
       </button>
@@ -331,7 +376,10 @@ export function QuantitySelector({
         type="button"
         disabled={value >= 99}
         onClick={() => onChange(value + 1)}
-        aria-label={`Increase ${label.toLowerCase()}`}
+        aria-label={copy["template-10"].replaceAll(
+          "{0}",
+          String(label.toLowerCase()),
+        )}
       >
         <Plus size={14} />
       </button>
@@ -359,14 +407,18 @@ export function EmptyState({
 export function SearchField({
   value,
   onChange,
-  placeholder = "Search products…",
-  label = "Search products",
+  placeholder: suppliedplaceholder,
+  label: suppliedlabel,
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   label?: string;
 }) {
+  const copy = useContent().copy["components/catalog.tsx"];
+  const placeholder = suppliedplaceholder ?? copy["default-11"];
+  const label = suppliedlabel ?? copy["default-12"];
+
   return (
     <div className="search-field">
       <Search size={17} />
@@ -389,8 +441,11 @@ export function FilterChips({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/catalog.tsx"];
+
   return (
-    <div className="filter-chips" aria-label="Filter by category">
+    <div className="filter-chips" aria-label={copy["copy-16"]}>
       <SlidersHorizontal size={16} className="mr-2 shrink-0 text-neutral-500" />
       {["All", ...options].map((option) => (
         <button
@@ -399,7 +454,7 @@ export function FilterChips({
           aria-pressed={value === option}
           onClick={() => onChange(option)}
         >
-          {option}
+          {option === "All" ? copy["copy-17"] : option}
         </button>
       ))}
     </div>

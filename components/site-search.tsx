@@ -1,8 +1,7 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import { useState } from "react";
-import { products } from "@/data/products";
-import { recipes } from "@/data/recipes";
-import { posts } from "@/data/posts";
+
 import {
   BlogCard,
   EmptyState,
@@ -14,6 +13,9 @@ import {
 } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
 export function SiteSearch() {
+  const { products, recipes, posts, copy: allCopy } = useContent();
+  const copy = allCopy["components/site-search.tsx"];
+
   const [query, setQuery] = useState("");
   const normalized = query.toLowerCase().trim();
   const match = (text: string) => text.toLowerCase().includes(normalized);
@@ -32,22 +34,23 @@ export function SiteSearch() {
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="A LITTLE DISCOVERY STARTS HERE"
-        title="What are you looking for?"
-        description="Find a favorite product, your next recipe, or a story worth reading."
+        eyebrow={copy["copy-1"]}
+        title={copy["copy-2"]}
+        description={copy["copy-3"]}
       />
       <div className="global-search">
         <SearchField
           value={query}
           onChange={setQuery}
-          placeholder="Try plantain, egusi, or pantry…"
-          label="Search products, recipes, and articles"
+          placeholder={copy["copy-4"]}
+          label={copy["label-1"]}
         />
         <div className="flex flex-wrap items-center gap-2 mt-4">
           <span className="text-xs text-neutral-500 mr-2">
-            Try a little inspiration
+            {" "}
+            {copy["copy-5"]}{" "}
           </span>
-          {["Plantain", "Egusi", "Pantry"].map((term) => (
+          {[copy["copy-6"], copy["copy-7"], copy["copy-8"]].map((term) => (
             <button className="badge" key={term} onClick={() => setQuery(term)}>
               {term}
             </button>
@@ -56,17 +59,17 @@ export function SiteSearch() {
       </div>
       <p className="fine-print mt-6" aria-live="polite">
         {normalized
-          ? `${count} results for “${query}”`
-          : "Explore a few favorites, or search the complete sample collection."}{" "}
-        · Local prototype search
+          ? copy["template-2"]
+              .replaceAll("{0}", String(count))
+              .replaceAll("{1}", String(query))
+          : copy["copy-9"]}{" "}
+        {copy["copy-10"]}{" "}
       </p>
       {!count ? (
-        <EmptyState
-          title="No matches this time"
-          description="Try a different ingredient, product name, or topic."
-        >
+        <EmptyState title={copy["copy-11"]} description={copy["copy-12"]}>
           <Button variant="outline" onClick={() => setQuery("")}>
-            Clear search
+            {" "}
+            {copy["copy-13"]}{" "}
           </Button>
         </EmptyState>
       ) : (
@@ -74,10 +77,13 @@ export function SiteSearch() {
           {foundProducts.length > 0 && (
             <section className="section">
               <SectionHeading
-                title="From the pantry"
-                description={`${normalized ? foundProducts.length : "Featured"} sample products`}
+                title={copy["copy-14"]}
+                description={copy["template-3"].replaceAll(
+                  "{0}",
+                  String(normalized ? foundProducts.length : copy["copy-15"]),
+                )}
                 href="/shop"
-                action="Browse the shop"
+                action={copy["copy-16"]}
               />
               <ProductGrid
                 items={normalized ? foundProducts : foundProducts.slice(0, 4)}
@@ -87,9 +93,9 @@ export function SiteSearch() {
           {foundRecipes.length > 0 && (
             <section className="section border-t border-neutral-200">
               <SectionHeading
-                title="In the kitchen"
+                title={copy["copy-17"]}
                 href="/recipes"
-                action="All recipes"
+                action={copy["copy-18"]}
               />
               <div className="editorial-grid">
                 {(normalized ? foundRecipes : foundRecipes.slice(0, 3)).map(
@@ -107,9 +113,9 @@ export function SiteSearch() {
           {foundPosts.length > 0 && (
             <section className="section border-t border-neutral-200">
               <SectionHeading
-                title="From the journal"
+                title={copy["copy-19"]}
                 href="/blog"
-                action="All stories"
+                action={copy["copy-20"]}
               />
               <div className="editorial-grid">
                 {(normalized ? foundPosts : foundPosts.slice(0, 3)).map(

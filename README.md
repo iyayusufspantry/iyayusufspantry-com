@@ -1,6 +1,6 @@
 # Simbiat · Storefront and Production Foundations
 
-A storefront prototype with the first production foundation milestone underway after receipt of the initial payment. This is **not a production store or an approved final design**. Server-side sample cart review and reusable stock/order rules are implemented; real payments, owner authentication, persistent orders, email, CMS, and analytics remain unconnected.
+A storefront prototype with Clerk accounts and Contentful-managed website content. This is **not a production store or an approved final design**. Server-side sample cart review and reusable stock/order rules are implemented; real payments, owner authorization, persistent orders, email and analytics remain unconnected.
 
 ## Development record
 
@@ -8,13 +8,16 @@ A storefront prototype with the first production foundation milestone underway a
 - [Development log](docs/development-log.md): changes, validation results, evidence, and pending client dependencies.
 - [Foundation architecture](docs/production-foundations.md): implementation boundaries, API, inventory/order rules, integration checklist, and repeatable validation.
 - [Content model](docs/content-model.md) and [product intake CSV](docs/product-intake.csv): preparation for client content and CMS setup.
+- [Contentful integration](docs/contentful-migration.md): 11 active content types, 107 published entries, 16 assets, editing instructions and secured cache revalidation. Registering the remote webhook requires the public deployed site URL.
 - [Before screenshots](artifacts/milestones/01-foundations/before/index.html) and [current screenshot gallery](artifacts/screenshots/index.html).
 - [Foundation progress PDF](artifacts/pdf/Simbiat-Foundation-Progress.pdf): summary and desktop/mobile review images. Regenerate with `npm run export:foundations` after screenshots.
 - Archive each reviewed milestone with `npm run archive:milestone -- 01-foundations after` (use a new stage name for later captures). Archives live under `artifacts/milestones/` and are Git-ignored.
 
 ## Run locally
 
-Use Node.js 20.9 or newer.
+Use Node.js 20.9 or newer. Add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the intended Clerk application to `.env` or `.env.local` before starting or building. Both files are Git-ignored; never commit the secret key. CLI login is optional when keys are configured directly.
+
+Also configure `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ENVIRONMENT=master`, `CONTENTFUL_DELIVERY_TOKEN`, and `CONTENTFUL_REVALIDATION_SECRET`. Contentful must contain the published site entries and assets before the app can build or render. `CMA_TOKEN` is needed only for management scripts. Contentful credentials are server-only; there is no local-content fallback.
 
 ```bash
 npm install
@@ -28,9 +31,11 @@ Open [http://localhost:3000](http://localhost:3000).
 - **[/shop](http://localhost:3000/shop)** — 15 sample products across five categories.
 - **[/prototype/owner](http://localhost:3000/prototype/owner)** — fictional order and stock workspace. Changes reset on refresh and do not update the storefront.
 
-No environment variables, secrets, or service accounts are needed. The interface uses the reconstructed Iya Yusuf's Pantry SVG logo, local client photography, branded placeholders for missing photos, and system fonts. No external photography or font requests are required.
+Clerk provides account sign-in, sign-up, and profile/sign-out controls in the desktop header and mobile menu, plus `/sign-in` and `/sign-up` pages. Its UI uses the storefront's shadcn theme and requires access to Clerk's services. Create a first test account using **Sign up**; successful authentication shows a profile button. Storefront browsing and guest checkout remain public, and `/prototype/owner` still contains public sample data. Production owner authorization is a separate integration step.
 
-The storefront theme uses cream, mint, navy, and the confirmed `#06ad8f` green, with a darker green for accessible text and buttons. Shared styling covers commerce, editorial, policies, contact, and owner previews. Edit `styles/brand.css` for the visual theme and `data/brand-assets.ts` for reviewed photo mappings. Supplied assortment photos are editorial references; only clearly labeled red palm oil is mapped to a specific sample product. Current catalogue details and packaging still require client approval.
+The interface loads the Iya Yusuf's Pantry logo and supplied photography from Contentful, with code-drawn illustrations for products without photography and system fonts.
+
+The storefront theme uses cream, mint, navy, and the confirmed `#06ad8f` green, with a darker green for accessible text and buttons. Edit Contentful Site settings for brand colors and images; structural styling remains in `styles/brand.css`. Supplied assortment photos are editorial references; only clearly labeled red palm oil is mapped to a specific sample product. Current catalogue details and packaging still require client approval.
 
 ## Present the customer flow
 
@@ -44,7 +49,7 @@ The storefront theme uses cream, mint, navy, and the confirmed `#06ad8f` green, 
 
 The cart, checkout, and screen directory have a **Load sample cart** button. An empty cart is the default. “Buy now” adds the selected configuration and opens the checkout preview.
 
-Mock cart selections survive refreshes within the browser tab through `sessionStorage`. Customer contact, addresses, messages, newsletter addresses, and payment information are never stored or transmitted by the application. There are no card fields. The scope materials checklist is temporary review state, not a submission.
+Mock cart selections survive refreshes within the browser tab through `sessionStorage`. Checkout contact/address fields, contact messages, newsletter addresses, and payment information are never stored or transmitted by the prototype forms. Account information entered into Clerk's authentication UI is handled by Clerk. There are no card fields. The scope materials checklist is temporary review state, not a submission.
 
 The shared cart uses Zustand with a store per `CartProvider` instance. Components select only the state/actions they need; the header selects the item count. Persistence restores after hydration and preserves existing `simbiat-scope-cart-v1` selections. Invalid entries and extra fields are discarded, duplicate variants are merged, and storage failures leave the in-memory cart usable. Local controls continue to use React state.
 

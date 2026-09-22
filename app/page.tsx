@@ -1,3 +1,4 @@
+import { getContent } from "@/lib/content/server";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -17,55 +18,58 @@ import {
   BlogCard,
 } from "@/components/catalog";
 import { Newsletter } from "@/components/site-shell";
-import { categories } from "@/data/categories";
-import { products } from "@/data/products";
-import { recipes } from "@/data/recipes";
-import { posts } from "@/data/posts";
-import { brandPhotos } from "@/data/brand-assets";
-const values = [
-  {
-    icon: Sprout,
-    title: "Authentic ingredients",
-    subtitle: "Rooted in African food traditions",
-  },
-  {
-    icon: Heart,
-    title: "Thoughtfully sourced",
-    subtitle: "Relationships behind every story",
-  },
-  {
-    icon: PackageCheck,
-    title: "Made for your pantry",
-    subtitle: "Everyday staples & new discoveries",
-  },
-];
-export default function Home() {
+
+export default async function Home() {
+  const {
+    featured,
+    categories,
+    products,
+    recipes,
+    posts,
+    brandPhotos,
+    copy: allCopy,
+  } = await getContent();
+  const copy = allCopy["app/page.tsx"];
+  const values = [
+    {
+      icon: Sprout,
+      title: copy["copy-1"],
+      subtitle: copy["copy-2"],
+    },
+    {
+      icon: Heart,
+      title: copy["copy-3"],
+      subtitle: copy["copy-4"],
+    },
+    {
+      icon: PackageCheck,
+      title: copy["copy-5"],
+      subtitle: copy["copy-6"],
+    },
+  ];
+
   return (
     <div className="site-container">
       <section className="home-hero">
         <div className="hero-copy">
           <span className="eyebrow">
-            <span className="eyebrow-rule" />
-            ROOTED IN CULTURE. MADE FOR YOUR TABLE.
+            <span className="eyebrow-rule" /> {copy["copy-7"]}{" "}
           </span>
           <h1>
-            A taste of home.
-            <br />A pantry full of <span>possibility.</span>
+            {" "}
+            {copy["copy-8"]} <br />
+            {copy["copy-9"]} <span>{copy["copy-10"]}</span>
           </h1>
-          <p>
-            Discover authentic African foods, everyday essentials, and the
-            snacks you grew up loving. Thoughtfully sourced, from our community
-            to your kitchen.
-          </p>
+          <p> {copy["copy-11"]} </p>
           <div className="flex flex-wrap gap-3">
             <Button asChild>
               <Link href="/shop">
-                Shop products
-                <ArrowRight />
+                {" "}
+                {copy["copy-12"]} <ArrowRight />
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/recipes">Explore recipes</Link>
+              <Link href="/recipes">{copy["copy-13"]}</Link>
             </Button>
           </div>
           <div className="hero-footnote">
@@ -76,7 +80,7 @@ export default function Home() {
                 </span>
               ))}
             </span>
-            <span>Familiar flavors. Meaningful connections.</span>
+            <span>{copy["copy-14"]}</span>
           </div>
         </div>
         <div className="hero-visual">
@@ -84,14 +88,13 @@ export default function Home() {
           <div className="hero-stamp" aria-hidden="true">
             <Sprout size={24} />
             <span>
-              Rooted
-              <br />
-              in home.
+              {" "}
+              {copy["copy-15"]} <br /> {copy["copy-16"]}{" "}
             </span>
           </div>
           <div className="hero-photo-note">
-            <span className="size-1.5 rounded-full bg-primary" />
-            A look inside Iya Yusuf&apos;s Pantry
+            <span className="size-1.5 rounded-full bg-primary" />{" "}
+            {copy["copy-17"]}{" "}
             <ArrowUpRight size={13} className="ml-auto shrink-0" />
           </div>
         </div>
@@ -109,11 +112,11 @@ export default function Home() {
       </div>
       <section className="section">
         <SectionHeading
-          eyebrow="FIND YOUR FAVORITES"
-          title="A little of everything you love"
-          description="From your daily essentials to something a little special."
+          eyebrow={copy["copy-18"]}
+          title={copy["copy-19"]}
+          description={copy["copy-20"]}
           href="/shop"
-          action="Shop all categories"
+          action={copy["copy-21"]}
         />
         <div className="category-grid">
           {categories.map((category, index) => (
@@ -124,33 +127,33 @@ export default function Home() {
             />
           ))}
         </div>
-        <p className="fine-print mt-4">
-          Sample categories · Final collection to be confirmed with Simbiat.
-        </p>
+        <p className="fine-print mt-4"> {copy["copy-22"]} </p>
       </section>
       <section className="section pt-2!">
         <SectionHeading
-          eyebrow="THE PANTRY EDIT"
-          title="Good things to start with"
-          description="A few familiar favorites to welcome into your kitchen."
+          eyebrow={copy["copy-23"]}
+          title={copy["copy-24"]}
+          description={copy["copy-25"]}
           href="/shop"
-          action="Shop all products"
+          action={copy["copy-26"]}
         />
         <ProductGrid
-          items={[products[1], products[7], products[9], products[3]]}
+          items={featured.products.flatMap((slug) =>
+            products.filter((p) => p.slug === slug),
+          )}
         />
       </section>
       <section className="pantry-gallery section">
         <SectionHeading
-          eyebrow="FROM OUR SHELVES"
-          title="Familiar little joys."
-          description="A glimpse of the snacks and drinks that have been part of our pantry."
+          eyebrow={copy["copy-27"]}
+          title={copy["copy-28"]}
+          description={copy["copy-29"]}
         />
         <div className="pantry-photo-grid">
           {[
-            { photo: brandPhotos.snackJars, caption: "Something to share" },
-            { photo: brandPhotos.coconut, caption: "A little golden crunch" },
-            { photo: brandPhotos.drinks, caption: "A moment to refresh" },
+            { photo: brandPhotos.snackJars, caption: copy["copy-30"] },
+            { photo: brandPhotos.coconut, caption: copy["copy-31"] },
+            { photo: brandPhotos.drinks, caption: copy["copy-32"] },
           ].map(({ photo, caption }) => (
             <figure key={caption}>
               <MockImage photo={photo} />
@@ -158,66 +161,55 @@ export default function Home() {
             </figure>
           ))}
         </div>
-        <p className="fine-print mt-4">
-          Photos from the client&apos;s collection. Current range and packaging
-          are being confirmed.
-        </p>
+        <p className="fine-print mt-4"> {copy["copy-33"]} </p>
       </section>
       <section className="story-section">
         <MockImage kind="story" photo={brandPhotos.snackJars} />
         <div className="story-copy">
-          <span className="eyebrow">MORE THAN WHAT’S ON THE SHELF</span>
+          <span className="eyebrow">{copy["copy-34"]}</span>
           <h2>
-            Rooted in home.
-            <br />
-            Shared with you.
+            {" "}
+            {copy["copy-35"]} <br /> {copy["copy-36"]}{" "}
           </h2>
-          <p>
-            Food has a way of bringing us back. To a place, a person, a moment
-            around the table.
-          </p>
-          <p>
-            Iya Yusuf&apos;s Pantry brings African food items and snacks to
-            customers in the United States, with some products imported directly
-            from Nigeria. Behind the business is a focus on authentic
-            ingredients and relationships with farmers, fishermen, and
-            suppliers.
-          </p>
+          <p> {copy["copy-37"]} </p>
+          <p> {copy["copy-38"]} </p>
           <Link className="text-link mt-5" href="/about">
-            Get to know our story
-            <ArrowRight size={16} />
+            {" "}
+            {copy["copy-39"]} <ArrowRight size={16} />
           </Link>
-          <span className="fine-print mt-7 block">
-            Draft story copy · Subject to client review.
-          </span>
+          <span className="fine-print mt-7 block"> {copy["copy-40"]} </span>
         </div>
       </section>
       <section className="section">
         <SectionHeading
-          eyebrow="FROM THE PANTRY TO THE PLATE"
-          title="A little inspiration for your kitchen"
-          description="Approachable recipes to make the most of your ingredients."
+          eyebrow={copy["copy-41"]}
+          title={copy["copy-42"]}
+          description={copy["copy-43"]}
           href="/recipes"
-          action="Explore all recipes"
+          action={copy["copy-44"]}
         />
         <div className="editorial-grid">
-          {recipes.slice(0, 3).map((recipe, index) => (
-            <RecipeCard key={recipe.slug} recipe={recipe} index={index} />
-          ))}
+          {featured.recipes
+            .flatMap((slug) => recipes.filter((r) => r.slug === slug))
+            .map((recipe, index) => (
+              <RecipeCard key={recipe.slug} recipe={recipe} index={index} />
+            ))}
         </div>
       </section>
       <section className="section border-t border-neutral-200">
         <SectionHeading
-          eyebrow="THE PANTRY JOURNAL"
-          title="Food has a story. Let’s share it."
-          description="Ingredients, culture, and the connections that bring us together."
+          eyebrow={copy["copy-45"]}
+          title={copy["copy-46"]}
+          description={copy["copy-47"]}
           href="/blog"
-          action="Read the journal"
+          action={copy["copy-48"]}
         />
         <div className="editorial-grid">
-          {posts.slice(0, 3).map((post, index) => (
-            <BlogCard key={post.slug} post={post} index={index} />
-          ))}
+          {featured.posts
+            .flatMap((slug) => posts.filter((p) => p.slug === slug))
+            .map((post, index) => (
+              <BlogCard key={post.slug} post={post} index={index} />
+            ))}
         </div>
       </section>
       <Newsletter />

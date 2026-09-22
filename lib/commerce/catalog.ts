@@ -1,5 +1,3 @@
-import variantData from "@/data/product-variants.json";
-
 export type Variant = {
   id: string;
   productSlug: string;
@@ -10,12 +8,17 @@ export type Variant = {
   active: boolean;
 };
 
-// Explicit sample prices; replace these records with approved catalogue data.
-export const variants: readonly Variant[] = variantData;
+// All callers must supply the published catalogue.
 
-export function findVariant(slug: string, size: string, dietary: string) {
+export function findVariant(
+  variants: readonly Variant[],
+  slug: string,
+  size: string,
+  dietary: string,
+) {
   return variants.find(
     (variant) =>
+      variant.active &&
       variant.productSlug === slug &&
       variant.size === size &&
       variant.dietary === dietary,

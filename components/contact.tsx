@@ -1,122 +1,100 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import { Mail, Phone, MessageCircle, ArrowRight, Plus } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { PageHeading } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
-const faqs = [
-  [
-    "Where do you ship?",
-    "Shipping regions and delivery methods are still being confirmed. The finished website will clearly explain where delivery is available.",
-  ],
-  [
-    "How do I find ingredient and allergen information?",
-    "Each final product page is expected to include client-approved ingredients, allergen information, and relevant dietary options. Current labels are illustrative only.",
-  ],
-  [
-    "Can I get help choosing a product?",
-    "The proposed contact form and approved business contact channels will give customers a way to ask questions. Contact details have not yet been supplied.",
-  ],
-  [
-    "Are these products available to order now?",
-    "This is a visual scope prototype. Products, prices, and stock labels are examples; no orders can be placed here.",
-  ],
-];
+
 export function ContactPage() {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/contact.tsx"];
+  const { faqs, settings } = useContent();
+
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="LET’S START A CONVERSATION"
-        title="We’d love to hear from you."
-        description="A question about an ingredient, an order, or something else? There’s a place for it here."
+        eyebrow={copy["copy-9"]}
+        title={copy["copy-10"]}
+        description={copy["copy-11"]}
       />
       <div className="contact-grid">
         <form
           className="contact-form"
           onSubmit={(e) => {
             e.preventDefault();
-            toast(
-              "Prototype only — contact form integration will be implemented during development.",
-            );
+            toast(copy["copy-12"]);
           }}
         >
-          <h2>Send a little hello</h2>
-          <p className="text-sm text-neutral-500 mb-7">
-            Form preview · Please use sample details only.
-          </p>
+          <h2>{copy["copy-13"]}</h2>
+          <p className="text-sm text-neutral-500 mb-7"> {copy["copy-14"]} </p>
           <div className="form-grid">
             <div className="field">
-              <label htmlFor="contact-name">Name</label>
+              <label htmlFor="contact-name">{copy["copy-15"]}</label>
               <input
                 id="contact-name"
-                placeholder="Your name"
+                placeholder={copy["copy-16"]}
                 required
                 autoComplete="off"
               />
             </div>
             <div className="field">
-              <label htmlFor="contact-email">Email address</label>
+              <label htmlFor="contact-email">{copy["copy-17"]}</label>
               <input
                 id="contact-email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={copy["copy-18"]}
                 required
                 autoComplete="off"
               />
             </div>
             <div className="field col-span-2">
-              <label htmlFor="contact-subject">What can we help with?</label>
+              <label htmlFor="contact-subject">{copy["copy-19"]}</label>
               <select id="contact-subject" defaultValue="general">
-                <option value="general">General question</option>
-                <option value="product">Product information</option>
-                <option value="order">Order question</option>
-                <option value="other">Something else</option>
+                <option value="general">{copy["copy-20"]}</option>
+                <option value="product">{copy["copy-21"]}</option>
+                <option value="order">{copy["copy-22"]}</option>
+                <option value="other">{copy["copy-23"]}</option>
               </select>
             </div>
             <div className="field col-span-2">
-              <label htmlFor="contact-message">Your message</label>
+              <label htmlFor="contact-message">{copy["copy-24"]}</label>
               <textarea
                 id="contact-message"
-                placeholder="Tell us a little more…"
+                placeholder={copy["copy-25"]}
                 rows={6}
                 required
               />
             </div>
           </div>
           <Button type="submit" className="mt-6">
-            Send message
-            <ArrowRight />
+            {" "}
+            {copy["copy-26"]} <ArrowRight />
           </Button>
-          <p className="fine-print mt-4">
-            No message is transmitted or stored by this prototype.
-          </p>
+          <p className="fine-print mt-4"> {copy["copy-27"]} </p>
         </form>
         <aside className="contact-details">
-          <span className="eyebrow">OTHER WAYS TO CONNECT</span>
+          <span className="eyebrow">{copy["copy-28"]}</span>
           <h2>
-            Good conversations
-            <br />
-            start somewhere.
+            {" "}
+            {copy["copy-29"]} <br /> {copy["copy-30"]}{" "}
           </h2>
-          <p>
-            Final contact channels will be added when the business details are
-            confirmed.
-          </p>
+          <p> {copy["copy-31"]} </p>
           {[
             {
               icon: Mail,
-              title: "Email",
-              detail: "hello@your-business.example",
+              title: copy["copy-32"],
+              detail: String(settings.contactDetails.email),
             },
             {
               icon: Phone,
-              title: "Phone",
-              detail: "Phone number to be supplied",
+              title: copy["copy-34"],
+              detail: String(settings.contactDetails.phone),
             },
             {
               icon: MessageCircle,
-              title: "WhatsApp",
-              detail: "Business WhatsApp to be confirmed",
+              title: copy["copy-36"],
+              detail: String(settings.contactDetails.whatsapp),
             },
           ].map(({ icon: Icon, title, detail }) => (
             <div className="contact-channel" key={title}>
@@ -124,23 +102,21 @@ export function ContactPage() {
               <div>
                 <h3>{title}</h3>
                 <span>{detail}</span>
-                <small>Placeholder</small>
+                <small>{copy["copy-38"]}</small>
               </div>
             </div>
           ))}
-          <p className="fine-print">
-            Response times and opening hours need client approval.
-          </p>
+          <p className="fine-print"> {copy["copy-39"]} </p>
         </aside>
       </div>
       <section className="faq-section">
         <div>
-          <span className="eyebrow">A FEW HELPFUL ANSWERS</span>
-          <h2>Before you ask.</h2>
-          <p>Sample questions for the finished store.</p>
+          <span className="eyebrow">{copy["copy-40"]}</span>
+          <h2>{copy["copy-41"]}</h2>
+          <p>{copy["copy-42"]}</p>
           <Link className="text-link mt-5" href="/shipping">
-            Shipping information
-            <ArrowRight size={15} />
+            {" "}
+            {copy["copy-43"]} <ArrowRight size={15} />
           </Link>
         </div>
         <div>

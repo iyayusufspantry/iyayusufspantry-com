@@ -1,4 +1,5 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -19,10 +20,8 @@ import {
   RecipeCard,
 } from "@/components/catalog";
 import { useAddToCart } from "@/components/cart-provider";
-import { products, money, productPrice, type Product } from "@/data/products";
-import { categories } from "@/data/categories";
-import { recipes } from "@/data/recipes";
-import { productPhotos } from "@/data/brand-assets";
+import { money, productPrice, type Product } from "@/data/products";
+
 export function ProductVariantSelector({
   label,
   options,
@@ -34,10 +33,16 @@ export function ProductVariantSelector({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/product-detail.tsx"];
+
   return (
     <fieldset className="variant-field">
       <legend>
-        {label} <span className="font-normal text-neutral-500">— {value}</span>
+        {label}{" "}
+        <span className="font-normal text-neutral-500">
+          {copy["copy-1"]} {value}
+        </span>
       </legend>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => (
@@ -56,20 +61,43 @@ export function ProductVariantSelector({
   );
 }
 export function ProductDetail({ product }: { product: Product }) {
+  const { productGalleries } = useContent();
+  const gallery = productGalleries[product.slug] ?? [];
+  const { variants } = useContent();
+
+  const {
+    products,
+    categories,
+    recipes,
+    productPhotos,
+    copy: allCopy,
+  } = useContent();
+  const copy = allCopy["components/product-detail.tsx"];
+
   const [size, setSize] = useState(product.sizes?.[0] ?? "Standard");
   const [dietary, setDietary] = useState(product.dietary?.[0] ?? "Standard");
   const [quantity, setQuantity] = useState(1);
   const [image, setImage] = useState(0);
+  const galleryLabels = gallery.length
+    ? gallery.map((p) => p.alt)
+    : [copy["copy-7"], copy["copy-8"], copy["copy-9"]];
   const add = useAddToCart();
   const router = useRouter();
+  const selectedVariant = variants.find(
+    (v) =>
+      v.productSlug === product.slug &&
+      v.size === size &&
+      v.dietary === dietary &&
+      v.active,
+  );
   const category = categories.find((c) => c.slug === product.category)!;
   const recipe = recipes.find((r) => r.slug === product.recipe);
   return (
     <div className="site-container page-bottom">
-      <nav className="breadcrumb" aria-label="Breadcrumb">
-        <Link href="/">Home</Link>
+      <nav className="breadcrumb" aria-label={copy["copy-4"]}>
+        <Link href="/">{copy["copy-5"]}</Link>
         <ChevronRight />
-        <Link href="/shop">Shop</Link>
+        <Link href="/shop">{copy["copy-6"]}</Link>
         <ChevronRight />
         <Link href={`/shop?category=${category.slug}`}>{category.name}</Link>
         <ChevronRight />
@@ -78,33 +106,29 @@ export function ProductDetail({ product }: { product: Product }) {
       <div className="product-detail-grid">
         <div>
           <MockImage
-            label={
-              [product.name, "Packaging detail", "Serving inspiration"][image]
-            }
+            label={galleryLabels[image]}
+            photo={gallery[image]}
             className="product-main-image"
             index={image}
           />
           <div className="gallery-thumbnails">
-            {["Product", "Packaging", "Serving"].map((label, i) => (
+            {galleryLabels.map((label, i) => (
               <button
                 type="button"
-                key={label}
+                key={i}
                 onClick={() => setImage(i)}
-                aria-label={`View ${label.toLowerCase()} image`}
+                aria-label={copy["template-1"].replaceAll(
+                  "{0}",
+                  String(label.toLowerCase()),
+                )}
                 aria-pressed={image === i}
               >
-                <MockImage
-                  label={label}
-                  index={i}
-                  photo={i === 0 ? productPhotos[product.name] : undefined}
-                />
+                <MockImage label={label} index={i} photo={gallery[i]} />
               </button>
             ))}
           </div>
           <p className="fine-print mt-4">
-            {productPhotos[product.name]
-              ? "Client reference photo · Current packaging and additional views are being confirmed."
-              : "Illustrative preview · Product photography is being prepared."}
+            {productPhotos[product.name] ? copy["copy-10"] : copy["copy-11"]}
           </p>
         </div>
         <div className="product-detail-copy">
@@ -112,25 +136,27 @@ export function ProductDetail({ product }: { product: Product }) {
           <h1>{product.name}</h1>
           <div className="mt-5 flex items-center gap-4">
             <span className="text-2xl font-medium">
-              {money(productPrice(product, size, dietary))}
+              {selectedVariant
+                ? money(productPrice(variants, product, size, dietary))
+                : "—"}
             </span>
             <span className="text-xs text-neutral-500">
-              Sample price ·{" "}
+              {" "}
+              {copy["copy-12"]}{" "}
               {size === "Standard" || size === "Small"
                 ? product.unit
-                : `${size} pack`}
+                : copy["template-2"].replaceAll("{0}", String(size))}
             </span>
           </div>
           <p className="mt-6 text-neutral-500 leading-7">
             {product.description}
           </p>
           <div className="my-6 flex items-center gap-2 text-xs">
-            <Check size={14} />
-            Sample availability checked at checkout
+            <Check size={14} /> {copy["copy-15"]}{" "}
           </div>
           {product.sizes && (
             <ProductVariantSelector
-              label="Size"
+              label={copy["label-3"]}
               options={product.sizes}
               value={size}
               onChange={setSize}
@@ -138,7 +164,7 @@ export function ProductDetail({ product }: { product: Product }) {
           )}
           {product.dietary && (
             <ProductVariantSelector
-              label="Dietary option"
+              label={copy["label-4"]}
               options={product.dietary}
               value={dietary}
               onChange={setDietary}
@@ -148,68 +174,65 @@ export function ProductDetail({ product }: { product: Product }) {
             <QuantitySelector value={quantity} onChange={setQuantity} />
             <Button
               className="flex-1"
+              disabled={!selectedVariant}
               onClick={() => add(product, quantity, size, dietary)}
             >
-              <ShoppingBag />
-              Add to cart
+              <ShoppingBag /> {copy["copy-16"]}{" "}
             </Button>
           </div>
           <Button
             variant="outline"
             className="mt-3 w-full"
+            disabled={!selectedVariant}
             onClick={() => {
               add(product, quantity, size, dietary);
               router.push("/checkout");
             }}
           >
-            Buy now — preview checkout
-            <ArrowRight />
+            {" "}
+            {copy["copy-17"]} <ArrowRight />
           </Button>
           <div className="product-service-note">
             <Truck size={18} />
             <div>
-              Shipping details at checkout
-              <span>Regions and rates to be confirmed.</span>
+              {" "}
+              {copy["copy-18"]} <span>{copy["copy-19"]}</span>
             </div>
           </div>
-          <p className="fine-print">
-            Sample product concept. Ingredients, allergens, dietary suitability,
-            pack sizes, and final prices require client confirmation.
-          </p>
+          <p className="fine-print"> {copy["copy-20"]} </p>
         </div>
       </div>
       <div className="product-info-grid">
         <section>
-          <h2>Product details</h2>
+          <h2>{copy["copy-21"]}</h2>
           <p>{product.description}</p>
+          {product.ingredients && <p>{product.ingredients}</p>}
+          {product.allergens && <p>{product.allergens}</p>}
           <p>
-            Sample pack: {product.unit}. Final ingredient list, allergen
-            information, origin, and storage instructions will be supplied by
-            the client.
+            {" "}
+            {copy["copy-22"]} {product.unit}
+            {copy["copy-23"]}{" "}
           </p>
         </section>
         <section>
-          <h2>Preparation & usage</h2>
+          <h2>{copy["copy-24"]}</h2>
           <p>{product.usage}</p>
         </section>
         <section>
-          <h2>Shipping information</h2>
-          <p>
-            Shipping regions, delivery estimates, and charges are still being
-            scoped. No shipping promise is made in this prototype.
-          </p>
+          <h2>{copy["copy-25"]}</h2>
+          <p> {copy["copy-26"]} </p>
           <Link href="/shipping" className="text-link mt-3">
-            View shipping preview
-            <ArrowRight size={14} />
+            {" "}
+            {copy["copy-27"]} <ArrowRight size={14} />
           </Link>
         </section>
       </div>
       <section className="section">
         <SectionHeading
-          eyebrow="KEEP EXPLORING"
-          title="A few more pantry possibilities"
+          eyebrow={copy["copy-28"]}
+          title={copy["copy-29"]}
           href="/shop"
-          action="Shop all products"
+          action={copy["copy-30"]}
         />
         <ProductGrid
           items={products
@@ -226,15 +249,14 @@ export function ProductDetail({ product }: { product: Product }) {
         <section className="related-recipe-block">
           <div>
             <Leaf strokeWidth={1.3} size={25} />
-            <span className="eyebrow mt-4">PUT YOUR PANTRY TO WORK</span>
+            <span className="eyebrow mt-4">{copy["copy-31"]}</span>
             <h2>
-              Something good starts
-              <br />
-              with one ingredient.
+              {" "}
+              {copy["copy-32"]} <br /> {copy["copy-33"]}{" "}
             </h2>
             <p className="mt-4 max-w-md text-neutral-500">
-              A little kitchen inspiration to help you bring this sample product
-              to the table.
+              {" "}
+              {copy["copy-34"]}{" "}
             </p>
           </div>
           <RecipeCard recipe={recipe} />

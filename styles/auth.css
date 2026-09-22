@@ -1,0 +1,248 @@
+/* Scope the wider editorial treatment to Clerk's authentication modals.
+   The native Clerk dialog still owns focus, dismissal, OAuth and verification. */
+.pantry-auth-modal:has(.cl-signIn-root, .cl-signUp-root) {
+  width: min(900px, calc(100vw - 48px));
+  max-width: none;
+  margin-block: auto;
+}
+.cl-modalBackdrop:has(
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root)
+) {
+  padding-block: 24px;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) {
+  width: 100%;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) > .cl-cardBox {
+  position: relative;
+  width: 100%;
+  min-height: 590px;
+  padding-left: 43%;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 24px;
+  background: var(--brand-paper);
+  box-shadow: 0 32px 100px rgb(9 34 26 / 24%);
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) > .cl-cardBox::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 43%;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgb(9 42 30 / 4%) 22%,
+      rgb(9 42 30 / 35%) 52%,
+      #092a1e 100%
+    ),
+    var(--pantry-auth-image);
+  background-position: center;
+  background-size: cover;
+  pointer-events: none;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) > .cl-cardBox::after {
+  content: var(--pantry-auth-caption);
+  position: absolute;
+  left: 38px;
+  bottom: 44px;
+  width: calc(43% - 76px);
+  color: #fffdf3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -1.6px;
+  text-wrap: balance;
+  pointer-events: none;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-card {
+  width: 100%;
+  flex: 1;
+  gap: 28px;
+  padding: 44px 44px 28px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-header {
+  gap: 26px;
+  text-align: left;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-logoBox {
+  justify-content: flex-start;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-logoImage {
+  width: 176px;
+  max-height: none;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-headerTitle {
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -1.2px;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-headerSubtitle {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-formFieldInput {
+  min-height: 48px;
+  padding-inline: 14px;
+  border: 1px solid #ced8ce;
+  border-radius: 10px;
+  font-size: 15px;
+  box-shadow: none;
+}
+.pantry-auth-modal
+  :is(.cl-signIn-root, .cl-signUp-root)
+  :is(.cl-formButtonPrimary, .cl-socialButtonsBlockButton) {
+  min-height: 48px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-footer {
+  gap: 12px;
+  padding: 18px 32px;
+  border-top: 1px solid var(--brand-border);
+  border-radius: 0;
+  background: transparent;
+}
+.pantry-auth-modal .cl-modalCloseButton {
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--brand-border);
+  border-radius: 50%;
+  background: var(--brand-paper);
+  color: var(--brand-ink);
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-footerAction {
+  padding: 0;
+}
+.pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-footerItem {
+  padding: 12px 0 0;
+  border-top: 0;
+}
+@media (max-width: 700px) {
+  .pantry-auth-modal:has(.cl-signIn-root, .cl-signUp-root) {
+    width: min(440px, calc(100vw - 24px));
+  }
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) > .cl-cardBox {
+    min-height: 0;
+    padding-left: 0;
+    border-radius: 20px;
+  }
+  .pantry-auth-modal
+    :is(.cl-signIn-root, .cl-signUp-root)
+    > .cl-cardBox::before,
+  .pantry-auth-modal
+    :is(.cl-signIn-root, .cl-signUp-root)
+    > .cl-cardBox::after {
+    content: none;
+  }
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-card {
+    padding: 30px 24px 24px;
+    gap: 24px;
+  }
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-logoImage {
+    width: 160px;
+  }
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-headerTitle {
+    font-size: 30px;
+  }
+  .pantry-auth-modal :is(.cl-signIn-root, .cl-signUp-root) .cl-footer {
+    padding: 16px 24px;
+  }
+}
+
+@layer components {
+  /* Keep the development notice, with a plain backdrop instead of a masked grid. */
+  .cl-cardBox [data-clerk-dev-mode-overlay] {
+    display: none;
+  }
+  .pantry-auth-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(32px, 6vw, 88px);
+    padding-block: 56px 72px;
+  }
+  .pantry-auth-story {
+    min-width: 0;
+  }
+  .pantry-auth-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+    color: var(--brand-deep);
+    font-size: 13px;
+  }
+  .pantry-auth-back:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .pantry-auth-story > .eyebrow {
+    display: block;
+    margin-bottom: 16px;
+  }
+  .pantry-auth-story h1 {
+    max-width: 540px;
+    font-size: clamp(40px, 4.5vw, 64px);
+    line-height: 1.08;
+  }
+  .pantry-auth-story h1 em {
+    color: var(--brand-deep);
+  }
+  .pantry-auth-story > p {
+    max-width: 430px;
+    margin-top: 20px;
+    color: var(--brand-muted);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .pantry-auth-photo {
+    position: relative;
+    height: 240px;
+    margin-top: 32px;
+    overflow: hidden;
+    border-radius: 80px 20px 20px 20px;
+    background: var(--brand-mint);
+  }
+  .pantry-auth-photo > span {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px;
+    background: var(--brand-mint);
+    color: var(--brand-deep);
+    font-size: 12px;
+  }
+  .pantry-auth-form {
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    .pantry-auth-page {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+      padding-block: 24px 48px;
+    }
+    .pantry-auth-back {
+      margin-bottom: 24px;
+    }
+    .pantry-auth-story > p {
+      margin-top: 14px;
+    }
+    .pantry-auth-photo {
+      display: none;
+    }
+  }
+}

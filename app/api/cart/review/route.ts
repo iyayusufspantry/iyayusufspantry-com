@@ -1,4 +1,5 @@
-import { CommerceError, quoteCart, variants } from "@/lib/commerce/catalog";
+import { getContent } from "@/lib/content/server";
+import { CommerceError, quoteCart } from "@/lib/commerce/catalog";
 import { availableStock } from "@/lib/commerce/orders";
 import { sampleStock } from "@/lib/commerce/sample";
 
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
       { status: 400, headers },
     );
   try {
+    const { variants } = await getContent();
     const chunks: Uint8Array[] = [];
     let size = 0;
     while (true) {
@@ -58,7 +60,7 @@ export async function POST(request: Request) {
     const quote = quoteCart(
       body.items,
       variants,
-      availableStock({ stock: sampleStock(), orders: [] }),
+      availableStock({ stock: sampleStock(variants), orders: [] }),
     );
     return Response.json(
       {

@@ -1,7 +1,10 @@
+import { getContent } from "@/lib/content/server";
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
+
 import { ProductDetail } from "@/components/product-detail";
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const { products } = await getContent();
+
   return products.map((p) => ({ slug: p.slug }));
 }
 export async function generateMetadata({
@@ -9,9 +12,12 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const { products, copy: allCopy } = await getContent();
+  const copy = allCopy["app/shop/[slug]/page.tsx"];
+
   const { slug } = await params;
   return {
-    title: products.find((p) => p.slug === slug)?.name ?? "Product not found",
+    title: products.find((p) => p.slug === slug)?.name ?? copy["copy-1"],
   };
 }
 export default async function ProductPage({
@@ -19,6 +25,8 @@ export default async function ProductPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const { products } = await getContent();
+
   const { slug } = await params;
   const product = products.find((p) => p.slug === slug);
   if (!product) notFound();

@@ -1,4 +1,5 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -20,13 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PageHeading } from "@/components/catalog";
 import { useLoadDemoCart } from "@/components/cart-provider";
-import {
-  openDecisions,
-  scopeFeatures,
-  clientMaterials,
-  exclusions,
-  prototypeScreens,
-} from "@/data/scope";
+
 export function ScopeSection({
   number,
   title,
@@ -57,6 +52,9 @@ export function ScopeFeatureCard({
   description: string;
   index: number;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/scope-presentation.tsx"];
+
   const Icon = [Monitor, ShoppingBag, BookOpen, Package][index % 4];
   return (
     <article className="scope-feature">
@@ -64,13 +62,14 @@ export function ScopeFeatureCard({
       <h3>{title}</h3>
       <p>{description}</p>
       <span className="scope-feature-status">
-        <Check size={12} />
-        Proposed scope
+        <Check size={12} /> {copy["copy-1"]}{" "}
       </span>
     </article>
   );
 }
 function QuestionsList() {
+  const { openDecisions } = useContent();
+
   return (
     <ol className="questions-list">
       {openDecisions.map(([title, question], index) => (
@@ -86,30 +85,29 @@ function QuestionsList() {
   );
 }
 export function ScopeQuestions() {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/scope-presentation.tsx"];
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <Button variant="outline">
-          <CircleHelp />
-          Scope questions
+          <CircleHelp /> {copy["copy-2"]}{" "}
         </Button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
         <Dialog.Content className="dialog-content">
           <div className="dialog-heading">
-            <span className="eyebrow">BEFORE FINAL PRICING</span>
-            <Dialog.Title>Let’s confirm the details.</Dialog.Title>
-            <Dialog.Description>
-              These decisions may affect the final project scope, timeline, and
-              price.
-            </Dialog.Description>
+            <span className="eyebrow">{copy["copy-3"]}</span>
+            <Dialog.Title>{copy["copy-4"]}</Dialog.Title>
+            <Dialog.Description> {copy["copy-5"]} </Dialog.Description>
             <Dialog.Close asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 className="dialog-close"
-                aria-label="Close scope questions"
+                aria-label={copy["copy-6"]}
               >
                 <X />
               </Button>
@@ -119,7 +117,7 @@ export function ScopeQuestions() {
             className="dialog-scroll"
             tabIndex={0}
             role="region"
-            aria-label="Open scope decisions"
+            aria-label={copy["copy-7"]}
           >
             <QuestionsList />
           </div>
@@ -129,33 +127,39 @@ export function ScopeQuestions() {
   );
 }
 export function ScopePage() {
+  const {
+    scopeFeatures,
+    clientMaterials,
+    exclusions,
+    copy: allCopy,
+  } = useContent();
+  const copy = allCopy["components/scope-presentation.tsx"];
+
   const flow = [
-    ["Discover", "/"],
-    ["Browse", "/shop"],
-    ["Product", "/shop/plantain-chips"],
-    ["Cart", "/cart"],
-    ["Secure Checkout", "/checkout"],
-    ["Confirmation", "/order-confirmation"],
+    [copy["copy-8"], "/"],
+    [copy["copy-9"], "/shop"],
+    [copy["copy-10"], "/shop/plantain-chips"],
+    [copy["copy-11"], "/cart"],
+    [copy["copy-12"], "/checkout"],
+    [copy["copy-13"], "/order-confirmation"],
   ];
   return (
     <div className="site-container page-bottom scope-page">
       <div className="scope-hero">
         <div>
           <span className="eyebrow">
-            <FileText size={14} />
-            PREPARED FOR SIMBIAT · DISCOVERY FOLLOW-UP
+            <FileText size={14} /> {copy["copy-14"]}{" "}
           </span>
           <h1>
-            Proposed E-Commerce Website <span>— Project Scope</span>
+            {" "}
+            {copy["copy-15"]} <span>{copy["copy-16"]}</span>
           </h1>
-          <p>
-            Visual scope prepared following our initial discovery conversation.
-          </p>
+          <p> {copy["copy-17"]} </p>
           <div className="flex flex-wrap gap-3 mt-7">
             <Button asChild>
               <Link href="/prototype">
-                Explore the prototype
-                <ArrowUpRight />
+                {" "}
+                {copy["copy-18"]} <ArrowUpRight />
               </Link>
             </Button>
             <ScopeQuestions />
@@ -163,78 +167,58 @@ export function ScopePage() {
         </div>
         <div className="scope-overview">
           <Layers3 size={28} strokeWidth={1.2} />
-          <span>AT A GLANCE</span>
+          <span>{copy["copy-19"]}</span>
           <dl>
             <div>
-              <dt>Initial products</dt>
-              <dd>~15</dd>
+              <dt>{copy["copy-20"]}</dt>
+              <dd>{copy["copy-21"]}</dd>
             </div>
             <div>
-              <dt>Product categories</dt>
-              <dd>~5</dd>
+              <dt>{copy["copy-22"]}</dt>
+              <dd>{copy["copy-23"]}</dd>
             </div>
             <div>
-              <dt>Checkout approach</dt>
-              <dd>Guest</dd>
+              <dt>{copy["copy-24"]}</dt>
+              <dd>{copy["copy-25"]}</dd>
             </div>
             <div>
-              <dt>Project stage</dt>
-              <dd>Scope review</dd>
+              <dt>{copy["copy-26"]}</dt>
+              <dd>{copy["copy-27"]}</dd>
             </div>
           </dl>
-          <p>Proposed direction. Final pricing follows scope confirmation.</p>
+          <p>{copy["copy-28"]}</p>
         </div>
       </div>
       <div className="prototype-notice">
         <FileText size={23} strokeWidth={1.4} />
         <div>
-          <h2>
-            This prototype is a visual project-scoping tool, not the final
-            website.
-          </h2>
-          <p>
-            The layout, imagery, wording, colors, technical architecture,
-            integrations, and features may change after scope approval.
-          </p>
-          <p>
-            No real customer data or payments are processed by this prototype.
-          </p>
+          <h2> {copy["copy-29"]} </h2>
+          <p> {copy["copy-30"]} </p>
+          <p> {copy["copy-31"]} </p>
         </div>
       </div>
-      <nav className="scope-nav" aria-label="Scope sections">
-        <a href="#objective">Objective</a>
-        <a href="#customer-flow">Customer flow</a>
-        <a href="#included">Proposed scope</a>
-        <a href="#security">Security</a>
-        <a href="#materials">Your materials</a>
-        <a href="#decisions">Open decisions</a>
+      <nav className="scope-nav" aria-label={copy["copy-32"]}>
+        <a href="#objective">{copy["copy-33"]}</a>
+        <a href="#customer-flow">{copy["copy-34"]}</a>
+        <a href="#included">{copy["copy-35"]}</a>
+        <a href="#security">{copy["copy-36"]}</a>
+        <a href="#materials">{copy["copy-37"]}</a>
+        <a href="#decisions">{copy["copy-38"]}</a>
       </nav>
-      <ScopeSection number="01" title="Project objective" id="objective">
-        <p className="scope-lead">
-          Build a professional, secure, mobile-friendly e-commerce experience
-          for approximately 15 initial African food products and snacks, with
-          room for the catalog and content strategy to grow.
-        </p>
-        <p className="scope-body-copy">
-          The aim is a clear, welcoming place to discover the business,
-          understand the products, find cooking inspiration, and shop with
-          confidence.
-        </p>
+      <ScopeSection number="01" title={copy["copy-39"]} id="objective">
+        <p className="scope-lead"> {copy["copy-40"]} </p>
+        <p className="scope-body-copy"> {copy["copy-41"]} </p>
       </ScopeSection>
-      <ScopeSection
-        number="02"
-        title="Proposed customer experience"
-        id="customer-flow"
-      >
-        <p className="scope-body-copy">
-          A straightforward guest shopping journey. Select any step to preview
-          its screen.
-        </p>
+      <ScopeSection number="02" title={copy["copy-42"]} id="customer-flow">
+        <p className="scope-body-copy"> {copy["copy-43"]} </p>
         <ol className="customer-flow">
           {flow.map(([title, href], index) => (
             <li key={title}>
               <Link href={href}>
-                <span>0{index + 1}</span>
+                <span>
+                  {copy["copy-44"]}
+                  {index + 1}
+                </span>
                 <strong>{title}</strong>
                 <ArrowUpRight size={14} />
               </Link>
@@ -247,39 +231,37 @@ export function ScopePage() {
         <div className="content-flows">
           <div>
             <BookOpen size={21} />
-            <h3>Recipe discovery</h3>
+            <h3>{copy["copy-45"]}</h3>
             <p>
-              <Link href="/recipes">Recipes</Link>
+              <Link href="/recipes">{copy["copy-46"]}</Link>
+              <ArrowRight size={14} /> {copy["copy-47"]}{" "}
               <ArrowRight size={14} />
-              Educational content
-              <ArrowRight size={14} />
-              <Link href="/shop">Relevant products</Link>
+              <Link href="/shop">{copy["copy-48"]}</Link>
             </p>
           </div>
           <div>
             <FileText size={21} />
-            <h3>Stories & education</h3>
+            <h3>{copy["copy-49"]}</h3>
             <p>
-              <Link href="/blog">Blog</Link>
+              <Link href="/blog">{copy["copy-50"]}</Link>
+              <ArrowRight size={14} /> {copy["copy-51"]}{" "}
               <ArrowRight size={14} />
-              Business / educational content
-              <ArrowRight size={14} />
-              <Link href="/">Store discovery</Link>
+              <Link href="/">{copy["copy-52"]}</Link>
             </p>
           </div>
         </div>
       </ScopeSection>
-      <ScopeSection number="03" title="Initial catalog assumptions">
+      <ScopeSection number="03" title={copy["copy-53"]}>
         <div className="assumption-grid">
           {[
-            "Approximately 15 products",
-            "Approximately 5 product categories",
-            "Product size variants where required",
-            "Dietary variants where required",
-            "Client supplies final product photos",
-            "Client supplies / approves product descriptions",
-            "Client supplies final prices",
-            "Client supplies shipping rules",
+            copy["copy-54"],
+            copy["copy-55"],
+            copy["copy-56"],
+            copy["copy-57"],
+            copy["copy-58"],
+            copy["copy-59"],
+            copy["copy-60"],
+            copy["copy-61"],
           ].map((item) => (
             <div key={item}>
               <Check size={16} />
@@ -287,20 +269,10 @@ export function ScopePage() {
             </div>
           ))}
         </div>
-        <p className="fine-print mt-5">
-          Sample products and dietary labels illustrate possible configurations.
-          They do not represent a confirmed inventory.
-        </p>
+        <p className="fine-print mt-5"> {copy["copy-62"]} </p>
       </ScopeSection>
-      <ScopeSection
-        number="04"
-        title="Included in proposed scope"
-        id="included"
-      >
-        <p className="scope-body-copy">
-          These capabilities form the proposed starting point for discussion and
-          pricing. Production integrations are represented visually here.
-        </p>
+      <ScopeSection number="04" title={copy["copy-63"]} id="included">
+        <p className="scope-body-copy"> {copy["copy-64"]} </p>
         <div className="scope-feature-grid">
           {scopeFeatures.map(([title, description], index) => (
             <ScopeFeatureCard
@@ -311,46 +283,21 @@ export function ScopePage() {
             />
           ))}
         </div>
-        <p className="notice mt-6">
-          Payment provider, hosting provider, CMS, authentication approach, and
-          analytics implementation are not finalized in this prototype. The
-          prototype stack does not commit the production architecture.
-        </p>
+        <p className="notice mt-6"> {copy["copy-65"]} </p>
       </ScopeSection>
-      <ScopeSection
-        number="05"
-        title="A thoughtful approach to security"
-        id="security"
-      >
+      <ScopeSection number="05" title={copy["copy-66"]} id="security">
         <div className="security-grid">
           <div className="security-statement">
             <ShieldCheck size={35} strokeWidth={1.2} />
-            <h3>
-              Handle less sensitive information. Rely on established providers.
-            </h3>
-            <p>
-              The production implementation should minimize how much sensitive
-              information the custom application handles directly.
-            </p>
+            <h3> {copy["copy-67"]} </h3>
+            <p> {copy["copy-68"]} </p>
           </div>
           <div className="security-points">
             {[
-              [
-                "Payment processing",
-                "Use an established third-party payment provider such as Stripe, subject to approval. Full card data should not be stored by the custom application.",
-              ],
-              [
-                "Administrative access",
-                "Use established authentication and security practices for administrative access. The approach and provider remain to be confirmed.",
-              ],
-              [
-                "Practical safeguards",
-                "Use appropriate security practices and trusted providers. Security cannot be represented as an absolute guarantee.",
-              ],
-              [
-                "Customer privacy",
-                "Guest checkout is the default prototype flow. Customer accounts remain an open decision rather than a committed feature.",
-              ],
+              [copy["copy-69"], copy["copy-70"]],
+              [copy["copy-71"], copy["copy-72"]],
+              [copy["copy-73"], copy["copy-74"]],
+              [copy["copy-75"], copy["copy-76"]],
             ].map(([title, text]) => (
               <div key={title}>
                 <LockKeyhole size={17} />
@@ -363,17 +310,16 @@ export function ScopePage() {
           </div>
         </div>
       </ScopeSection>
-      <ScopeSection number="06" title="Content management">
-        <p className="scope-lead">Everyday updates should be everyday work.</p>
-        <p className="scope-body-copy">
-          The production website is expected to support routine management of
-          products, categories, recipes, and blog posts without requiring a
-          developer for every ordinary content change. The content platform,
-          administrative roles, and editing workflow will be agreed during
-          scoping.
-        </p>
+      <ScopeSection number="06" title={copy["copy-77"]}>
+        <p className="scope-lead">{copy["copy-78"]}</p>
+        <p className="scope-body-copy"> {copy["copy-79"]} </p>
         <div className="content-management-tags">
-          {["Products", "Categories", "Recipes", "Blog posts"].map((item) => (
+          {[
+            copy["copy-80"],
+            copy["copy-81"],
+            copy["copy-82"],
+            copy["copy-83"],
+          ].map((item) => (
             <span key={item}>
               <Check size={14} />
               {item}
@@ -381,16 +327,8 @@ export function ScopePage() {
           ))}
         </div>
       </ScopeSection>
-      <ScopeSection
-        number="07"
-        title="Client-provided materials"
-        id="materials"
-      >
-        <p className="scope-body-copy">
-          A checklist of materials needed to turn this neutral prototype into a
-          store that feels like your business. Checkboxes are for this review
-          session only.
-        </p>
+      <ScopeSection number="07" title={copy["copy-84"]} id="materials">
+        <p className="scope-body-copy"> {copy["copy-85"]} </p>
         <div className="materials-checklist">
           {clientMaterials.map((item, index) => (
             <label key={item} htmlFor={`material-${index}`}>
@@ -400,51 +338,36 @@ export function ScopePage() {
           ))}
         </div>
       </ScopeSection>
-      <ScopeSection
-        number="08"
-        title="Open items / decisions required"
-        id="decisions"
-      >
-        <p className="scope-body-copy">
-          These decisions may affect the final project scope, timeline, and
-          price.
-        </p>
+      <ScopeSection number="08" title={copy["copy-86"]} id="decisions">
+        <p className="scope-body-copy"> {copy["copy-87"]} </p>
         <QuestionsList />
       </ScopeSection>
-      <ScopeSection number="09" title="Not included / not yet confirmed">
-        <p className="scope-body-copy">
-          The following capabilities should not automatically be assumed. Any
-          additions need a separate scope discussion before they are included in
-          pricing.
-        </p>
+      <ScopeSection number="09" title={copy["copy-88"]}>
+        <p className="scope-body-copy"> {copy["copy-89"]} </p>
         <div className="exclusions-grid">
           {exclusions.map((item) => (
             <div key={item}>
-              <span>—</span>
+              <span>{copy["copy-90"]}</span>
               {item}
             </div>
           ))}
         </div>
       </ScopeSection>
       <section className="scope-closing">
-        <span className="eyebrow">THE NEXT STEP</span>
-        <h2>Scope Review</h2>
-        <p>
-          Please review the proposed pages, customer flow, and functionality.
-          Features can be added, removed, or simplified before the project scope
-          and price are finalized.
-        </p>
+        <span className="eyebrow">{copy["copy-91"]}</span>
+        <h2>{copy["copy-92"]}</h2>
+        <p> {copy["copy-93"]} </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Button asChild>
             <Link href="/">
-              Review storefront
-              <ArrowUpRight />
+              {" "}
+              {copy["copy-94"]} <ArrowUpRight />
             </Link>
           </Button>
           <Button asChild variant="outline">
             <a href="#customer-flow">
-              View customer flow
-              <ArrowRight />
+              {" "}
+              {copy["copy-95"]} <ArrowRight />
             </a>
           </Button>
           <ScopeQuestions />
@@ -454,30 +377,31 @@ export function ScopePage() {
   );
 }
 export function PrototypeDirectory() {
+  const { prototypeScreens, copy: allCopy } = useContent();
+  const copy = allCopy["components/scope-presentation.tsx"];
+
   const loadDemo = useLoadDemoCart();
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="SIMBIAT · PRESENTATION DIRECTORY"
-        title="One project. Every perspective."
-        description="A guided collection of the proposed screens. Explore the customer experience, review the scope, and capture the layouts for your conversation."
+        eyebrow={copy["copy-96"]}
+        title={copy["copy-97"]}
+        description={copy["copy-98"]}
       />
       <div className="notice directory-note">
         <div>
-          <h2>Ready for your walkthrough</h2>
-          <p>
-            Every screen uses sample content. Load a sample cart to populate the
-            shopping flow, or begin with the project scope.
-          </p>
+          <h2>{copy["copy-99"]}</h2>
+          <p> {copy["copy-100"]} </p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Button variant="outline" onClick={loadDemo}>
-            Load sample cart
+            {" "}
+            {copy["copy-101"]}{" "}
           </Button>
           <Button asChild>
             <Link href="/scope">
-              Review scope
-              <ArrowRight />
+              {" "}
+              {copy["copy-102"]} <ArrowRight />
             </Link>
           </Button>
         </div>
@@ -487,14 +411,15 @@ export function PrototypeDirectory() {
           <Link key={screen.href} href={screen.href} className="directory-card">
             <div className="flex justify-between">
               <span className="eyebrow">
-                {String(index + 1).padStart(2, "0")} / {screen.group}
+                {String(index + 1).padStart(2, "0")} {copy["copy-103"]}{" "}
+                {screen.group}
               </span>
               <ArrowUpRight size={20} strokeWidth={1.3} />
             </div>
             <h2>{screen.name}</h2>
             <p>{screen.purpose}</p>
             <div className="flex justify-between gap-2 mt-auto pt-7">
-              <span className="badge">Scope Prototype</span>
+              <span className="badge">{copy["copy-104"]}</span>
               <code>
                 {screen.href.length > 30
                   ? screen.href.split("/").slice(0, 2).join("/") + "/[slug]"

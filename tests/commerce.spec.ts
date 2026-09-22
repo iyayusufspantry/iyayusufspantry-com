@@ -1,5 +1,6 @@
+import variants from "../scripts/contentful/fixtures/product-variants.json";
 import { expect, test } from "@playwright/test";
-import { quoteCart, variants } from "../lib/commerce/catalog";
+import { quoteCart } from "../lib/commerce/catalog";
 import {
   adjustStock,
   availableStock,
@@ -13,7 +14,10 @@ import { sampleStock } from "../lib/commerce/sample";
 
 const variantId = "classic-chin-chin:Large:Vegan";
 const items = [{ variantId, quantity: 2 }];
-const initial = (): CommerceState => ({ stock: sampleStock(), orders: [] });
+const initial = (): CommerceState => ({
+  stock: sampleStock(variants),
+  orders: [],
+});
 
 test("skip link becomes visible on keyboard focus and moves focus to main content", async ({
   page,

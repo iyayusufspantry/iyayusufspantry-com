@@ -1,7 +1,7 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import { useState } from "react";
-import { products } from "@/data/products";
-import { categories } from "@/data/categories";
+
 import {
   EmptyState,
   FilterChips,
@@ -15,6 +15,9 @@ export function ShopBrowser({
 }: {
   initialCategory?: string;
 }) {
+  const { products, categories, copy: allCopy } = useContent();
+  const copy = allCopy["components/shop-browser.tsx"];
+
   const [category, setCategory] = useState(
     categories.find((c) => c.slug === initialCategory)?.name ?? "All",
   );
@@ -35,28 +38,29 @@ export function ShopBrowser({
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="YOUR NEXT PANTRY FAVORITE"
-        title="Good food starts here."
-        description="Familiar staples, satisfying snacks, and a few new discoveries. Make yourself at home."
+        eyebrow={copy["copy-4"]}
+        title={copy["copy-5"]}
+        description={copy["copy-6"]}
       />
       <div className="catalog-toolbar">
         <SearchField value={query} onChange={setQuery} />
         <div className="flex items-center gap-3">
           <span className="text-xs text-neutral-500" aria-live="polite">
-            {filtered.length} products
+            {filtered.length} {copy["copy-7"]}{" "}
           </span>
           <label className="sr-only" htmlFor="sort">
-            Sort products
+            {" "}
+            {copy["copy-8"]}{" "}
           </label>
           <select
             id="sort"
             value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
-            <option value="featured">Sort: Featured</option>
-            <option value="price-low">Price: Low to high</option>
-            <option value="price-high">Price: High to low</option>
-            <option value="name">Name: A–Z</option>
+            <option value="featured">{copy["copy-9"]}</option>
+            <option value="price-low">{copy["copy-10"]}</option>
+            <option value="price-high">{copy["copy-11"]}</option>
+            <option value="name">{copy["copy-12"]}</option>
           </select>
         </div>
       </div>
@@ -65,17 +69,11 @@ export function ShopBrowser({
         value={category}
         onChange={setCategory}
       />
-      <p className="fine-print mb-7">
-        Illustrative catalog · Products, prices, dietary labels, and
-        availability need client approval.
-      </p>
+      <p className="fine-print mb-7"> {copy["copy-13"]} </p>
       {filtered.length ? (
         <ProductGrid items={filtered} />
       ) : (
-        <EmptyState
-          title="No pantry finds just yet"
-          description="Try a different search or explore another category."
-        >
+        <EmptyState title={copy["copy-14"]} description={copy["copy-15"]}>
           <Button
             variant="outline"
             onClick={() => {
@@ -83,7 +81,8 @@ export function ShopBrowser({
               setCategory("All");
             }}
           >
-            Reset filters
+            {" "}
+            {copy["copy-16"]}{" "}
           </Button>
         </EmptyState>
       )}

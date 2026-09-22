@@ -1,4 +1,5 @@
 "use client";
+import { useContent } from "@/components/content-provider";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -22,36 +23,54 @@ import {
   QuantitySelector,
 } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
-import { money, products, productPrice } from "@/data/products";
+import { money, productPrice } from "@/data/products";
 import { CartReview } from "@/components/cart-review";
 
 export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
+  const { variants } = useContent();
+
+  const { products, copy: allCopy } = useContent();
+  const copy = allCopy["components/commerce.tsx"];
+
   const items = useCart((state) => state.items);
   const count = useCart(selectCartCount);
   const subtotal = useCart(selectCartSubtotal);
   return (
     <aside className="order-summary">
       <div className="flex items-center justify-between">
-        <h2>Order summary</h2>
-        <span className="text-xs text-neutral-500">{count} items</span>
+        <h2>{copy["copy-1"]}</h2>
+        <span className="text-xs text-neutral-500">
+          {count} {copy["copy-2"]}
+        </span>
       </div>
       {checkout && (
         <div className="summary-items">
           {items.length ? (
             items.map((item) => {
-              const product = products.find((p) => p.slug === item.slug)!;
+              const product = products.find((p) => p.slug === item.slug);
+              if (
+                !product ||
+                !variants.some(
+                  (v) =>
+                    v.productSlug === item.slug &&
+                    v.size === item.size &&
+                    v.dietary === item.dietary &&
+                    v.active,
+                )
+              )
+                return null;
               return (
                 <div key={item.key} className="summary-item">
                   <MockImage label={product.name} />
                   <div className="min-w-0 flex-1">
                     <strong>{product.name}</strong>
                     <span>
-                      {item.size} · Qty {item.quantity}
+                      {item.size} {copy["copy-3"]} {item.quantity}
                     </span>
                   </div>
                   <span>
                     {money(
-                      productPrice(product, item.size, item.dietary) *
+                      productPrice(variants, product, item.size, item.dietary) *
                         item.quantity,
                     )}
                   </span>
@@ -59,56 +78,56 @@ export function OrderSummary({ checkout = false }: { checkout?: boolean }) {
               );
             })
           ) : (
-            <p className="text-sm text-neutral-500">
-              Your sample items will appear here.
-            </p>
+            <p className="text-sm text-neutral-500"> {copy["copy-4"]} </p>
           )}
         </div>
       )}
       <dl className="summary-totals">
         <div>
-          <dt>Subtotal</dt>
+          <dt>{copy["copy-5"]}</dt>
           <dd>{money(subtotal)}</dd>
         </div>
         <div>
-          <dt>Estimated shipping</dt>
-          <dd className="text-neutral-500">To be confirmed</dd>
+          <dt>{copy["copy-6"]}</dt>
+          <dd className="text-neutral-500">{copy["copy-7"]}</dd>
         </div>
         <div>
-          <dt>Estimated tax</dt>
-          <dd className="text-neutral-500">To be confirmed</dd>
+          <dt>{copy["copy-8"]}</dt>
+          <dd className="text-neutral-500">{copy["copy-9"]}</dd>
         </div>
         <div className="summary-total">
-          <dt>Estimated total</dt>
+          <dt>{copy["copy-10"]}</dt>
           <dd>
             {money(subtotal)} <small>USD</small>
           </dd>
         </div>
       </dl>
-      <p className="fine-print">
-        Excludes shipping and tax. Final total is not yet calculated.
-      </p>
+      <p className="fine-print"> {copy["copy-12"]} </p>
       {checkout && <CartReview key={JSON.stringify(items)} items={items} />}
       {!checkout && (
         <Button asChild className="mt-6 w-full">
           <Link href="/checkout">
-            Continue to checkout
-            <ArrowRight />
+            {" "}
+            {copy["copy-13"]} <ArrowRight />
           </Link>
         </Button>
       )}
       <div className="summary-security">
         <LockKeyhole size={16} />
         <span>
-          Payment provider integration proposed.
-          <br />
-          No payment is collected in this prototype.
+          {" "}
+          {copy["copy-14"]} <br /> {copy["copy-15"]}{" "}
         </span>
       </div>
     </aside>
   );
 }
 export function CartPage() {
+  const { variants } = useContent();
+
+  const { products, copy: allCopy } = useContent();
+  const copy = allCopy["components/commerce.tsx"];
+
   const items = useCart((state) => state.items);
   const ready = useCart((state) => state.ready);
   const count = useCart(selectCartCount);
@@ -118,27 +137,26 @@ export function CartPage() {
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="A FEW GOOD THINGS"
-        title="Your shopping bag"
-        description="A little taste of home, ready for your kitchen."
+        eyebrow={copy["copy-16"]}
+        title={copy["copy-17"]}
+        description={copy["copy-18"]}
       />
       {!ready ? (
         <div className="loading-panel" role="status">
-          Loading your sample bag…
+          {" "}
+          {copy["copy-19"]}{" "}
         </div>
       ) : !items.length ? (
-        <EmptyState
-          title="Your bag is waiting for something good"
-          description="Explore the sample collection, or load a sample bag to preview the complete shopping flow."
-        >
+        <EmptyState title={copy["copy-20"]} description={copy["copy-21"]}>
           <Button asChild>
             <Link href="/shop">
-              Explore products
-              <ArrowRight />
+              {" "}
+              {copy["copy-22"]} <ArrowRight />
             </Link>
           </Button>
           <Button variant="outline" onClick={loadDemo}>
-            Load sample cart
+            {" "}
+            {copy["copy-23"]}{" "}
           </Button>
         </EmptyState>
       ) : (
@@ -146,15 +164,33 @@ export function CartPage() {
           <section>
             <div className="cart-list-heading">
               <h2>
-                Your items <span>({count})</span>
+                {" "}
+                {copy["copy-24"]}{" "}
+                <span>
+                  {copy["copy-25"]}
+                  {count}
+                  {copy["copy-26"]}
+                </span>
               </h2>
               <Button variant="ghost" size="sm" onClick={loadDemo}>
-                Reset to sample cart
+                {" "}
+                {copy["copy-27"]}{" "}
               </Button>
             </div>
             <div className="cart-items">
               {items.map((item) => {
-                const product = products.find((p) => p.slug === item.slug)!;
+                const product = products.find((p) => p.slug === item.slug);
+                if (
+                  !product ||
+                  !variants.some(
+                    (v) =>
+                      v.productSlug === item.slug &&
+                      v.size === item.size &&
+                      v.dietary === item.dietary &&
+                      v.active,
+                  )
+                )
+                  return null;
                 return (
                   <article className="cart-item" key={item.key}>
                     <Link href={`/shop/${product.slug}`}>
@@ -176,15 +212,24 @@ export function CartPage() {
                           </p>
                           <span className="text-xs text-neutral-500">
                             {money(
-                              productPrice(product, item.size, item.dietary),
+                              productPrice(
+                                variants,
+                                product,
+                                item.size,
+                                item.dietary,
+                              ),
                             )}{" "}
-                            each · Sample price
+                            {copy["copy-29"]}{" "}
                           </span>
                         </div>
                         <strong>
                           {money(
-                            productPrice(product, item.size, item.dietary) *
-                              item.quantity,
+                            productPrice(
+                              variants,
+                              product,
+                              item.size,
+                              item.dietary,
+                            ) * item.quantity,
                           )}
                         </strong>
                       </div>
@@ -197,11 +242,13 @@ export function CartPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          aria-label={`Remove ${product.name}`}
+                          aria-label={copy["template-1"].replaceAll(
+                            "{0}",
+                            String(product.name),
+                          )}
                           onClick={() => remove(item.key)}
                         >
-                          <Trash2 size={14} />
-                          Remove
+                          <Trash2 size={14} /> {copy["copy-30"]}{" "}
                         </Button>
                       </div>
                     </div>
@@ -210,13 +257,9 @@ export function CartPage() {
               })}
             </div>
             <Link href="/shop" className="text-link mt-6">
-              <ArrowLeft size={15} />
-              Continue shopping
+              <ArrowLeft size={15} /> {copy["copy-31"]}{" "}
             </Link>
-            <p className="notice mt-8">
-              Payment and final shipping/tax calculation would be handled during
-              production implementation.
-            </p>
+            <p className="notice mt-8"> {copy["copy-32"]} </p>
           </section>
           <OrderSummary />
         </div>
@@ -239,11 +282,16 @@ function CheckoutField({
   optional?: boolean;
   wide?: boolean;
 }) {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/commerce.tsx"];
+
   return (
     <div className={wide ? "field col-span-2" : "field"}>
       <label htmlFor={name}>
         {label}
-        {optional && <span className="text-neutral-500"> (optional)</span>}
+        {optional && (
+          <span className="text-neutral-500"> {copy["copy-33"]}</span>
+        )}
       </label>
       <input
         id={name}
@@ -255,31 +303,32 @@ function CheckoutField({
   );
 }
 export function CheckoutPage() {
+  const { copy: allCopy } = useContent();
+  const copy = allCopy["components/commerce.tsx"];
+
   const items = useCart((state) => state.items);
   const loadDemo = useLoadDemoCart();
   const [attempted, setAttempted] = useState(false);
   return (
     <div className="site-container page-bottom">
       <PageHeading
-        eyebrow="GUEST CHECKOUT · UI PREVIEW"
-        title="One step closer to home."
-        description="A preview of a simple, thoughtful checkout experience. Please use sample details only."
+        eyebrow={copy["copy-34"]}
+        title={copy["copy-35"]}
+        description={copy["copy-36"]}
       />
       <div className="checkout-steps">
-        <Link href="/cart">Bag</Link>
+        <Link href="/cart">{copy["copy-37"]}</Link>
         <ArrowRight size={14} />
-        <strong>Checkout</strong>
+        <strong>{copy["copy-38"]}</strong>
         <ArrowRight size={14} />
-        <Link href="/order-confirmation">Confirmation preview</Link>
+        <Link href="/order-confirmation">{copy["copy-39"]}</Link>
       </div>
       {!items.length && (
         <div className="notice mb-7 flex flex-wrap items-center justify-between gap-3">
-          <span>
-            Preview the layout below, or add sample items for a complete order
-            summary.
-          </span>
+          <span> {copy["copy-40"]} </span>
           <Button variant="outline" size="sm" onClick={loadDemo}>
-            Load sample cart
+            {" "}
+            {copy["copy-41"]}{" "}
           </Button>
         </div>
       )}
@@ -288,121 +337,118 @@ export function CheckoutPage() {
           onSubmit={(e) => {
             e.preventDefault();
             setAttempted(true);
-            toast("Prototype only — no payment was processed.");
+            toast(copy["copy-42"]);
           }}
           autoComplete="off"
         >
           <section className="checkout-section">
             <h2>
-              <span>01</span>Contact information
+              <span>{copy["copy-43"]}</span>
+              {copy["copy-44"]}{" "}
             </h2>
             <CheckoutField
               name="checkout-email"
-              label="Email address"
+              label={copy["label-2"]}
               type="email"
-              placeholder="customer@example.com"
+              placeholder={copy["copy-45"]}
               wide
             />
-            <p className="fine-print mt-3">
-              Guest checkout. No account is created and no email is sent.
-            </p>
+            <p className="fine-print mt-3"> {copy["copy-46"]} </p>
           </section>
           <section className="checkout-section">
             <h2>
-              <span>02</span>Shipping details
+              <span>{copy["copy-47"]}</span>
+              {copy["copy-48"]}{" "}
             </h2>
             <div className="form-grid">
               <CheckoutField
-                label="First name"
+                label={copy["label-3"]}
                 name="first-name"
-                placeholder="Alex"
+                placeholder={copy["copy-49"]}
               />
               <CheckoutField
-                label="Last name"
+                label={copy["label-4"]}
                 name="last-name"
-                placeholder="Sample"
+                placeholder={copy["copy-50"]}
               />
               <CheckoutField
-                label="Address"
+                label={copy["label-5"]}
                 name="address"
-                placeholder="123 Example Street"
+                placeholder={copy["copy-51"]}
                 wide
               />
               <CheckoutField
-                label="City"
+                label={copy["label-6"]}
                 name="city"
-                placeholder="Example City"
+                placeholder={copy["copy-52"]}
               />
-              <CheckoutField label="State" name="state" placeholder="State" />
-              <CheckoutField label="ZIP code" name="zip" placeholder="00000" />
               <CheckoutField
-                label="Phone"
+                label={copy["label-7"]}
+                name="state"
+                placeholder={copy["copy-53"]}
+              />
+              <CheckoutField
+                label={copy["label-8"]}
+                name="zip"
+                placeholder={copy["copy-54"]}
+              />
+              <CheckoutField
+                label={copy["label-9"]}
                 name="phone"
                 type="tel"
-                placeholder="(000) 000-0000"
+                placeholder={copy["copy-55"]}
                 optional
               />
             </div>
-            <p className="fine-print mt-3">
-              US address layout for review. Supported shipping regions remain an
-              open decision.
-            </p>
+            <p className="fine-print mt-3"> {copy["copy-56"]} </p>
           </section>
           <section className="checkout-section">
             <h2>
-              <span>03</span>Delivery method
+              <span>{copy["copy-57"]}</span>
+              {copy["copy-58"]}{" "}
             </h2>
             <div className="delivery-option">
               <Truck size={21} />
               <div>
-                <strong>Standard delivery — placeholder</strong>
-                <p>Delivery times, regions, and rates to be confirmed.</p>
+                <strong>{copy["copy-59"]}</strong>
+                <p>{copy["copy-60"]}</p>
               </div>
-              <span className="text-xs">TBC</span>
+              <span className="text-xs">{copy["copy-61"]}</span>
             </div>
           </section>
           <section className="checkout-section">
             <h2>
-              <span>04</span>Payment
+              <span>{copy["copy-62"]}</span>
+              {copy["copy-63"]}{" "}
             </h2>
             <div className="payment-placeholder">
               <div className="payment-icon">
                 <ShieldCheck size={28} strokeWidth={1.3} />
               </div>
-              <h3>Secure payment provider integration</h3>
-              <p>
-                Production implementation proposed using Stripe or another
-                approved payment provider.
-              </p>
+              <h3>{copy["copy-64"]}</h3>
+              <p> {copy["copy-65"]} </p>
               <div className="payment-explanation">
                 <LockKeyhole size={16} />
-                <p>
-                  Full card details would be processed by the payment provider
-                  rather than stored directly by this website.
-                </p>
+                <p> {copy["copy-66"]} </p>
               </div>
-              <span className="badge">
-                Illustrative only · No card fields or payment processing
-              </span>
+              <span className="badge"> {copy["copy-67"]} </span>
             </div>
           </section>
           <Button type="submit" className="w-full">
-            Place order — prototype
-            <ArrowRight />
+            {" "}
+            {copy["copy-68"]} <ArrowRight />
           </Button>
-          <p className="fine-print mt-4 text-center">
-            This preview does not submit, transmit, or save your contact and
-            shipping details.
-          </p>
+          <p className="fine-print mt-4 text-center"> {copy["copy-69"]} </p>
           <div className={attempted ? "notice mt-6" : "mt-6"}>
             {attempted && (
               <p className="mb-3 text-sm" role="status">
-                Prototype only — no payment was processed.
+                {" "}
+                {copy["copy-70"]}{" "}
               </p>
             )}
             <Link href="/order-confirmation" className="text-link">
-              Preview the order confirmation screen
-              <ArrowRight size={15} />
+              {" "}
+              {copy["copy-71"]} <ArrowRight size={15} />
             </Link>
           </div>
         </form>
@@ -412,6 +458,11 @@ export function CheckoutPage() {
   );
 }
 export function ConfirmationPage() {
+  const { variants } = useContent();
+
+  const { products, copy: allCopy } = useContent();
+  const copy = allCopy["components/commerce.tsx"];
+
   const items = useCart((state) => state.items);
   const subtotal = useCart(selectCartSubtotal);
   const sampleItems = items.length
@@ -431,36 +482,41 @@ export function ConfirmationPage() {
       <div className="confirmation-check">
         <Check size={32} strokeWidth={1.4} />
       </div>
-      <span className="eyebrow">ORDER CONFIRMATION PREVIEW</span>
-      <h1>Thank you for your order.</h1>
-      <p>
-        A little taste of home is on its way — this is how the production
-        confirmation could look.
-      </p>
-      <div className="notice mt-6">
-        Prototype data only. No order was placed, no payment was processed, and
-        no email was sent.
-      </div>
+      <span className="eyebrow">{copy["copy-74"]}</span>
+      <h1>{copy["copy-75"]}</h1>
+      <p> {copy["copy-76"]} </p>
+      <div className="notice mt-6"> {copy["copy-77"]} </div>
       <section className="confirmation-card">
         <div className="flex flex-wrap justify-between gap-3 border-b border-neutral-200 pb-5">
-          <h2>Order #SIM-DEMO-001</h2>
-          <span className="badge">Sample order</span>
+          <h2>{copy["copy-78"]}</h2>
+          <span className="badge">{copy["copy-79"]}</span>
         </div>
         <div className="summary-items">
           {sampleItems.map((item) => {
-            const product = products.find((p) => p.slug === item.slug)!;
+            const product = products.find((p) => p.slug === item.slug);
+            if (
+              !product ||
+              !variants.some(
+                (v) =>
+                  v.productSlug === item.slug &&
+                  v.size === item.size &&
+                  v.dietary === item.dietary &&
+                  v.active,
+              )
+            )
+              return null;
             return (
               <div key={item.key} className="summary-item">
                 <MockImage label={product.name} />
                 <div className="flex-1">
                   <strong>{product.name}</strong>
                   <span>
-                    {item.size} · Qty {item.quantity}
+                    {item.size} {copy["copy-80"]} {item.quantity}
                   </span>
                 </div>
                 <span>
                   {money(
-                    productPrice(product, item.size, item.dietary) *
+                    productPrice(variants, product, item.size, item.dietary) *
                       item.quantity,
                   )}
                 </span>
@@ -469,36 +525,32 @@ export function ConfirmationPage() {
           })}
         </div>
         <div className="flex justify-between border-t border-neutral-200 pt-5 font-medium">
-          <span>Sample subtotal</span>
+          <span>{copy["copy-81"]}</span>
           <span>{money(total)}</span>
         </div>
-        <p className="fine-print mt-2">Shipping and tax are not included.</p>
+        <p className="fine-print mt-2">{copy["copy-82"]}</p>
       </section>
       <div className="confirmation-next">
         <div>
           <Mail size={22} strokeWidth={1.4} />
-          <h3>Confirmation by email</h3>
-          <p>
-            In production, an order summary would be sent to your email address.
-          </p>
+          <h3>{copy["copy-83"]}</h3>
+          <p> {copy["copy-84"]} </p>
         </div>
         <div>
           <PackageCheck size={22} strokeWidth={1.4} />
-          <h3>Prepared with care</h3>
-          <p>
-            Fulfillment steps and delivery updates will follow the approved
-            order process.
-          </p>
+          <h3>{copy["copy-85"]}</h3>
+          <p> {copy["copy-86"]} </p>
         </div>
       </div>
       <Button asChild>
         <Link href="/shop">
-          Continue shopping
-          <ArrowRight />
+          {" "}
+          {copy["copy-87"]} <ArrowRight />
         </Link>
       </Button>
       <Link className="text-link mt-6" href="/scope">
-        Back to project scope
+        {" "}
+        {copy["copy-88"]}{" "}
       </Link>
     </div>
   );

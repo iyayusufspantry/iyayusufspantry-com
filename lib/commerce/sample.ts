@@ -1,4 +1,4 @@
-import { variants } from "./catalog";
+import type { Variant } from "./catalog";
 import {
   recordPayment,
   reserveOrder,
@@ -7,7 +7,7 @@ import {
 } from "./orders";
 
 // Development fixtures only. Never use this as production stock or order storage.
-export function sampleStock() {
+export function sampleStock(variants: readonly Variant[]) {
   return Object.fromEntries(
     variants.map((variant) => [
       variant.id,
@@ -24,8 +24,8 @@ export function sampleStock() {
   );
 }
 
-export function sampleOwnerState(): CommerceState {
-  let state: CommerceState = { stock: sampleStock(), orders: [] };
+export function sampleOwnerState(variants: readonly Variant[]): CommerceState {
+  let state: CommerceState = { stock: sampleStock(variants), orders: [] };
   const examples = [
     {
       id: "SIM-DEMO-001",
@@ -47,6 +47,7 @@ export function sampleOwnerState(): CommerceState {
     },
   ];
   for (const example of examples) {
+    if (!variants.some((v) => v.id === example.variantId && v.active)) continue;
     state = reserveOrder(
       state,
       example.id,
