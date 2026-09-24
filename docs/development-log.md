@@ -1,5 +1,14 @@
 # Simbiat development log
 
+## 24 September 2026 — Local Stripe sandbox checkout
+
+- Implemented server-created Stripe Checkout sessions, signed raw-body webhooks, persistent PostgreSQL test orders and inventory, idempotent requests/events, stock reservations and expiry/failure handling. Live keys/events are rejected; test shipping and tax are explicitly zero.
+- Added a local launcher that starts Next.js and Stripe CLI forwarding, obtains the local signing secret without displaying it, and preserves the Dashboard secret in `.env`. Local overrides are stored in Git-ignored `.env.local`. A port argument supports running alongside other projects.
+- Added sandbox checkout and verified order confirmation screens, database setup, recovery, transaction tests and browser tests. The public owner preview and email remain unconnected to saved orders.
+- Validation: production build, type checking, lint and formatting passed; eight payment/database tests and six desktop/mobile checkout checks passed. Ten relevant existing prototype/commerce checks passed, including one focused rerun after two simultaneous Playwright runs collided on their original output directory; payment tests now have a separate output directory.
+- Real Stripe sandbox validation: created a Checkout Session and verified request retries reuse it; expired the session and received a signed `checkout.session.expired` callback with HTTP 200, releasing its reservation. Then submitted a hosted test-card purchase and received `checkout.session.completed` with HTTP 200; the order became paid, sample stock decreased, and the website showed confirmation. No live charge was made. Evidence: `artifacts/payments/confirmed-test-payment.png`.
+- Local checkout was tested on port 3002 because another project used port 3000. Nothing has been deployed. See [Stripe setup and boundaries](stripe-payments.md).
+
 ## 21 September 2026 — Account modal visual refinement
 
 - Reworked the native Clerk sign-in/sign-up modal into a centered desktop layout with Contentful pantry photography and the site tagline alongside the form. The image uses Next image optimization; no new local content source was added.

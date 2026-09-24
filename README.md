@@ -1,6 +1,8 @@
 # Simbiat · Storefront and Production Foundations
 
-A storefront prototype with Clerk accounts and Contentful-managed website content. This is **not a production store or an approved final design**. Server-side sample cart review and reusable stock/order rules are implemented; real payments, owner authorization, persistent orders, email and analytics remain unconnected.
+A storefront prototype with Clerk accounts and Contentful-managed website content. This is **not a production store or an approved final design**. An optional Stripe sandbox checkout now persists test orders and stock in PostgreSQL and handles signed payment events. Live payments, owner authorization, email and analytics remain unconnected.
+
+Deployed on Vercel at [www.iyayusufspantry.com](https://www.iyayusufspantry.com). Homepage and shop returned HTTP 200 on 24 September 2026; the Contentful revalidation endpoint returned HTTP 404, so webhook setup remains pending.
 
 ## Development record
 
@@ -8,12 +10,14 @@ A storefront prototype with Clerk accounts and Contentful-managed website conten
 - [Development log](docs/development-log.md): changes, validation results, evidence, and pending client dependencies.
 - [Foundation architecture](docs/production-foundations.md): implementation boundaries, API, inventory/order rules, integration checklist, and repeatable validation.
 - [Content model](docs/content-model.md) and [product intake CSV](docs/product-intake.csv): preparation for client content and CMS setup.
-- [Contentful integration](docs/contentful-migration.md): 11 active content types, 107 published entries, 16 assets, editing instructions and secured cache revalidation. Registering the remote webhook requires the public deployed site URL.
+- [Contentful integration](docs/contentful-migration.md): 11 active content types, 107 published entries, 16 assets, editing instructions and secured cache revalidation. Registering the remote webhook requires the revalidation route and matching secret to be available on the deployed site.
 - [Before screenshots](artifacts/milestones/01-foundations/before/index.html) and [current screenshot gallery](artifacts/screenshots/index.html).
 - [Foundation progress PDF](artifacts/pdf/Simbiat-Foundation-Progress.pdf): summary and desktop/mobile review images. Regenerate with `npm run export:foundations` after screenshots.
 - Archive each reviewed milestone with `npm run archive:milestone -- 01-foundations after` (use a new stage name for later captures). Archives live under `artifacts/milestones/` and are Git-ignored.
 
 ## Run locally
+
+For working local test payments, follow [Stripe sandbox setup](docs/stripe-payments.md): `npm run payments:setup`, then `npm run payments:dev`. The checkout uses Stripe-hosted test payments while this feature is enabled. The prototype walkthrough below applies when `STRIPE_CHECKOUT_ENABLED=false`.
 
 Use Node.js 20.9 or newer. Add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the intended Clerk application to `.env` or `.env.local` before starting or building. Both files are Git-ignored; never commit the secret key. CLI login is optional when keys are configured directly.
 

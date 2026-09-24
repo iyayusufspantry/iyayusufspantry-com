@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: ["**/payments.test.ts", "**/payments-ui.spec.ts"],
   fullyParallel: true,
   workers: 3,
   timeout: 30000,
@@ -22,6 +23,7 @@ export default defineConfig({
     },
   ],
   webServer: {
+    env: { STRIPE_CHECKOUT_ENABLED: "false" },
     command: "npm run start -- --hostname localhost --port 3100",
     url: "http://localhost:3100",
     reuseExistingServer: !process.env.CI,

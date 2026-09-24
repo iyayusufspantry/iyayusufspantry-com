@@ -42,12 +42,12 @@ All Contentful reads share the `contentful` cache tag and a 60-second revalidati
 
 `POST /api/contentful/revalidate` accepts Entry/Asset publish, unpublish and delete events. It checks the secret in `X-Contentful-Webhook-Secret`, the Contentful topic, the space and environment, and a bounded JSON body. It waits for the Delivery API to reflect the event before expiring the cache; temporary delivery failures return 503 for retry. Invalid requests cannot invalidate the cache.
 
-`CONTENTFUL_REVALIDATION_SECRET` has been generated in the local `.env`. Set the **same value** in the hosting project's server environment alongside the Delivery API configuration. A public HTTPS website URL has not yet been supplied, so the remote webhook has **not** been registered and live cloud-to-site delivery is still pending.
+`CONTENTFUL_REVALIDATION_SECRET` has been generated in the local `.env`. Set the **same value** in the hosting project's server environment alongside the Delivery API configuration. The deployed URL is `https://www.iyayusufspantry.com`, supplied on 24 September 2026. A check that day returned HTTP 200 for `/` and `/shop`, but an unauthenticated `POST /api/contentful/revalidate` returned HTTP 404 instead of the expected 401. The route must be available before registering the webhook; live cloud-to-site delivery remains unverified.
 
 After deploying the route and environment variables:
 
 ```bash
-npm run contentful:webhook -- --url https://your-public-website.example
+npm run contentful:webhook -- --url https://www.iyayusufspantry.com
 ```
 
 The command checks that the deployed endpoint requires authentication, then creates or updates this app's named webhook with a secret header and environment filter. It preserves unrelated webhooks. It never prints the secret. Contentful cannot reach a workstation's `localhost` address. Event selection and environment filtering follow [Contentful's webhook configuration](https://www.contentful.com/developers/docs/extensibility/webhooks/configure-webhook/).

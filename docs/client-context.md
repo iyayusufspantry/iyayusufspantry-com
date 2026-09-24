@@ -2,6 +2,8 @@
 
 Updated 20 September 2026 from the supplied email thread, including the client's 19 September reply and subsequent color confirmation. These notes record client statements; domain and account status have not been independently verified.
 
+Deployment update, 24 September 2026: the user supplied the Vercel production domain [www.iyayusufspantry.com](https://www.iyayusufspantry.com). Direct checks returned HTTP 200 for the homepage and shop. This confirms website availability; registrar, renewal and business email details remain unverified.
+
 ## Brand and supplied logo
 
 - Business name shown on the logo: **Iya Yusuf's Pantry**.
@@ -38,9 +40,9 @@ Updated 20 September 2026 from the supplied email thread, including the client's
 ## Follow-up work
 
 - Review the reconstructed logo and the applied storefront theme with the client; assess whether the original vector master is available. The UI now uses the green, navy, cream, and mint palette across its pages.
-- Establish the complete domain name, then check its registration and recovery/renewal options.
+- Confirm registration and renewal details for the deployed `iyayusufspantry.com` domain.
 - Set up the dedicated business account with client ownership and recovery, and confirm the full business email address and service costs.
 - Provide Stripe onboarding guidance and obtain appropriate integration access.
 - Review supplied product photos and gather the final catalogue through the [product intake template](product-intake.csv).
 
-See the [development log](development-log.md) for implementation progress. The account and domain actions above have not been performed.
+See the [development log](development-log.md) for implementation progress. Website deployment is confirmed above; remaining account setup and domain registration checks are pending.

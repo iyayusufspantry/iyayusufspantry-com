@@ -3,6 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "payments:setup": "tsx scripts/payments/setup.mts",
+    "payments:dev": "tsx scripts/payments/dev.mts",
+    "payments:smoke": "tsx scripts/payments/smoke.mts",
+    "payments:test-purchase": "tsx scripts/payments/purchase-test.mts",
+    "payments:reconcile": "tsx scripts/payments/reconcile.mts",
+    "payments:test": "tsx --test tests/payments.test.ts",
+    "payments:test-ui": "playwright test --config playwright.payments.config.ts",
     "contentful:export": "node scripts/contentful/export.mjs",
     "contentful:plan": "node scripts/contentful/migrate.mjs",
     "contentful:import": "node scripts/contentful/migrate.mjs --apply",
@@ -34,23 +41,28 @@
     "lucide-react": "^1.45.0",
     "motion": "^13.4.0",
     "next": "^16.3.5",
+    "pg": "^8.23.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "sonner": "^2.0.8",
+    "stripe": "^22.6.2",
     "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
+    "@stripe/cli": "^1.51.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.3.5",
     "prettier": "^3.9.6",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
