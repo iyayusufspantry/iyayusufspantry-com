@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import Stripe from "stripe";
 import { paymentConfig } from "../../lib/payments/config";
 import { PaymentStore } from "../../lib/payments/store";
+import { reconcilePayments } from "../../lib/payments/reconcile";
 
 nextEnv.loadEnvConfig(process.cwd());
 const config = paymentConfig();
@@ -16,51 +17,9 @@ try {
     timeout: 15000,
   });
   const store = new PaymentStore(pool);
-  const orders = await store.pending();
-  let updated = 0;
-  let manual = 0;
-  for (const order of orders) {
-    // Replay uncertain creates with the original parameters and key, within Stripe's retention window.
-    if (
-      !order.session_id &&
-      Date.now() - new Date(order.created_at).getTime() > 23 * 3600000
-    ) {
-      manual++;
-      continue;
-    }
-    const session = order.session_id
-      ? await stripe.checkout.sessions.retrieve(order.session_id)
-      : await stripe.checkout.sessions.create(order.stripe_params, {
-          idempotencyKey: `checkout-${order.id}`,
-        });
-    await store.attachSession(order.id, session);
-    if (session.status !== "expired" && session.payment_status !== "paid")
-      continue;
-    const type =
-      session.payment_status === "paid"
-        ? "checkout.session.completed"
-        : "checkout.session.expired";
-    // This event is synthesized only from an authenticated server-to-Stripe API retrieval.
-    await store.processEvent({
-      id: `reconcile_${session.id}_${type}`,
-      object: "event",
-      api_version: null,
-      created: Math.floor(Date.now() / 1000),
-      pending_webhooks: 0,
-      request: null,
-      type,
-      livemode: session.livemode,
-      data: { object: session },
-    } as Stripe.Event);
-    updated++;
-  }
-  console.log(
-    JSON.stringify({
-      checked: orders.length,
-      updated,
-      manualReviewRequired: manual,
-    }),
-  );
+  const result = await reconcilePayments(stripe, store);
+  console.log(JSON.stringify(result));
+  if (result.failed) process.exitCode = 1;
 } catch {
   console.error(
     "Reconciliation failed. Check Stripe/database connectivity and retry. Reservations were not released without provider confirmation.",

@@ -1,8 +1,8 @@
 # Simbiat · Storefront and Production Foundations
 
-A storefront prototype with Clerk accounts and Contentful-managed website content. This is **not a production store or an approved final design**. An optional Stripe sandbox checkout now persists test orders and stock in PostgreSQL and handles signed payment events. Live payments, owner authorization, email and analytics remain unconnected.
+A storefront prototype with Clerk accounts and Contentful-managed website content. This is **not a production store or an approved final design**. Optional Stripe sandbox checkout persists test orders and stock in PostgreSQL. Protected owner operations, a contact inbox, confirmed newsletter subscriptions, and an email queue are implemented; enabling them requires the business configuration described in [Store operations](docs/operations.md). Live payments and analytics remain unconnected.
 
-Deployed on Vercel at [www.iyayusufspantry.com](https://www.iyayusufspantry.com). Homepage and shop returned HTTP 200 on 24 September 2026; the Contentful revalidation endpoint returned HTTP 404, so webhook setup remains pending.
+Deployed on Vercel at [www.iyayusufspantry.com](https://www.iyayusufspantry.com). The Contentful webhook is registered and an authenticated revalidation returned HTTP 200 on 24 September 2026. Public sandbox payment activation and the Stripe signing-secret match still need deployment configuration. See [Feature audit](docs/feature-audit.md) for verification results.
 
 ## Development record
 
@@ -37,7 +37,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - **[/shop](http://localhost:3000/shop)** — 15 sample products across five categories.
 - **[/prototype/owner](http://localhost:3000/prototype/owner)** — fictional order and stock workspace. Changes reset on refresh and do not update the storefront.
 
-Clerk provides account sign-in, sign-up, and profile/sign-out controls in the desktop header and mobile menu, plus `/sign-in` and `/sign-up` pages. Its UI uses the storefront's shadcn theme and requires access to Clerk's services. Create a first test account using **Sign up**; successful authentication shows a profile button. Storefront browsing and guest checkout remain public, and `/prototype/owner` still contains public sample data. Production owner authorization is a separate integration step.
+Clerk provides account sign-in, sign-up, and profile/sign-out controls in the desktop header and mobile menu, plus `/sign-in` and `/sign-up` pages. Its UI uses the storefront's shadcn theme and requires access to Clerk's services. Create a first test account using **Sign up**; successful authentication shows a profile button. Storefront browsing and guest checkout remain public. `/prototype/owner` contains public sample data; the separate `/owner` dashboard requires a server-configured owner allowlist and operates on persisted records.
 
 The interface loads the Iya Yusuf's Pantry logo and supplied photography from Contentful, with code-drawn illustrations for products without photography and system fonts.
 
@@ -55,7 +55,7 @@ The storefront theme uses cream, mint, navy, and the confirmed `#06ad8f` green, 
 
 The cart, checkout, and screen directory have a **Load sample cart** button. An empty cart is the default. “Buy now” adds the selected configuration and opens the checkout preview.
 
-Mock cart selections survive refreshes within the browser tab through `sessionStorage`. Checkout contact/address fields, contact messages, newsletter addresses, and payment information are never stored or transmitted by the prototype forms. Account information entered into Clerk's authentication UI is handled by Clerk. There are no card fields. The scope materials checklist is temporary review state, not a submission.
+Mock cart selections survive refreshes within the browser tab through `sessionStorage`. With the integration flags disabled, prototype forms do not store or transmit contact/address details or newsletter addresses. Enabled contact/newsletter forms persist their submissions as described in [Store operations](docs/operations.md). Account information entered into Clerk's authentication UI is handled by Clerk, and sandbox payment details are entered on Stripe's hosted page. The scope materials checklist is temporary review state, not a submission.
 
 The shared cart uses Zustand with a store per `CartProvider` instance. Components select only the state/actions they need; the header selects the item count. Persistence restores after hydration and preserves existing `simbiat-scope-cart-v1` selections. Invalid entries and extra fields are discarded, duplicate variants are merged, and storage failures leave the in-memory cart usable. Local controls continue to use React state.
 

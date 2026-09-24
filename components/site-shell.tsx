@@ -146,9 +146,11 @@ export function SiteHeader() {
     </>
   );
 }
-export function Newsletter() {
+export function Newsletter({ enabled = false }: { enabled?: boolean }) {
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/site-shell.tsx"];
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
 
   return (
     <section className="newsletter">
@@ -158,9 +160,40 @@ export function Newsletter() {
         <p> {copy["copy-20"]} </p>
       </div>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          toast(copy["copy-21"]);
+          if (!enabled) {
+            toast(copy["copy-21"]);
+            return;
+          }
+          if (busy) return;
+          const form = e.currentTarget;
+          const data = new FormData(form);
+          setBusy(true);
+          setStatus("");
+          try {
+            const response = await fetch("/api/newsletter", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: data.get("email"),
+                consent: data.get("consent") === "on",
+                website: data.get("website"),
+              }),
+              signal: AbortSignal.timeout(15000),
+            });
+            const result = await response.json();
+            if (!response.ok)
+              throw new Error(result.error || "Please try again.");
+            setStatus(result.message);
+            form.reset();
+          } catch (error) {
+            setStatus(
+              error instanceof Error ? error.message : "Please try again.",
+            );
+          } finally {
+            setBusy(false);
+          }
         }}
         className="newsletter-form"
       >
@@ -171,16 +204,34 @@ export function Newsletter() {
           </label>
           <input
             id="newsletter-email"
+            name="email"
+            maxLength={254}
             type="email"
             placeholder={copy["copy-23"]}
             required
             autoComplete="off"
           />
-          <Button type="submit" aria-label={copy["copy-24"]}>
+          <Button type="submit" aria-label={copy["copy-24"]} disabled={busy}>
             <ArrowRight />
           </Button>
         </div>
-        <span className="fine-print"> {copy["copy-25"]} </span>
+        <div hidden aria-hidden="true">
+          <label>
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+        {enabled ? (
+          <label className="fine-print mt-3 flex gap-2">
+            <input type="checkbox" name="consent" required />I agree to receive
+            pantry news and recipes by email. I can unsubscribe at any time.
+          </label>
+        ) : (
+          <span className="fine-print">{copy["copy-25"]}</span>
+        )}
+        <p role="status" className="mt-3 text-sm">
+          {status}
+        </p>
       </form>
     </section>
   );

@@ -1284,7 +1284,7 @@
     margin-top: 10px;
     line-height: 1.8;
   }
-  .newsletter-form input {
+  .newsletter-form input:not([type="checkbox"]) {
     width: 100%;
   }
   .newsletter-form .fine-print {

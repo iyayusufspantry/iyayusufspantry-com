@@ -6,6 +6,7 @@ import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
 import Stripe from "stripe";
 import { PaymentStore } from "../lib/payments/store";
+import { reconcilePayments } from "../lib/payments/reconcile";
 import { receiveWebhook } from "../lib/payments/http";
 import { paymentConfig } from "../lib/payments/config";
 import type { Variant } from "../lib/commerce/catalog";
@@ -93,6 +94,46 @@ before(async () => {
   );
   const sql = await readFile("lib/payments/schema.sql", "utf8");
   await pool.query(sql.replaceAll("simbiat_checkout_test", schema));
+});
+
+test("reconciliation rotates unresolved orders and recovers an expired reservation", async () => {
+  await pool.query(`UPDATE ${schema}.orders SET last_reconciled_at=now()`);
+  const old = await reserve();
+  await pool.query(
+    `UPDATE ${schema}.orders SET created_at=now()-interval '25 hours' WHERE id=$1`,
+    [old.id],
+  );
+  const current = await reserve();
+  const expired = event(current, "checkout.session.expired", {
+    status: "expired",
+    payment_status: "unpaid",
+  }).data.object as Stripe.Checkout.Session;
+  const client = {
+    checkout: { sessions: { create: async () => expired } },
+  } as unknown as Stripe;
+  const first = await reconcilePayments(client, store, undefined, 1);
+  assert.equal(first.manualReviewRequired, 1);
+  let notifications = 0;
+  const second = await reconcilePayments(
+    client,
+    store,
+    async () => {
+      notifications++;
+    },
+    1,
+  );
+  assert.equal(second.updated, 1);
+  assert.equal(notifications, 1);
+  assert.equal((await store.findSession(expired.id)).status, "cancelled");
+  assert.equal(
+    (
+      await pool.query(
+        `SELECT reserved FROM ${schema}.stock WHERE variant_id=$1`,
+        [current.quote.lines[0].variantId],
+      )
+    ).rows[0].reserved,
+    0,
+  );
 });
 after(async () => {
   // Only this run's randomly named test schema is removed.

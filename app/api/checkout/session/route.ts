@@ -3,6 +3,8 @@ import { CommerceError } from "@/lib/commerce/catalog";
 import { checkoutEnabled } from "@/lib/payments/config";
 import { BodyTooLarge, privateHeaders, readBody } from "@/lib/payments/http";
 import { payments } from "@/lib/payments/runtime";
+import { limitForm } from "@/lib/operations/http";
+import { OperationError } from "@/lib/operations/validation";
 
 export const runtime = "nodejs";
 export async function POST(request: Request) {
@@ -30,6 +32,7 @@ export async function POST(request: Request) {
       )
     )
       return reply(400, "Invalid checkout request.");
+    await limitForm(request, "checkout");
     const { variants, products } = await getContent();
     const order = await store.reserve(
       body.requestId,
@@ -53,6 +56,8 @@ export async function POST(request: Request) {
       return reply(409, "This checkout has ended. Start a new checkout.");
     return Response.json({ url: session.url }, { headers: privateHeaders });
   } catch (error) {
+    if (error instanceof OperationError)
+      return reply(error.status, error.message);
     if (error instanceof BodyTooLarge)
       return reply(413, "Cart request is too large.");
     if (error instanceof SyntaxError) return reply(400, "Invalid JSON.");

@@ -5,11 +5,15 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { PageHeading } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import { useRef, useState } from "react";
 
-export function ContactPage() {
+export function ContactPage({ enabled = false }: { enabled?: boolean }) {
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/contact.tsx"];
   const { faqs, settings } = useContent();
+  const [busy, setBusy] = useState(false);
+  const [status, setStatus] = useState("");
+  const submission = useRef<{ fingerprint: string; id: string } | null>(null);
 
   return (
     <div className="site-container page-bottom">
@@ -21,18 +25,65 @@ export function ContactPage() {
       <div className="contact-grid">
         <form
           className="contact-form"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            toast(copy["copy-12"]);
+            if (!enabled) {
+              toast(copy["copy-12"]);
+              return;
+            }
+            if (busy) return;
+            const form = e.currentTarget;
+            const fields = Object.fromEntries(new FormData(form));
+            const fingerprint = JSON.stringify(fields);
+            if (submission.current?.fingerprint !== fingerprint)
+              submission.current = { fingerprint, id: crypto.randomUUID() };
+            setBusy(true);
+            setStatus("");
+            try {
+              const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  ...fields,
+                  requestId: submission.current.id,
+                }),
+                signal: AbortSignal.timeout(15000),
+              });
+              const result = await response.json();
+              if (!response.ok)
+                throw new Error(result.error || "Please try again.");
+              setStatus(result.message);
+              form.reset();
+              submission.current = null;
+            } catch (error) {
+              setStatus(
+                error instanceof Error ? error.message : "Please try again.",
+              );
+            } finally {
+              setBusy(false);
+            }
           }}
         >
           <h2>{copy["copy-13"]}</h2>
-          <p className="text-sm text-neutral-500 mb-7"> {copy["copy-14"]} </p>
+          <p className="text-sm text-neutral-500 mb-7">
+            {enabled
+              ? "Send your question to the pantry team."
+              : copy["copy-14"]}
+          </p>
+          <div hidden aria-hidden="true">
+            <label>
+              Website
+              <input name="website" tabIndex={-1} autoComplete="off" />
+            </label>
+          </div>
           <div className="form-grid">
             <div className="field">
               <label htmlFor="contact-name">{copy["copy-15"]}</label>
               <input
                 id="contact-name"
+                name="name"
+                minLength={2}
+                maxLength={120}
                 placeholder={copy["copy-16"]}
                 required
                 autoComplete="off"
@@ -42,6 +93,8 @@ export function ContactPage() {
               <label htmlFor="contact-email">{copy["copy-17"]}</label>
               <input
                 id="contact-email"
+                name="email"
+                maxLength={254}
                 type="email"
                 placeholder={copy["copy-18"]}
                 required
@@ -50,7 +103,11 @@ export function ContactPage() {
             </div>
             <div className="field col-span-2">
               <label htmlFor="contact-subject">{copy["copy-19"]}</label>
-              <select id="contact-subject" defaultValue="general">
+              <select
+                id="contact-subject"
+                name="subject"
+                defaultValue="general"
+              >
                 <option value="general">{copy["copy-20"]}</option>
                 <option value="product">{copy["copy-21"]}</option>
                 <option value="order">{copy["copy-22"]}</option>
@@ -61,17 +118,27 @@ export function ContactPage() {
               <label htmlFor="contact-message">{copy["copy-24"]}</label>
               <textarea
                 id="contact-message"
+                name="message"
+                minLength={10}
+                maxLength={5000}
                 placeholder={copy["copy-25"]}
                 rows={6}
                 required
               />
             </div>
           </div>
-          <Button type="submit" className="mt-6">
+          <Button type="submit" className="mt-6" disabled={busy}>
             {" "}
-            {copy["copy-26"]} <ArrowRight />
+            {busy ? "Sending…" : copy["copy-26"]} <ArrowRight />
           </Button>
-          <p className="fine-print mt-4"> {copy["copy-27"]} </p>
+          <p className="fine-print mt-4">
+            {enabled
+              ? "Your details will be saved so our team can respond to your inquiry."
+              : copy["copy-27"]}
+          </p>
+          <p role="status" className="mt-4">
+            {status}
+          </p>
         </form>
         <aside className="contact-details">
           <span className="eyebrow">{copy["copy-28"]}</span>

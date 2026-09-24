@@ -374,7 +374,7 @@
   .newsletter p {
     font-size: 14px;
   }
-  .newsletter-form input {
+  .newsletter-form input:not([type="checkbox"]) {
     background: #fffef8;
   }
   .site-footer {

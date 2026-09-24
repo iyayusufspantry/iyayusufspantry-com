@@ -19,6 +19,7 @@ export type PaymentOrder = {
   session_id: string | null;
   checkout_url: string | null;
   payment_id: string | null;
+  customer_details?: { email?: string | null } | null;
   created_at: Date;
 };
 
@@ -172,9 +173,16 @@ export class PaymentStore {
 
   async pending() {
     const result = await this.pool.query<PaymentOrder>(
-      `SELECT * FROM ${this.schema}.orders WHERE status = 'pending' ORDER BY created_at LIMIT 100`,
+      `SELECT * FROM ${this.schema}.orders WHERE status = 'pending' ORDER BY last_reconciled_at NULLS FIRST, created_at LIMIT 100`,
     );
     return result.rows;
+  }
+
+  async markReconciled(id: string) {
+    await this.pool.query(
+      `UPDATE ${this.schema}.orders SET last_reconciled_at=now() WHERE id=$1`,
+      [id],
+    );
   }
 
   async processEvent(event: Stripe.Event) {

@@ -26,3 +26,13 @@ CREATE TABLE IF NOT EXISTS simbiat_checkout_test.events (
   processed_at timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS pending_checkout_orders ON simbiat_checkout_test.orders(created_at) WHERE status = 'pending';
+ALTER TABLE simbiat_checkout_test.orders ADD COLUMN IF NOT EXISTS fulfilled_at timestamptz;
+ALTER TABLE simbiat_checkout_test.orders ADD COLUMN IF NOT EXISTS last_reconciled_at timestamptz;
+CREATE TABLE IF NOT EXISTS simbiat_checkout_test.owner_audit (
+  id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  actor text NOT NULL,
+  action text NOT NULL,
+  reference text NOT NULL,
+  details jsonb NOT NULL DEFAULT '{}',
+  created_at timestamptz NOT NULL DEFAULT now()
+);

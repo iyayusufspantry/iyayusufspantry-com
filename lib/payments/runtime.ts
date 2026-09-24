@@ -14,6 +14,7 @@ export function payments() {
     idleTimeoutMillis: 10000,
   }));
   return {
+    pool,
     config,
     stripe: new Stripe(config.key, { maxNetworkRetries: 2, timeout: 15000 }),
     store: new PaymentStore(pool),

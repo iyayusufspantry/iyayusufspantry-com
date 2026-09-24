@@ -55,9 +55,6 @@ export function AnimatedMain({ children }: { children: ReactNode }) {
 
       const seen = new WeakSet<HTMLElement>();
       const active = new Map<HTMLElement, () => void>();
-      const distance = window.matchMedia("(max-width: 767px)").matches
-        ? 14
-        : 22;
       let frame = 0;
 
       const observer = new IntersectionObserver((entries) => {
@@ -73,10 +70,8 @@ export function AnimatedMain({ children }: { children: ReactNode }) {
             .filter((sibling) => sibling.matches(revealSelector))
             .indexOf(element);
           const originalOpacity = element.style.opacity;
-          const originalTranslate = element.style.translate;
           const restore = () => {
             element.style.opacity = originalOpacity;
-            element.style.translate = originalTranslate;
             active.delete(element);
           };
 
@@ -84,7 +79,10 @@ export function AnimatedMain({ children }: { children: ReactNode }) {
           // blank full-page screenshots, or JavaScript-dependent reading.
           const animation = animate(
             element,
-            { opacity: [0, 1], translate: [`0 ${distance}px`, "0 0"] },
+            // Keep hit targets stationary. Restoring a translated container on
+            // focus can move its button between pointerdown and pointerup and
+            // swallow the click, especially with a warm browser cache.
+            { opacity: [0, 1] },
             {
               duration: 0.6,
               delay: Math.min(Math.max(index, 0), 3) * 0.06,

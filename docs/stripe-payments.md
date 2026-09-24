@@ -17,6 +17,7 @@ The webhook secret in `.env` is for the destination registered in the Stripe Das
 ```bash
 corepack pnpm install --frozen-lockfile
 npm run payments:setup
+npm run operations:setup
 npm run payments:dev
 ```
 
@@ -26,7 +27,7 @@ npm run payments:dev
 
 Visit `/checkout`, load a sample cart, then click **Continue to Stripe — test payment**. Enter fictional details with a US address, card **4242 4242 4242 4242**, any future expiration, and a three-digit CVC. Stripe sends its event to the local listener. The confirmation screen waits for the database status to become paid; the redirect alone cannot mark an order paid.
 
-No email is sent. The public prototype owner page remains sample-only and cannot manage these saved orders. Inspect test payments in Stripe and orders in the sandbox database. Do not enter actual customer details during testing.
+Email is off by default. Optional test receipts can only go to explicitly configured recipients. The protected `/owner` dashboard can now inspect saved sandbox orders, record test fulfillment, and edit reserved-stock-aware inventory. The public prototype owner page remains sample-only. See [Store operations](operations.md) for owner and email configuration. Do not enter actual customer details during testing.
 
 If another app uses port 3000, run `npm run payments:dev -- 3002` and open `http://localhost:3002/checkout`. The launcher updates local forwarding and return URLs to match the selected port.
 
@@ -34,7 +35,7 @@ In PowerShell, paste only the command itself, such as `npm run payments:dev -- 3
 
 ## Implemented flow
 
-- `/api/checkout/session` validates JSON, bounds body size, requires the configured browser origin, fetches authoritative published prices, and reserves sandbox stock in a database transaction. Browser prices are rejected.
+- `/api/checkout/session` validates JSON, bounds body size, requires the configured browser origin, applies persistent request limits, fetches authoritative published prices, and reserves sandbox stock in a database transaction. Browser prices are rejected. Run `operations:setup` for the rate-limit table and local `FORM_SECRET`.
 - A random request ID is reused after network errors and page reloads. The immutable order snapshot stores exact Stripe parameters. Database locking and Stripe idempotency prevent duplicate reservations and sessions for that request.
 - Each variant gets sample stock only on its first sandbox reservation. Concurrent reservations lock stock rows in a consistent order. Successful payment consumes stock exactly once.
 - `/api/stripe/webhook` verifies the signature against the **raw** request body. It checks test mode, integration/order/session references, payment status, amount, and currency. Event IDs and payment IDs are unique; database failures return an error so Stripe can retry.
@@ -60,11 +61,11 @@ The smoke check creates a real **test** Checkout Session, verifies idempotent re
 
 `payments:test-purchase` opens Stripe's hosted form in Chromium, submits fictional delivery details and the standard test card, and waits for the webhook-confirmed paid screen. It leaves a paid sandbox order and consumes sample stock. This complete flow passed locally on 24 September 2026, as did the expiration smoke check, eight transaction/security tests, six browser checks, and the production build.
 
-Reconciliation checks up to 100 pending orders against Stripe. It can recover missed payment/expiry events and incomplete session linking. Uncertain session creation is replayed with identical parameters and the original idempotency key only within 23 hours; older unlinked orders are reported for manual review and remain reserved. A failed create with no Stripe session may also need manual review. This deliberately avoids guessing that a payment cannot still arrive. No scheduled reconciliation or unattended production recovery is enabled yet.
+Reconciliation checks up to 100 pending orders against Stripe and rotates checked records so unresolved old orders cannot starve later ones. It can recover missed payment/expiry events and incomplete session linking. Uncertain session creation is replayed with identical parameters and the original idempotency key only within 23 hours; older unlinked orders are reported for manual review and remain reserved. A failed create with no Stripe session may also need manual review. The protected maintenance endpoint is implemented; a scheduler still needs deployment configuration. See [Store operations](operations.md).
 
 ## Later deployment
 
-The future public endpoint is `https://www.iyayusufspantry.com/api/stripe/webhook`. Subscribe to these **snapshot** events from **Your account**:
+The deployed public endpoint is `https://www.iyayusufspantry.com/api/stripe/webhook`. Its test destination now subscribes to these four **snapshot** events from **Your account**:
 
 ```text
 checkout.session.completed
@@ -73,8 +74,8 @@ checkout.session.async_payment_failed
 checkout.session.expired
 ```
 
-For a deployed sandbox, set the public `APP_URL`, test key, database URL, `STRIPE_CHECKOUT_ENABLED=true`, and the **Dashboard endpoint's** signing secret in Vercel. Do not copy the local CLI secret into Vercel. Deploy the implementation before testing remote delivery. Without the feature flag, checkout retains the prototype UI, while the webhook remains available to process existing sandbox orders.
+For a deployed sandbox, set the public `APP_URL`, test key, database URL, `FORM_SECRET`, `STRIPE_CHECKOUT_ENABLED=true`, and the **Dashboard endpoint's** signing secret in Vercel. Initialize both schemas. Do not copy the local CLI secret into Vercel. Deploy the implementation before testing remote delivery. Without the feature flag, checkout retains the prototype UI, while the webhook remains available to process existing sandbox orders. Run `npm run operations:check -- --public` to check the deployed flag, protected route, and signing-secret match.
 
-Before live sales: approve real prices, shipping destinations/rates and tax settings; provision a separate live order/inventory configuration; implement protected owner access, email notifications, abuse controls, scheduled recovery and operational monitoring; and complete live-account verification and end-to-end acceptance testing. Replacing the test key with a live key intentionally does not enable live checkout.
+Before live sales: approve real prices, shipping destinations/rates and tax settings; implement a separate live order/inventory configuration; configure the owner allowlist, sender, scheduler, and operational monitoring; and complete live-account verification and end-to-end acceptance testing. The implemented owner tools, email queue, and rate limits currently support the sandbox flow. Replacing the test key with a live key intentionally does not enable live checkout.
 
 References: [Stripe Checkout](https://docs.stripe.com/checkout/quickstart), [webhook verification](https://docs.stripe.com/webhooks), [local forwarding](https://docs.stripe.com/cli/listen).

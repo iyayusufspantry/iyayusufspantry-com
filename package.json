@@ -4,6 +4,12 @@
   "private": true,
   "packageManager": "pnpm@10.34.5",
   "scripts": {
+    "operations:setup": "tsx scripts/operations/setup.mts",
+    "operations:mail": "tsx scripts/operations/mail.mts",
+    "operations:test": "tsx --test tests/operations.test.ts",
+    "operations:test-ui": "playwright test --config playwright.operations.config.ts",
+    "operations:test-auth": "tsx scripts/operations/auth-smoke.mts",
+    "operations:check": "tsx scripts/operations/check.mts",
     "payments:setup": "tsx scripts/payments/setup.mts",
     "payments:dev": "tsx scripts/payments/dev.mts",
     "payments:smoke": "tsx scripts/payments/smoke.mts",
