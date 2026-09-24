@@ -56,8 +56,11 @@ const key = process.env.STRIPE_SECRET_KEY ?? "";
 if (!/^(sk|rk)_test_/.test(key))
   throw new Error("Set a Stripe test secret key in .env first.");
 const require = createRequire(import.meta.url);
+const requireFromStripeCli = createRequire(
+  require.resolve("@stripe/cli/package.json"),
+);
 const cli = resolve(
-  require.resolve(
+  requireFromStripeCli.resolve(
     `@stripe/cli-${process.platform}-${process.arch}/package.json`,
   ),
   "..",

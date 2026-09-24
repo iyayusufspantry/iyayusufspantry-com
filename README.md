@@ -24,9 +24,11 @@ Use Node.js 20.9 or newer. Add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SE
 Also configure `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ENVIRONMENT=master`, `CONTENTFUL_DELIVERY_TOKEN`, and `CONTENTFUL_REVALIDATION_SECRET`. Contentful must contain the published site entries and assets before the app can build or render. `CMA_TOKEN` is needed only for management scripts. Contentful credentials are server-only; there is no local-content fallback.
 
 ```bash
-npm install
+corepack pnpm install --frozen-lockfile
 npm run dev
 ```
+
+Dependency installs use the pnpm version pinned in `package.json`, matching Vercel. Use `corepack pnpm add` when adding packages and commit the updated `pnpm-lock.yaml` with `package.json`. Running scripts with `npm run` is still supported.
 
 Open [http://localhost:3000](http://localhost:3000).
 

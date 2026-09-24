@@ -15,7 +15,7 @@ DATABASE_URL=postgresql://...
 The webhook secret in `.env` is for the destination registered in the Stripe Dashboard. Never commit credentials. A publishable Stripe key is not needed for this hosted redirect flow.
 
 ```bash
-npm install
+corepack pnpm install --frozen-lockfile
 npm run payments:setup
 npm run payments:dev
 ```
