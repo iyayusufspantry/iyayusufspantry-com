@@ -10,8 +10,10 @@ import {
   operationFailure,
 } from "@/lib/operations/http";
 import { emailAddress, OperationError } from "@/lib/operations/validation";
+import { dispatchMailAfterResponse } from "@/lib/operations/dispatch";
 
 export const runtime = "nodejs";
+export const maxDuration = 120;
 export async function POST(request: Request) {
   if (!newsletterEnabled())
     return json(
@@ -28,6 +30,7 @@ export async function POST(request: Request) {
     const email = emailAddress(body.email);
     await limitForm(request, "newsletter", email);
     await operations().subscribe(email, siteOrigin(), process.env.EMAIL_FROM!);
+    dispatchMailAfterResponse();
     return json({ message });
   } catch (error) {
     return operationFailure(error);

@@ -10,8 +10,10 @@ import {
   operationFailure,
 } from "@/lib/operations/http";
 import { contactInput } from "@/lib/operations/validation";
+import { dispatchMailAfterResponse } from "@/lib/operations/dispatch";
 
 export const runtime = "nodejs";
+export const maxDuration = 120;
 export async function POST(request: Request) {
   if (!contactEnabled())
     return json({ error: "The contact form is not available yet." }, 503);
@@ -29,6 +31,7 @@ export async function POST(request: Request) {
           }
         : undefined;
     await operations().contact(input, notification);
+    if (notification) dispatchMailAfterResponse();
     return json({
       message: "Thank you. Your message has been received.",
       reference: input.id,
