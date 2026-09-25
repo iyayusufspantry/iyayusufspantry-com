@@ -7,8 +7,13 @@ import { paymentConfig } from "../../lib/payments/config";
 
 nextEnv.loadEnvConfig(process.cwd(), true);
 const config = paymentConfig();
-if (!new URL(config.origin).hostname.match(/^(localhost|127\.0\.0\.1)$/))
-  throw new Error("Run this smoke check against the local sandbox only.");
+const publicTest = process.argv.includes("--public");
+if (publicTest) config.origin = "https://www.iyayusufspantry.com";
+if (
+  !publicTest &&
+  !new URL(config.origin).hostname.match(/^(localhost|127\.0\.0\.1)$/)
+)
+  throw new Error("Use --public to explicitly test the deployed sandbox.");
 const pool = new Pool({
   connectionString: config.databaseUrl,
   connectionTimeoutMillis: 10000,
@@ -61,8 +66,29 @@ try {
     );
     const order = await response.json();
     if (order.status === "cancelled") {
+      if (publicTest) {
+        let delivered = false;
+        for (let retry = 0; retry < 15; retry++) {
+          const events = await stripe.events.list({
+            type: "checkout.session.expired",
+            limit: 25,
+          });
+          const event = events.data.find(
+            (event) => event.data.object.id === session.id,
+          );
+          if (event?.pending_webhooks === 0) {
+            delivered = true;
+            break;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+        assert.ok(
+          delivered,
+          "Stripe has not confirmed successful delivery to all enabled webhook destinations.",
+        );
+      }
       console.log(
-        "Stripe delivered checkout.session.expired through the local listener. Signed webhook saved cancellation and released the reservation.",
+        `Stripe delivered checkout.session.expired ${publicTest ? "to the deployed webhook" : "through the local listener"}. Signed webhook saved cancellation and released the reservation.`,
       );
       sessionId = undefined;
       break;
@@ -72,14 +98,14 @@ try {
   assert.equal(
     sessionId,
     undefined,
-    "Webhook did not update the order. Keep npm run payments:dev running and retry reconciliation.",
+    "Webhook did not update the order. Check the destination or local listener, then retry reconciliation.",
   );
 } catch (error) {
   // Do not print SDK/network error objects, which can include request credentials.
   console.error(
     error instanceof assert.AssertionError
       ? error.message
-      : "Sandbox smoke check failed. Check the local server, listener, Stripe, and database connectivity.",
+      : "Sandbox smoke check failed. Check the target server, webhook delivery, Stripe, and database connectivity.",
   );
   process.exitCode = 1;
 } finally {

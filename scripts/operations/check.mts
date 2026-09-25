@@ -2,13 +2,18 @@ import nextEnv from "@next/env";
 import Stripe from "stripe";
 import { randomUUID } from "node:crypto";
 import { Pool } from "pg";
+import { parseEnv } from "node:util";
 
 const env = nextEnv.loadEnvConfig(process.cwd());
 const production = process.argv.includes("--public");
 const origin = production
   ? "https://www.iyayusufspantry.com"
   : new URL(process.env.APP_URL || "http://localhost:3000").origin;
-const base = env.loadedEnvFiles.find((file) => file.path === ".env")?.env;
+// Next's expanded file.env includes higher-priority .env.local values. Read
+// the original file text so public probes never use the local CLI secret.
+const base = parseEnv(
+  env.loadedEnvFiles.find((file) => file.path === ".env")?.contents || "",
+);
 type Scope = "local" | "website";
 const checks: {
   scope: Scope;

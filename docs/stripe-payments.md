@@ -51,6 +51,8 @@ npm run build
 npm run payments:test-ui
 # With payments:dev running in another terminal:
 npm run payments:smoke
+# Public session retry, expiration, and Stripe delivery acknowledgement:
+npm run payments:smoke -- --public
 npm run payments:test-purchase
 # Explicitly test the canonical deployed sandbox:
 npm run payments:test-purchase -- --public
@@ -66,6 +68,8 @@ The smoke check creates a real **test** Checkout Session, verifies idempotent re
 Reconciliation checks up to 100 pending orders against Stripe and rotates checked records so unresolved old orders cannot starve later ones. It can recover missed payment/expiry events and incomplete session linking. Uncertain session creation is replayed with identical parameters and the original idempotency key only within 23 hours; older unlinked orders are reported for manual review and remain reserved. A failed create with no Stripe session may also need manual review. The protected maintenance endpoint is implemented; a scheduler still needs deployment configuration. See [Store operations](operations.md).
 
 ## Later deployment
+
+Public sandbox activation was verified on 25 September 2026: hosted test-card payment reached the persisted paid confirmation, session retries reused the same Stripe session, and expiration delivered successfully and released stock. The replacement test destination is active and the obsolete destination is disabled. Daily maintenance is deployed as a sandbox recovery backup; live payments remain unsupported.
 
 The deployed public endpoint is `https://www.iyayusufspantry.com/api/stripe/webhook`. Its test destination now subscribes to these four **snapshot** events from **Your account**:
 

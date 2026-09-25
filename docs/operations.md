@@ -2,11 +2,13 @@
 
 ## Activation update — 25 September 2026
 
-Vercel CLI access is now connected to the existing project. The owner's supplied, verified Clerk email is configured privately as the owner allowlist. Public sandbox checkout and the contact inbox are being activated with the canonical website origin and a replacement Stripe test destination whose signing secret is synchronized to Vercel. Contact submissions do not require outgoing email.
+Vercel CLI access is connected to the existing project. The owner's supplied, verified Clerk email is configured privately as the owner allowlist. Public sandbox checkout and the contact inbox are active with the canonical website origin and a replacement Stripe test destination whose signing secret is synchronized to Vercel. The obsolete destination is disabled. Contact submissions do not require outgoing email.
 
 `vercel.json` schedules maintenance daily at 05:00 UTC on the current Hobby plan (execution can occur within that hour). This is a sandbox recovery backup. A scheduler running approximately every five minutes is still needed before newsletter delivery or live launch; daily processing is insufficient for prompt email and retries. No paid hosting upgrade is made. See [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
 
-Resend is the selected email adapter, but sending and newsletters remain disabled pending credentials and domain verification. The optional `EMAIL_REPLY_TO` setting is saved with each queued email so retries preserve the original payload. Contact notifications retain the customer's own reply address. See [Launch settings](store-launch-settings.md) for selected US defaults and remaining details. The older setup notes below describe the original prerequisites; this update supersedes their missing-access/owner/scheduler statements.
+Resend is the selected email adapter, but sending and newsletters remain disabled pending credentials and domain verification. The optional `EMAIL_REPLY_TO` setting is saved with each queued email so retries preserve the original payload. Contact notifications retain the customer's own reply address. See [Launch settings](store-launch-settings.md) for selected US defaults and remaining details.
+
+Verification: production build and lint passed; all ten operations tests passed. A public hosted test-card purchase returned the paid confirmation screen. Public session retry/expiration checks passed, including Stripe's confirmation of successful webhook delivery. The contact browser check saved a database message and removed only its test record; no email was queued. The authenticated maintenance request returned 200, and the deployment exposes the daily cron definition. Owner email verification and anonymous access denial were checked; the owner still signs in using their own credentials.
 
 The application now has a protected `/owner` dashboard, a persistent contact inbox, confirmed newsletter subscriptions, an email outbox, and a maintenance endpoint. These complement the existing **sandbox-only** checkout. The public `/prototype/owner` remains a fictional demonstration.
 
@@ -39,7 +41,7 @@ Configure these server-only variables as needed:
 | `EMAIL_TEST_RECIPIENTS`       | Comma-separated addresses allowed to receive sandbox order receipts. Other test/customer addresses are never emailed by this flow.        |
 | `CRON_SECRET`                 | Random bearer token protecting the maintenance endpoint.                                                                                  |
 
-No real owner identity or email sender was guessed. Until configured, access is denied and public forms retain their explicit prototype behavior. `npm run operations:check` reports local configuration and endpoint status without printing secrets. Add `-- --public` to probe the public checkout and webhook using the Dashboard secret in `.env`; local CLI forwarding uses `.env.local` instead.
+The owner supplied the allowlisted identity. Contact is enabled; newsletters remain in prototype mode until email is configured. `npm run operations:check` reports local configuration and endpoint status without printing secrets. Add `-- --public` to probe the public checkout and webhook using the Dashboard secret in the original `.env` text; local CLI forwarding uses `.env.local` instead. Next's expanded per-file environment map must not be used to select the Dashboard secret because it can contain higher-priority local overrides.
 
 The readiness report separates `local` configuration from `website` probes. It accepts either owner allowlist, checks all eight database tables, and continues website checks if the database is unreachable. Public probes check form validation, anonymous protection for owner/export/maintenance, and the saved Dashboard signing secret. They create no contact message, subscription, order, or email. A 400 response to an invalid form proves only that validation is reachable; it does not prove payment or email delivery works. A 401 from maintenance does not prove a scheduler exists. Missing settings produce a nonzero exit code deliberately.
 
@@ -83,7 +85,7 @@ GET https://www.iyayusufspantry.com/api/cron/maintenance
 Authorization: Bearer <CRON_SECRET>
 ```
 
-Run approximately every five minutes using a scheduler supported by the hosting account. The handler reconciles ten pending Stripe sessions, recovers missing eligible sandbox receipt jobs, sends up to five queued emails, and prunes expired rate-limit counters. A failure returns non-2xx. Old unresolved orders rotate through batches and cannot permanently block newer ones. Uncertain payments retain their reservations until Stripe confirms their outcome. A scheduler has **not** been activated because deployment access is not yet available.
+The daily sandbox backup is deployed as described above. Use a scheduler running approximately every five minutes before enabling newsletter delivery or live sales. The handler reconciles ten pending Stripe sessions, recovers missing eligible sandbox receipt jobs, sends up to five queued emails, and prunes expired rate-limit counters. A failure returns non-2xx. Old unresolved orders rotate through batches and cannot permanently block newer ones. Uncertain payments retain their reservations until Stripe confirms their outcome.
 
 The existing `npm run payments:reconcile` command uses the same reconciliation implementation and handles up to 100 orders without dispatching mail.
 
@@ -106,6 +108,6 @@ References: [Clerk user data](https://clerk.com/docs/nextjs/guides/users/reading
 
 ## Remaining launch dependencies
 
-Vercel configuration still needs a signed-in CLI/account connection. Public sandbox checkout requires the feature flag, canonical `APP_URL`, test credentials, matching Dashboard webhook secret, database schema, and `FORM_SECRET`. Local configuration does not update Vercel automatically.
+Public sandbox checkout is configured and tested. Local configuration still does not update Vercel automatically; future environment changes require explicit synchronization and a new deployment.
 
-The owner identity, email-provider credentials/verified sender, and shipping/tax decisions are still required. Live Stripe processing remains intentionally unsupported until the separate live inventory/payment configuration and approved business rules are implemented. Policies, final product information, social destinations, marketing delivery, and search indexing still need the business's launch decisions. The site continues to identify itself as a prototype and remains noindex.
+Email-provider credentials, sending-domain verification, and a frequent email worker are still required. US shipping defaults are recorded in the launch settings, but tax setup and real inventory remain unresolved. Live Stripe processing remains unsupported until separate live inventory/payment configuration and business rules are implemented. Policies, final product information, social destinations, marketing delivery, and search indexing still need the business's launch decisions. The site continues to identify itself as a prototype and remains noindex.
