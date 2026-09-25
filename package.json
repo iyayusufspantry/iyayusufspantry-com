@@ -6,6 +6,7 @@
   "scripts": {
     "operations:setup": "tsx scripts/operations/setup.mts",
     "operations:mail": "tsx scripts/operations/mail.mts",
+    "operations:email-test": "tsx scripts/operations/email-test.mts",
     "operations:test": "tsx --test tests/operations.test.ts",
     "operations:test-ui": "playwright test --config playwright.operations.config.ts",
     "operations:test-auth": "tsx scripts/operations/auth-smoke.mts",
@@ -51,6 +52,7 @@
     "pg": "^8.23.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "resend": "^6.29.0",
     "sonner": "^2.0.8",
     "stripe": "^22.6.2",
     "tailwind-merge": "^3.6.0",

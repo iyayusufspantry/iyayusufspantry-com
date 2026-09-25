@@ -74,6 +74,15 @@ Newsletter forms require explicit consent. Confirmation links expire after 24 ho
 
 ## Email and maintenance
 
+To send the Resend onboarding example, add `RESEND_API_KEY=re_xxxxxxxxx` to your ignored `.env` and replace `re_xxxxxxxxx` with the real API key. Never put this key in client components or a `NEXT_PUBLIC_` variable.
+
+```powershell
+npm run operations:email-test -- --dry-run
+npm run operations:email-test
+```
+
+The dry run prints the message and whether a key is configured, without revealing the key or contacting Resend. Running without `--dry-run` sends the supplied “Hello World” HTML message from `onboarding@resend.dev` to `iyayusufspantry@gmail.com`. This is an explicit standalone test command; it does not drain the customer email queue or enable newsletter delivery. The recipient must be the email associated with your Resend account when using the onboarding sender. Customer emails require your verified sending domain. See [Resend's Node.js guide](https://resend.com/docs/send-with-nodejs).
+
 Email is queued durably. The worker uses a lease and an immutable provider idempotency key so concurrent jobs and retries do not create duplicate sends. Transient failures wait five minutes. Uncertain requests older than 23 hours move to `review` instead of being automatically resent past the provider's deduplication window. Investigate these entries against the provider delivery log before any manual retry. A provider acceptance response is not proof of inbox delivery.
 
 After configuring email, `npm run operations:mail` drains up to 20 queued messages. Running it sends actual mail; automated tests use fake transports and do not call the provider. A disabled provider leaves mail queued.

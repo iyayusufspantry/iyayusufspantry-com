@@ -74,7 +74,9 @@ try {
             limit: 25,
           });
           const event = events.data.find(
-            (event) => event.data.object.id === session.id,
+            (event) =>
+              event.type === "checkout.session.expired" &&
+              event.data.object.id === session.id,
           );
           if (event?.pending_webhooks === 0) {
             delivered = true;
