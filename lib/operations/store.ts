@@ -16,6 +16,7 @@ export class OperationsStore {
   constructor(
     public readonly pool: Pool,
     public readonly schema = "simbiat_operations",
+    private readonly replyTo?: string,
   ) {
     if (!/^[a-z_][a-z0-9_]*$/.test(schema)) throw new Error("Invalid schema");
   }
@@ -54,7 +55,15 @@ export class OperationsStore {
   ) {
     await db.query(
       `INSERT INTO ${this.schema}.mail(id,payload) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
-      [id, JSON.stringify(payload)],
+      [
+        id,
+        JSON.stringify({
+          ...payload,
+          ...(this.replyTo && !payload.reply_to
+            ? { reply_to: this.replyTo }
+            : {}),
+        }),
+      ],
     );
   }
   async contact(

@@ -11,7 +11,7 @@ export function operations() {
     connectionTimeoutMillis: 10000,
     idleTimeoutMillis: 10000,
   }));
-  return new OperationsStore(pool);
+  return new OperationsStore(pool, undefined, process.env.EMAIL_REPLY_TO);
 }
 export function siteOrigin() {
   const url = new URL(process.env.APP_URL || "http://localhost:3000");

@@ -237,6 +237,28 @@ test("email workers claim each message once and retry the immutable payload with
     "review",
   );
 });
+test("reply address is saved with the original email and survives configuration changes", async () => {
+  const id = `reply-${randomUUID()}`;
+  const configured = new OperationsStore(pool, schema, "owner@example.com");
+  await configured.enqueue(id, mail);
+  const changed = new OperationsStore(pool, schema, "changed@example.com");
+  await changed.enqueue(id, mail);
+  const saved = await pool.query(
+    `SELECT payload FROM ${schema}.mail WHERE id=$1`,
+    [id],
+  );
+  assert.equal(saved.rows[0].payload.reply_to, "owner@example.com");
+  const contactId = `reply-${randomUUID()}`;
+  await configured.enqueue(contactId, {
+    ...mail,
+    reply_to: "customer@example.com",
+  });
+  const contact = await pool.query(
+    `SELECT payload FROM ${schema}.mail WHERE id=$1`,
+    [contactId],
+  );
+  assert.equal(contact.rows[0].payload.reply_to, "customer@example.com");
+});
 test("email transport fails closed without delivery opt-in", async () => {
   const old = process.env.EMAIL_DELIVERY_ENABLED;
   process.env.EMAIL_DELIVERY_ENABLED = "false";

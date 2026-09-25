@@ -1,5 +1,13 @@
 # Store operations
 
+## Activation update — 25 September 2026
+
+Vercel CLI access is now connected to the existing project. The owner's supplied, verified Clerk email is configured privately as the owner allowlist. Public sandbox checkout and the contact inbox are being activated with the canonical website origin and a replacement Stripe test destination whose signing secret is synchronized to Vercel. Contact submissions do not require outgoing email.
+
+`vercel.json` schedules maintenance daily at 05:00 UTC on the current Hobby plan (execution can occur within that hour). This is a sandbox recovery backup. A scheduler running approximately every five minutes is still needed before newsletter delivery or live launch; daily processing is insufficient for prompt email and retries. No paid hosting upgrade is made. See [Vercel cron limits](https://vercel.com/docs/cron-jobs/usage-and-pricing).
+
+Resend is the selected email adapter, but sending and newsletters remain disabled pending credentials and domain verification. The optional `EMAIL_REPLY_TO` setting is saved with each queued email so retries preserve the original payload. Contact notifications retain the customer's own reply address. See [Launch settings](store-launch-settings.md) for selected US defaults and remaining details. The older setup notes below describe the original prerequisites; this update supersedes their missing-access/owner/scheduler statements.
+
 The application now has a protected `/owner` dashboard, a persistent contact inbox, confirmed newsletter subscriptions, an email outbox, and a maintenance endpoint. These complement the existing **sandbox-only** checkout. The public `/prototype/owner` remains a fictional demonstration.
 
 ## Database and local configuration

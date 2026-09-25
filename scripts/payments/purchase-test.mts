@@ -5,8 +5,13 @@ import { paymentConfig } from "../../lib/payments/config";
 
 nextEnv.loadEnvConfig(process.cwd(), true);
 const config = paymentConfig();
-if (!["localhost", "127.0.0.1"].includes(new URL(config.origin).hostname))
-  throw new Error("Run against the local sandbox only.");
+const publicTest = process.argv.includes("--public");
+if (publicTest) config.origin = "https://www.iyayusufspantry.com";
+if (
+  !publicTest &&
+  !["localhost", "127.0.0.1"].includes(new URL(config.origin).hostname)
+)
+  throw new Error("Use --public to explicitly test the deployed sandbox.");
 const browser = await chromium.launch();
 const page = await browser.newPage({
   viewport: { width: 1440, height: 1000 },
@@ -39,7 +44,7 @@ try {
   await expect(page.locator(".confirmation-card")).toContainText("USD");
   await mkdir("artifacts/payments", { recursive: true });
   await page.screenshot({
-    path: "artifacts/payments/confirmed-test-payment.png",
+    path: `artifacts/payments/${publicTest ? "public-" : ""}confirmed-test-payment.png`,
     fullPage: true,
   });
   console.log(
@@ -48,11 +53,11 @@ try {
 } catch {
   await mkdir("artifacts/payments", { recursive: true });
   await page.screenshot({
-    path: "artifacts/payments/purchase-test-failure.png",
+    path: `artifacts/payments/${publicTest ? "public-" : ""}purchase-test-failure.png`,
     fullPage: true,
   });
   console.error(
-    "Hosted sandbox purchase check failed; inspect artifacts/payments/purchase-test-failure.png. No live payment was attempted.",
+    `Hosted sandbox purchase check failed; inspect artifacts/payments/${publicTest ? "public-" : ""}purchase-test-failure.png. No live payment was attempted.`,
   );
   process.exitCode = 1;
 } finally {

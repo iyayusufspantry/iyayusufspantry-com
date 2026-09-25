@@ -52,6 +52,8 @@ npm run payments:test-ui
 # With payments:dev running in another terminal:
 npm run payments:smoke
 npm run payments:test-purchase
+# Explicitly test the canonical deployed sandbox:
+npm run payments:test-purchase -- --public
 npm run payments:reconcile
 ```
 
