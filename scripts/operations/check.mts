@@ -9,103 +9,235 @@ const origin = production
   ? "https://www.iyayusufspantry.com"
   : new URL(process.env.APP_URL || "http://localhost:3000").origin;
 const base = env.loadedEnvFiles.find((file) => file.path === ".env")?.env;
-const checks: { name: string; passed: boolean; detail: string }[] = [];
-const check = (name: string, passed: boolean, detail: string) =>
-  checks.push({ name, passed, detail });
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  connectionTimeoutMillis: 10000,
-});
-try {
-  const tables = await pool.query(
-    "SELECT to_regclass('simbiat_operations.contact_messages') AS inbox,to_regclass('simbiat_operations.mail') AS mail,to_regclass('simbiat_checkout_test.orders') AS orders",
-  );
+type Scope = "local" | "website";
+const checks: {
+  scope: Scope;
+  name: string;
+  passed: boolean;
+  detail: string;
+}[] = [];
+const check = (scope: Scope, name: string, passed: boolean, detail: string) =>
+  checks.push({ scope, name, passed, detail });
+const present = (key: string) => !!process.env[key]?.trim();
+
+check(
+  "local",
+  "Owner allowlist",
+  ["OWNER_CLERK_USER_IDS", "OWNER_EMAILS"].some((key) =>
+    process.env[key]?.split(",").some((value) => value.trim()),
+  ),
+  "Configure owner IDs OR verified owner emails; both are not required.",
+);
+for (const key of [
+  "DATABASE_URL",
+  "RESEND_API_KEY",
+  "EMAIL_FROM",
+  "FORM_SECRET",
+  "CRON_SECRET",
+]) {
   check(
-    "Database tables",
-    Object.values(tables.rows[0]).every(Boolean),
-    "Checks the locally configured database.",
+    "local",
+    key,
+    present(key),
+    "Presence only; values hidden, provider validity not established.",
   );
-  for (const key of [
-    "OWNER_CLERK_USER_IDS",
-    "OWNER_EMAILS",
-    "RESEND_API_KEY",
-    "EMAIL_FROM",
-    "FORM_SECRET",
-    "CRON_SECRET",
-  ]) {
+}
+for (const key of [
+  "STRIPE_CHECKOUT_ENABLED",
+  "CONTACT_ENABLED",
+  "NEWSLETTER_ENABLED",
+  "EMAIL_DELIVERY_ENABLED",
+]) {
+  check(
+    "local",
+    key,
+    process.env[key] === "true",
+    "Must be true to enable this feature locally; does not inspect Vercel configuration.",
+  );
+}
+check(
+  "local",
+  "Stripe test key",
+  /^(sk|rk)_test_/.test(process.env.STRIPE_SECRET_KEY || ""),
+  "This implementation supports sandbox payments only.",
+);
+
+// A database outage must not hide public endpoint results.
+if (present("DATABASE_URL")) {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    connectionTimeoutMillis: 10000,
+    query_timeout: 10000,
+    max: 1,
+  });
+  try {
+    const tables = [
+      "simbiat_operations.contact_messages",
+      "simbiat_operations.subscribers",
+      "simbiat_operations.mail",
+      "simbiat_operations.rate_limits",
+      "simbiat_checkout_test.orders",
+      "simbiat_checkout_test.stock",
+      "simbiat_checkout_test.events",
+      "simbiat_checkout_test.owner_audit",
+    ];
+    const result = await pool.query<{ name: string; exists: boolean }>(
+      "SELECT name, to_regclass(name) IS NOT NULL AS exists FROM unnest($1::text[]) AS names(name)",
+      [tables],
+    );
+    const missing = result.rows
+      .filter((row) => !row.exists)
+      .map((row) => row.name);
     check(
-      `Local ${key}`,
-      !!process.env[key],
-      key.startsWith("OWNER_")
-        ? "Configure either owner IDs or verified owner emails."
-        : "Value hidden.",
+      "local",
+      "Database tables",
+      !missing.length,
+      missing.length
+        ? "Missing: " +
+            missing.join(", ") +
+            ". Run payments:setup and operations:setup."
+        : "All eight tables exist in the locally configured database; remote database configuration is not inspected.",
+    );
+  } catch {
+    check(
+      "local",
+      "Database tables",
+      false,
+      "Database check failed; credentials and provider errors hidden.",
+    );
+  } finally {
+    await pool.end();
+  }
+}
+
+async function probe(
+  name: string,
+  path: string,
+  expected: number,
+  detail: string,
+  init?: RequestInit,
+) {
+  try {
+    const response = await fetch(origin + path, {
+      ...init,
+      redirect: "manual",
+      signal: AbortSignal.timeout(20000),
+    });
+    check(
+      "website",
+      name,
+      response.status === expected,
+      "HTTP " + response.status + "; " + detail,
+    );
+    await response.body?.cancel();
+  } catch {
+    check(
+      "website",
+      name,
+      false,
+      "Website unreachable or request timed out; other checks continue.",
     );
   }
-  const request = (path: string, init?: RequestInit) =>
-    fetch(`${origin}${path}`, { ...init, signal: AbortSignal.timeout(20000) });
-  const checkout = await request("/api/checkout/session", {
-    method: "POST",
-    headers: { Origin: origin, "Content-Type": "application/json" },
-    body: "{}",
+}
+const invalidForm: RequestInit = {
+  method: "POST",
+  headers: { Origin: origin, "Content-Type": "application/json" },
+  body: "{}",
+};
+await Promise.all([
+  probe(
+    "Checkout validation reachable",
+    "/api/checkout/session",
+    400,
+    "invalid cart must return 400. This does not prove Stripe, database writes, or rate limiting work.",
+    invalidForm,
+  ),
+  probe(
+    "Contact validation reachable",
+    "/api/contact",
+    400,
+    "invalid message must return 400; no message or email is created.",
+    invalidForm,
+  ),
+  probe(
+    "Newsletter validation reachable",
+    "/api/newsletter",
+    400,
+    "missing consent must return 400; no subscription or email is created.",
+    invalidForm,
+  ),
+  probe(
+    "Owner API protected",
+    "/api/owner",
+    401,
+    "anonymous access must be denied; owner sign-in still needs acceptance testing.",
+  ),
+  probe(
+    "Subscriber export protected",
+    "/api/owner/subscribers",
+    401,
+    "anonymous access must be denied.",
+  ),
+  probe(
+    "Maintenance protected",
+    "/api/cron/maintenance",
+    401,
+    "anonymous access must be denied; this does not establish a configured scheduler.",
+  ),
+]);
+const secret = production
+  ? base?.STRIPE_WEBHOOK_SECRET
+  : process.env.STRIPE_WEBHOOK_SECRET;
+if (secret && /^(sk|rk)_test_/.test(process.env.STRIPE_SECRET_KEY || "")) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const payload = JSON.stringify({
+    id: "evt_check_" + randomUUID(),
+    object: "event",
+    type: "checkout.session.completed",
+    livemode: false,
+    data: { object: { metadata: {} } },
   });
-  check(
-    "Checkout enabled",
-    checkout.status === 400,
-    `HTTP ${checkout.status}; enabled checkout rejects this intentionally invalid cart with 400.`,
-  );
-  const owner = await request("/api/owner");
-  check(
-    "Owner access protected",
-    owner.status === 401,
-    `Unauthenticated HTTP ${owner.status}.`,
-  );
-  const secret = production
-    ? base?.STRIPE_WEBHOOK_SECRET
-    : process.env.STRIPE_WEBHOOK_SECRET;
-  if (secret && process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")) {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-    const payload = JSON.stringify({
-      id: `evt_check_${randomUUID()}`,
-      object: "event",
-      type: "checkout.session.completed",
-      livemode: false,
-      data: { object: { metadata: {} } },
-    });
-    const signature = stripe.webhooks.generateTestHeaderString({
-      payload,
-      secret,
-    });
-    const response = await request("/api/stripe/webhook", {
+  await probe(
+    "Stripe signing secret match",
+    "/api/stripe/webhook",
+    200,
+    "harmless unrelated event; no order mutation. Real Stripe delivery still needs a test purchase.",
+    {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "stripe-signature": signature,
+        "stripe-signature": stripe.webhooks.generateTestHeaderString({
+          payload,
+          secret,
+        }),
       },
       body: payload,
-    });
-    check(
-      "Stripe signing secret",
-      response.status === 200,
-      `HTTP ${response.status}; harmless unrelated event, no order mutation.`,
-    );
-  } else
-    check(
-      "Stripe signing secret",
-      false,
-      "Matching test key/signing secret is missing.",
-    );
-} catch {
-  check(
-    "Connectivity",
-    false,
-    "A provider or website check failed; no credentials printed.",
+    },
   );
-} finally {
-  await pool.end();
+} else {
+  check(
+    "website",
+    "Stripe signing secret match",
+    false,
+    "Test key or signing secret is missing; public checks use the Dashboard secret from .env, never the CLI override.",
+  );
 }
-console.log(JSON.stringify({ target: origin, checks }, null, 2));
-if (
-  checks.some((c) => !c.passed && !c.name.startsWith("Local OWNER_")) ||
-  !(process.env.OWNER_CLERK_USER_IDS || process.env.OWNER_EMAILS)
-)
-  process.exitCode = 1;
+console.log(
+  JSON.stringify(
+    {
+      target: origin,
+      livePaymentsSupported: false,
+      limitations: [
+        "Local settings are not proof of Vercel settings. No remote environment variables are read.",
+        "Readiness probes do not replace a hosted test purchase, owner sign-in, email delivery, or scheduled maintenance verification.",
+      ],
+      checks: checks.sort(
+        (a, b) =>
+          a.scope.localeCompare(b.scope) || a.name.localeCompare(b.name),
+      ),
+    },
+    null,
+    2,
+  ),
+);
+if (checks.some((entry) => !entry.passed)) process.exitCode = 1;

@@ -33,6 +33,21 @@ Configure these server-only variables as needed:
 
 No real owner identity or email sender was guessed. Until configured, access is denied and public forms retain their explicit prototype behavior. `npm run operations:check` reports local configuration and endpoint status without printing secrets. Add `-- --public` to probe the public checkout and webhook using the Dashboard secret in `.env`; local CLI forwarding uses `.env.local` instead.
 
+The readiness report separates `local` configuration from `website` probes. It accepts either owner allowlist, checks all eight database tables, and continues website checks if the database is unreachable. Public probes check form validation, anonymous protection for owner/export/maintenance, and the saved Dashboard signing secret. They create no contact message, subscription, order, or email. A 400 response to an invalid form proves only that validation is reachable; it does not prove payment or email delivery works. A 401 from maintenance does not prove a scheduler exists. Missing settings produce a nonzero exit code deliberately.
+
+### Inputs needed to finish activation
+
+Provide these business settings, and keep credentials in ignored environment files or the provider dashboard:
+
+- **Hosting:** a Vercel account connection or completed `npx vercel login` for this project.
+- **Owner:** verified Clerk sign-in email or Clerk user ID to allowlist.
+- **Email:** provider choice (Resend is implemented), verified sender, business inbox, and provider credentials. Actual sends require explicit authorization.
+- **Fulfillment:** shipping countries, rates/free-shipping threshold, dispatch timing, approved product prices, and real starting inventory.
+- **Tax:** the business's approved tax configuration, including whether Stripe Tax is configured. No tax obligations or rates are inferred from the website currency.
+- **Launch content:** final business/contact details, social links, and approved shipping, returns, privacy, and terms content.
+
+Deployment configuration and sandbox acceptance testing come first. Live checkout requires separate implementation and validation after the commercial settings are provided; a live Stripe key alone is insufficient. Search indexing should be enabled only after launch content is final.
+
 ## Owner workflow
 
 Sign in with an allowlisted Clerk account and visit `/owner`. Every data endpoint repeats the server-side ownership check. Unauthenticated API requests receive 401; authenticated non-owners receive 403. Owner responses are not cached.
