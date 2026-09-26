@@ -103,7 +103,17 @@ try {
   }
   const legal = page.locator('input[name="legalAccepted"]');
   if (await legal.isVisible()) await legal.check();
-  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  // The OTP inputs can appear before Clerk finishes preparing verification.
+  // Observe the request before submitting so a fast response cannot be missed.
+  await Promise.all([
+    page.waitForResponse(
+      (response) =>
+        response.url().includes("prepare_verification") &&
+        response.request().method() === "POST" &&
+        response.status() === 200,
+    ),
+    page.getByRole("button", { name: "Continue", exact: true }).click(),
+  ]);
   const otp = page.getByRole("textbox", { name: /verification code/i });
   await expect(otp).toBeVisible();
   await otp.pressSequentially("424242");

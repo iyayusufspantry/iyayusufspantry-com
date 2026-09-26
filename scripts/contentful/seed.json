@@ -3229,27 +3229,27 @@
       "contentType": "pantryPolicy",
       "fields": {
         "title": "Your privacy matters.",
-        "subtitle": "A placeholder for the client’s approved privacy policy.",
+        "subtitle": "How information is handled in this preview. The final policy is pending client approval.",
         "sections": [
           [
-            "About this prototype",
-            "The prototype contact, checkout, and newsletter forms do not send or save the details you enter. Sample cart selections are stored in this browser tab’s session storage. The optional availability check sends only variant IDs and quantities to this website’s server. The owner preview uses fictional data that resets on refresh."
+            "Contact and newsletter forms",
+            "The contact and newsletter forms are active. Contact submissions save your name, email address, subject and message so the store owner can review and respond to your enquiry; a notification is also sent to the owner by email. Newsletter signup saves your email address, consent and subscription status, and sends a confirmation email through Resend. Your subscription becomes active after you confirm it. You can unsubscribe using the link in the email."
           ],
           [
             "Account sign-in",
             "Account creation and sign-in are provided by Clerk. Information you enter in the account forms is sent to Clerk to manage your account and session."
           ],
           [
-            "Production policy to be supplied",
-            "The final policy should describe approved data collection, purposes, service providers, retention, customer choices, and business contact information."
+            "Cart and test checkout",
+            "Cart selections are stored in this browser tab’s session storage. Availability checks send product selections and quantities to our server. Checkout uses Stripe in test mode: information entered in Stripe’s hosted form is sent to Stripe, and test order records, contact and shipping details, and payment status are saved by this website. Full card details are handled by Stripe and are not stored by this website. No real payment is collected and no goods are shipped for test orders."
           ],
           [
-            "Provider decisions",
-            "Payment, hosting, analytics, content management, and administrative authentication providers have not been finalized."
+            "Services used",
+            "The website uses Vercel for hosting, Neon for database storage, Contentful for website content, Clerk for accounts, Stripe for test checkout, and Resend for email delivery. Submitted information is processed by the services needed to provide the feature you use. The protected owner dashboard displays saved submissions and test orders."
           ],
           [
             "Before launch",
-            "This page is a content placeholder, not an approved legal policy. The final wording and applicable requirements need to be reviewed and supplied before the store launches."
+            "This notice describes the current preview and is not the final approved privacy policy. Before the store launches, the client must review and approve the business contact details, retention periods, customer rights and request procedures, and any additional policy requirements. For questions about information you have submitted, use the contact page."
           ]
         ],
         "kind": "privacy",
@@ -3263,7 +3263,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "About this prototype",
+                  "value": "Contact and newsletter forms",
                   "marks": [],
                   "data": {}
                 }
@@ -3275,7 +3275,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "The prototype contact, checkout, and newsletter forms do not send or save the details you enter. Sample cart selections are stored in this browser tab’s session storage. The optional availability check sends only variant IDs and quantities to this website’s server. The owner preview uses fictional data that resets on refresh.",
+                  "value": "The contact and newsletter forms are active. Contact submissions save your name, email address, subject and message so the store owner can review and respond to your enquiry; a notification is also sent to the owner by email. Newsletter signup saves your email address, consent and subscription status, and sends a confirmation email through Resend. Your subscription becomes active after you confirm it. You can unsubscribe using the link in the email.",
                   "marks": [],
                   "data": {}
                 }
@@ -3311,7 +3311,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Production policy to be supplied",
+                  "value": "Cart and test checkout",
                   "marks": [],
                   "data": {}
                 }
@@ -3323,7 +3323,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "The final policy should describe approved data collection, purposes, service providers, retention, customer choices, and business contact information.",
+                  "value": "Cart selections are stored in this browser tab’s session storage. Availability checks send product selections and quantities to our server. Checkout uses Stripe in test mode: information entered in Stripe’s hosted form is sent to Stripe, and test order records, contact and shipping details, and payment status are saved by this website. Full card details are handled by Stripe and are not stored by this website. No real payment is collected and no goods are shipped for test orders.",
                   "marks": [],
                   "data": {}
                 }
@@ -3335,7 +3335,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Provider decisions",
+                  "value": "Services used",
                   "marks": [],
                   "data": {}
                 }
@@ -3347,7 +3347,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Payment, hosting, analytics, content management, and administrative authentication providers have not been finalized.",
+                  "value": "The website uses Vercel for hosting, Neon for database storage, Contentful for website content, Clerk for accounts, Stripe for test checkout, and Resend for email delivery. Submitted information is processed by the services needed to provide the feature you use. The protected owner dashboard displays saved submissions and test orders.",
                   "marks": [],
                   "data": {}
                 }
@@ -3371,7 +3371,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "This page is a content placeholder, not an approved legal policy. The final wording and applicable requirements need to be reviewed and supplied before the store launches.",
+                  "value": "This notice describes the current preview and is not the final approved privacy policy. Before the store launches, the client must review and approve the business contact details, retention periods, customer rights and request procedures, and any additional policy requirements. For questions about information you have submitted, use the contact page.",
                   "marks": [],
                   "data": {}
                 }
@@ -10798,17 +10798,17 @@
             {
               "key": "copy-12",
               "kind": "subtitle",
-              "text": "A placeholder for the client’s approved privacy policy."
+              "text": "How information is handled in this preview. The final policy is pending client approval."
             },
             {
               "key": "copy-13",
               "kind": "label",
-              "text": "About this prototype"
+              "text": "Contact and newsletter forms"
             },
             {
               "key": "copy-14",
               "kind": "label",
-              "text": "The prototype contact, checkout, and newsletter forms do not send or save the details you enter. Sample cart selections are stored in this browser tab’s session storage. The optional availability check sends only variant IDs and quantities to this website’s server. The owner preview uses fictional data that resets on refresh."
+              "text": "The contact and newsletter forms are active. Contact submissions save your name, email address, subject and message so the store owner can review and respond to your enquiry; a notification is also sent to the owner by email. Newsletter signup saves your email address, consent and subscription status, and sends a confirmation email through Resend. Your subscription becomes active after you confirm it. You can unsubscribe using the link in the email."
             },
             {
               "key": "copy-15",
@@ -10823,22 +10823,22 @@
             {
               "key": "copy-17",
               "kind": "label",
-              "text": "Production policy to be supplied"
+              "text": "Cart and test checkout"
             },
             {
               "key": "copy-18",
               "kind": "label",
-              "text": "The final policy should describe approved data collection, purposes, service providers, retention, customer choices, and business contact information."
+              "text": "Cart selections are stored in this browser tab’s session storage. Availability checks send product selections and quantities to our server. Checkout uses Stripe in test mode: information entered in Stripe’s hosted form is sent to Stripe, and test order records, contact and shipping details, and payment status are saved by this website. Full card details are handled by Stripe and are not stored by this website. No real payment is collected and no goods are shipped for test orders."
             },
             {
               "key": "copy-19",
               "kind": "label",
-              "text": "Provider decisions"
+              "text": "Services used"
             },
             {
               "key": "copy-20",
               "kind": "label",
-              "text": "Payment, hosting, analytics, content management, and administrative authentication providers have not been finalized."
+              "text": "The website uses Vercel for hosting, Neon for database storage, Contentful for website content, Clerk for accounts, Stripe for test checkout, and Resend for email delivery. Submitted information is processed by the services needed to provide the feature you use. The protected owner dashboard displays saved submissions and test orders."
             },
             {
               "key": "copy-21",
@@ -10848,7 +10848,7 @@
             {
               "key": "copy-22",
               "kind": "label",
-              "text": "This page is a content placeholder, not an approved legal policy. The final wording and applicable requirements need to be reviewed and supplied before the store launches."
+              "text": "This notice describes the current preview and is not the final approved privacy policy. Before the store launches, the client must review and approve the business contact details, retention periods, customer rights and request procedures, and any additional policy requirements. For questions about information you have submitted, use the contact page."
             },
             {
               "key": "copy-23",
@@ -11069,7 +11069,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "A placeholder for the client’s approved privacy policy.",
+                  "value": "How information is handled in this preview. The final policy is pending client approval.",
                   "marks": [],
                   "data": {}
                 }
@@ -11081,7 +11081,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "About this prototype",
+                  "value": "Contact and newsletter forms",
                   "marks": [],
                   "data": {}
                 }
@@ -11093,7 +11093,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "The prototype contact, checkout, and newsletter forms do not send or save the details you enter. Sample cart selections are stored in this browser tab’s session storage. The optional availability check sends only variant IDs and quantities to this website’s server. The owner preview uses fictional data that resets on refresh.",
+                  "value": "The contact and newsletter forms are active. Contact submissions save your name, email address, subject and message so the store owner can review and respond to your enquiry; a notification is also sent to the owner by email. Newsletter signup saves your email address, consent and subscription status, and sends a confirmation email through Resend. Your subscription becomes active after you confirm it. You can unsubscribe using the link in the email.",
                   "marks": [],
                   "data": {}
                 }
@@ -11129,7 +11129,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Production policy to be supplied",
+                  "value": "Cart and test checkout",
                   "marks": [],
                   "data": {}
                 }
@@ -11141,7 +11141,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "The final policy should describe approved data collection, purposes, service providers, retention, customer choices, and business contact information.",
+                  "value": "Cart selections are stored in this browser tab’s session storage. Availability checks send product selections and quantities to our server. Checkout uses Stripe in test mode: information entered in Stripe’s hosted form is sent to Stripe, and test order records, contact and shipping details, and payment status are saved by this website. Full card details are handled by Stripe and are not stored by this website. No real payment is collected and no goods are shipped for test orders.",
                   "marks": [],
                   "data": {}
                 }
@@ -11153,7 +11153,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Provider decisions",
+                  "value": "Services used",
                   "marks": [],
                   "data": {}
                 }
@@ -11165,7 +11165,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "Payment, hosting, analytics, content management, and administrative authentication providers have not been finalized.",
+                  "value": "The website uses Vercel for hosting, Neon for database storage, Contentful for website content, Clerk for accounts, Stripe for test checkout, and Resend for email delivery. Submitted information is processed by the services needed to provide the feature you use. The protected owner dashboard displays saved submissions and test orders.",
                   "marks": [],
                   "data": {}
                 }
@@ -11189,7 +11189,7 @@
               "content": [
                 {
                   "nodeType": "text",
-                  "value": "This page is a content placeholder, not an approved legal policy. The final wording and applicable requirements need to be reviewed and supplied before the store launches.",
+                  "value": "This notice describes the current preview and is not the final approved privacy policy. Before the store launches, the client must review and approve the business contact details, retention periods, customer rights and request procedures, and any additional policy requirements. For questions about information you have submitted, use the contact page.",
                   "marks": [],
                   "data": {}
                 }
