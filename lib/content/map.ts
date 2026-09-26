@@ -34,6 +34,7 @@ export function mapContent(
   assets: CmsResource[],
 ): SiteContent {
   const byId = new Map(entries.map((e) => [e.sys.id, e.fields]));
+  const resourcesById = new Map(entries.map((e) => [e.sys.id, e]));
   const rows = (type: string) =>
     entries
       .filter((e) => e.sys.contentType?.sys.id === type)
@@ -43,6 +44,35 @@ export function mapContent(
           a.sys.id.localeCompare(b.sys.id),
       );
   const linked = (value: unknown) => byId.get(linkId(value));
+  const references = (value: unknown, type: string) =>
+    list(value).flatMap((ref) => {
+      const entry = resourcesById.get(linkId(ref));
+      // Unpublished references are absent. Never restore stale legacy text.
+      if (!entry) return [];
+      if (entry.sys.contentType?.sys.id !== type)
+        throw new Error(`Invalid Contentful ${type} reference`);
+      return [entry.fields];
+    });
+  const sectionPairs = (f: Fields): [string, string][] =>
+    f.referenceVersion === 1 || f.sectionRefs !== undefined
+      ? references(f.sectionRefs, "pantrySection").map((s) => [
+          text(s.heading),
+          text(s.text),
+        ])
+      : pairs(f.sections);
+  const settingsValues = (refs: unknown) => {
+    const values: Record<string, string | boolean> = {};
+    for (const f of references(refs, "pantrySetting")) {
+      const key = text(f.key);
+      if (Object.hasOwn(values, key))
+        throw new Error("Duplicate Contentful setting key");
+      Object.defineProperty(values, key, {
+        value: typeof f.boolean === "boolean" ? f.boolean : text(f.text),
+        enumerable: true,
+      });
+    }
+    return values;
+  };
   const slugs = (value: unknown) =>
     list(value)
       .map((v) => text(linked(v)?.slug))
@@ -182,7 +212,10 @@ export function mapContent(
       date: text(f.displayDate),
       readTime: text(f.readTime),
       product: text(linked(f.product)?.slug),
-      sections: list(f.sections).map((s) => ({
+      sections: (f.referenceVersion === 1 || f.sectionRefs !== undefined
+        ? references(f.sectionRefs, "pantrySection")
+        : list(f.sections)
+      ).map((s) => ({
         heading: text(object(s).heading),
         text: text(object(s).text),
       })),
@@ -191,19 +224,22 @@ export function mapContent(
   const copy: SiteContent["copy"] = {};
   for (const { fields: f } of [...rows("pantryPage"), ...rows("pantryCopy")]) {
     const content = object(f.content);
-    const source = text(content.source);
+    const source = text(f.source) || text(content.source);
     if (source)
       copy[source] = Object.fromEntries(
-        list(content.blocks).map((b) => [
-          text(object(b).key),
-          text(object(b).text),
-        ]),
+        (f.referenceVersion === 1 || f.textBlocks !== undefined
+          ? references(f.textBlocks, "pantryTextBlock")
+          : list(content.blocks)
+        ).map((b) => [text(object(b).key), text(object(b).text)]),
       );
   }
   const scope = object(
     rows("pantryCopy").find((e) => e.fields.key === "data/scope.ts")?.fields
       .content,
   );
+  const scopeEntry = rows("pantryCopy").find(
+    (e) => e.fields.key === "data/scope.ts",
+  )?.fields;
   const home = rows("pantryPage").find((e) => e.fields.route === "/")?.fields;
   return {
     products,
@@ -228,19 +264,22 @@ export function mapContent(
       tagline: text(settings.tagline),
       logo: requiredPhoto(settings.logo),
       icon: requiredPhoto(settings.icon),
-      brandColors: object(settings.brandColors) as Record<string, string>,
-      contactDetails: object(settings.contactDetails) as Record<
-        string,
-        string | boolean
-      >,
+      brandColors: (settings.referenceVersion === 1 ||
+      settings.colorRefs !== undefined
+        ? settingsValues(settings.colorRefs)
+        : object(settings.brandColors)) as Record<string, string>,
+      contactDetails: (settings.referenceVersion === 1 ||
+      settings.contactRefs !== undefined
+        ? settingsValues(settings.contactRefs)
+        : object(settings.contactDetails)) as Record<string, string | boolean>,
     },
     navigation: Object.fromEntries(
       rows("pantryNavigation").map(({ fields: f }) => [
         text(f.key),
-        list(f.items).map((i) => [
-          text(object(i).label),
-          safeHref(object(i).href),
-        ]),
+        (f.referenceVersion === 1 || f.linkRefs !== undefined
+          ? references(f.linkRefs, "pantryMenuLink")
+          : list(f.items)
+        ).map((i) => [text(object(i).label), safeHref(object(i).href)]),
       ]),
     ),
     policies: Object.fromEntries(
@@ -249,7 +288,7 @@ export function mapContent(
         {
           title: text(f.title),
           subtitle: text(f.subtitle),
-          sections: pairs(f.sections),
+          sections: sectionPairs(f),
         },
       ]),
     ),
@@ -262,14 +301,40 @@ export function mapContent(
       recipes: slugs(home?.featuredRecipes),
       posts: slugs(home?.featuredArticles),
     },
-    openDecisions: pairs(scope.openDecisions),
-    scopeFeatures: pairs(scope.scopeFeatures),
-    clientMaterials: strings(scope.clientMaterials),
-    exclusions: strings(scope.exclusions),
-    prototypeScreens: list(scope.prototypeScreens).map((s) => ({
-      name: text(object(s).name),
+    openDecisions:
+      scopeEntry?.referenceVersion === 1 ||
+      scopeEntry?.decisionRefs !== undefined
+        ? references(scopeEntry.decisionRefs, "pantrySection").map((s) => [
+            text(s.heading),
+            text(s.text),
+          ])
+        : pairs(scope.openDecisions),
+    scopeFeatures:
+      scopeEntry?.referenceVersion === 1 ||
+      scopeEntry?.featureRefs !== undefined
+        ? references(scopeEntry.featureRefs, "pantrySection").map((s) => [
+            text(s.heading),
+            text(s.text),
+          ])
+        : pairs(scope.scopeFeatures),
+    clientMaterials: strings(
+      scopeEntry?.referenceVersion === 1
+        ? scopeEntry.clientMaterials
+        : scope.clientMaterials,
+    ),
+    exclusions: strings(
+      scopeEntry?.referenceVersion === 1
+        ? scopeEntry.exclusions
+        : scope.exclusions,
+    ),
+    prototypeScreens: (scopeEntry?.referenceVersion === 1 ||
+    scopeEntry?.screenRefs !== undefined
+      ? references(scopeEntry.screenRefs, "pantrySection")
+      : list(scope.prototypeScreens)
+    ).map((s) => ({
+      name: text(object(s).heading ?? object(s).name),
       href: safeHref(object(s).href),
-      purpose: text(object(s).purpose),
+      purpose: text(object(s).text ?? object(s).purpose),
       group: text(object(s).group),
     })),
   };

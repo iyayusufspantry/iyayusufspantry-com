@@ -1,5 +1,7 @@
 # Content and product intake
 
+Current editor update: see [Editing in Contentful](contentful-editing.md). Linked Website text, Content section, Navigation link, and Brand or contact value entries replace JSON editing for the website. The original schema notes below describe the initial import.
+
 The Contentful integration was completed locally on 21 September 2026: 11 content types, 107 published entries and 16 published assets. The storefront reads only the Delivery API, with server-side mapping and cached reads. See [Contentful integration](contentful-migration.md) for editing instructions and webhook deployment setup. The original intake structure below stays within the proposal: up to 15 products, five categories, six variants per product, six recipes, and five initial posts.
 
 ## Content records

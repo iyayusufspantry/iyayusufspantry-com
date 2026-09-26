@@ -25,6 +25,8 @@
     "contentful:connect": "node scripts/contentful/connect.mjs",
     "contentful:webhook": "node scripts/contentful/webhook.mjs",
     "contentful:test": "node --test scripts/contentful/export.test.mjs",
+    "contentful:references": "tsx scripts/contentful/references.mjs",
+    "contentful:test-references": "tsx --test scripts/contentful/references.test.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

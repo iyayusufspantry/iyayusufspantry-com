@@ -1,5 +1,13 @@
 # Simbiat development log
 
+## 26 September 2026 — Contentful references for client editing
+
+- Replaced JSON editing with linked Website text, Content section, Navigation link, and Brand or contact value entries. Migrated 52 parent entries and published 764 children; the space now has 15 models, 871 entries, and 16 assets.
+- Preserved original JSON/rich-text fields for rollback and hid them from the normal editor. The website prefers linked content, preserves section/menu ordering, and never restores archived JSON when a migrated reference list is cleared or unpublished.
+- Added a repeatable migration with snapshots, editor-change/version guards, deterministic IDs, bounded concurrency, and pre/post render comparisons. A rerun creates no entries or parent changes. The complete published Delivery API snapshot matches the original website content.
+- Added four reference migration/mapper tests and the [client editing guide](contentful-editing.md). Existing product, recipe, FAQ and media editing remains available. Stock and orders stay in the protected dashboard.
+- Validation: production build, lint, formatting, all four reference tests and all 104 existing desktop/mobile checks passed against the migrated Contentful data. No product prices, stock, order records, or displayed wording were changed by this migration.
+
 ## 24 September 2026 — Local Stripe sandbox checkout
 
 - Implemented server-created Stripe Checkout sessions, signed raw-body webhooks, persistent PostgreSQL test orders and inventory, idempotent requests/events, stock reservations and expiry/failure handling. Live keys/events are rejected; test shipping and tax are explicitly zero.

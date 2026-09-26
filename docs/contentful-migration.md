@@ -1,5 +1,7 @@
 # Contentful content migration
 
+Current editing update, 26 September 2026: page/shared text, policy/article sections, navigation, colours and contacts have a reference-based migration. Use the [current editing guide](contentful-editing.md) for the linked-entry workflow. The original JSON/rich-text fields below are retained as hidden migration history, not the editing source after migration.
+
 Imported on 21 September 2026 into [the client Contentful space](https://app.contentful.com/spaces/lfm7lmn9p7cr), environment `master`, default locale `en-US`.
 
 The **11 content types are active**, with **107 published entries and 16 published assets**. The storefront now reads published content exclusively through the Content Delivery API. There is no runtime fallback to local seed content. The original import is archived under `scripts/contentful/seed.json` and `scripts/contentful/fixtures/` for migration and tests only.
