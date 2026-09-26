@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Iya Yusuf's Pantry — Website review</title>
+    <style>
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e8eee9;
+        color: #29325f;
+        font:
+          15px/1.55 Arial,
+          sans-serif;
+      }
+      .page {
+        position: relative;
+        width: 1122px;
+        height: 794px;
+        padding: 36px 48px;
+        background: #fcfaf5;
+        break-after: page;
+        overflow: hidden;
+      }
+      .page:last-child {
+        break-after: auto;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ceddd4;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+        font-size: 12px;
+      }
+      .brand {
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: #087862;
+      }
+      .tag {
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        color: #087862;
+      }
+      h1 {
+        font:
+          42px/1.12 Georgia,
+          serif;
+        margin: 8px 0 12px;
+        letter-spacing: -1px;
+      }
+      h2 {
+        font:
+          23px/1.2 Georgia,
+          serif;
+        margin: 0 0 10px;
+      }
+      p {
+        margin: 0 0 14px;
+      }
+      a {
+        color: #087862;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .intro {
+        max-width: 920px;
+        color: #53645b;
+        margin-bottom: 22px;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: 2.1fr 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+      .equal {
+        grid-template-columns: 1fr 1fr;
+      }
+      .shopping {
+        grid-template-columns: 1fr 185px 240px;
+        gap: 22px;
+      }
+      figure {
+        margin: 0;
+      }
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border: 1px solid #d3dfd7;
+        border-radius: 8px;
+      }
+      figcaption {
+        font-size: 12px;
+        margin-top: 9px;
+        color: #53645b;
+      }
+      #direction figure img {
+        max-height: 400px;
+        width: auto;
+        max-width: 100%;
+      }
+      .panel {
+        padding: 22px;
+        background: #e6f3ec;
+        border-radius: 12px;
+      }
+      .panel h2 {
+        font-size: 22px;
+      }
+      ul {
+        padding-left: 19px;
+        margin: 10px 0 16px;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      .small {
+        font-size: 13px;
+      }
+      .note {
+        margin-top: 16px;
+        font-size: 13px;
+        color: #53645b;
+      }
+      footer {
+        position: absolute;
+        left: 48px;
+        right: 48px;
+        bottom: 25px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #ceddd4;
+        padding-top: 11px;
+        font-size: 11px;
+        color: #53645b;
+      }
+      .review-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .review-grid img {
+        width: 365px;
+        margin: auto;
+      }
+      .review-grid li {
+        margin-bottom: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="page" id="direction">
+      <header>
+        <span class="brand">IYA YUSUF'S PANTRY</span
+        ><span>Website progress review · {{DATE}}</span>
+      </header>
+      <div class="content">
+        <span class="tag">Visual direction</span>
+        <h1>A taste of home, online.</h1>
+        <p class="intro">
+          A working preview of the storefront, with your branding and supplied
+          photography applied. This review focuses on the look, wording, and
+          customer journey before final content and launch setup.
+        </p>
+        <div class="cols">
+          <figure>
+            <a href="https://www.iyayusufspantry.com"
+              ><img src="{{HOME}}" alt="Desktop homepage preview"
+            /></a>
+            <figcaption>
+              Homepage · desktop view. Select the image to open the live
+              website.
+            </figcaption>
+          </figure>
+          <div class="panel">
+            <h2>Your first impressions</h2>
+            <p>Does the website feel like Iya Yusuf's Pantry?</p>
+            <ul>
+              <li>Logo and brand colours</li>
+              <li>Photography and overall tone</li>
+              <li>Page layout and ease of navigation</li>
+            </ul>
+            <p class="small">
+              Please review the reconstructed logo against your original.
+              Product and editorial details still include samples.
+            </p>
+            <a href="https://www.iyayusufspantry.com">Open the website →</a>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <span>Client review · Selected live-page views</span
+        ><span>01 / 04</span>
+      </footer>
+    </section>
+    <section class="page" id="shopping">
+      <header>
+        <span class="brand">IYA YUSUF'S PANTRY</span
+        ><span>The shopping experience</span>
+      </header>
+      <div class="content">
+        <span class="tag">Browse · Choose · Add to bag</span>
+        <h1>Explore the shop.</h1>
+        <p class="intro">
+          Browse categories, open a product, choose options, and adjust the bag.
+          The current catalogue demonstrates the experience; final products,
+          prices, photos, sizes, and dietary options need your confirmation.
+        </p>
+        <div class="cols shopping">
+          <figure>
+            <a href="https://www.iyayusufspantry.com/shop"
+              ><img src="{{SHOP}}" alt="Desktop shop preview"
+            /></a>
+            <figcaption>
+              <a href="https://www.iyayusufspantry.com/shop">Shop · desktop</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <a href="https://www.iyayusufspantry.com/shop/classic-chin-chin"
+              ><img src="{{PRODUCT}}" alt="Mobile sample product preview"
+            /></a>
+            <figcaption>Sample product · mobile</figcaption>
+          </figure>
+          <div>
+            <h2>Try the journey</h2>
+            <ol>
+              <li>Open a product.</li>
+              <li>Select an option and quantity.</li>
+              <li>Add it to the bag.</li>
+              <li>Change or remove an item.</li>
+              <li>Continue to test checkout.</li>
+            </ol>
+            <p class="small">
+              You can browse and use the bag without creating an account.
+            </p>
+            <p class="small">
+              Tell me if any category, option, or step feels unclear.
+            </p>
+            <a href="https://www.iyayusufspantry.com/cart">View the bag →</a>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <span>Sample catalogue · Not approved inventory</span
+        ><span>02 / 04</span>
+      </footer>
+    </section>
+    <section class="page" id="stories">
+      <header>
+        <span class="brand">IYA YUSUF'S PANTRY</span
+        ><span>Recipes and stories</span>
+      </header>
+      <div class="content">
+        <span class="tag">Your knowledge · Your business</span>
+        <h1>Room for more than products.</h1>
+        <p class="intro">
+          Recipes and the blog have separate sections, as discussed. The sample
+          entries show the layouts; please confirm the subjects, photos, and
+          wording you want customers to see.
+        </p>
+        <div class="cols equal">
+          <figure>
+            <a href="https://www.iyayusufspantry.com/recipes"
+              ><img src="{{RECIPES}}" alt="Desktop recipe collection preview"
+            /></a>
+            <figcaption>
+              <a href="https://www.iyayusufspantry.com/recipes">Recipes</a> ·
+              Open a recipe to review its ingredients and instructions.
+            </figcaption>
+          </figure>
+          <figure>
+            <a href="https://www.iyayusufspantry.com/blog"
+              ><img src="{{BLOG}}" alt="Desktop blog preview"
+            /></a>
+            <figcaption>
+              <a href="https://www.iyayusufspantry.com/blog">Blog</a> · Open an
+              article to review the reading experience.
+            </figcaption>
+          </figure>
+        </div>
+        <p class="note">
+          Also review
+          <a href="https://www.iyayusufspantry.com/about">Our story</a> and
+          <a href="https://www.iyayusufspantry.com/contact">Contact</a>. Confirm
+          the business story, contact details, and channels you want displayed.
+        </p>
+      </div>
+      <footer>
+        <span>Editorial content is illustrative and awaits approval</span
+        ><span>03 / 04</span>
+      </footer>
+    </section>
+    <section class="page" id="review">
+      <header>
+        <span class="brand">IYA YUSUF'S PANTRY</span
+        ><span>Your feedback and the next stage</span>
+      </header>
+      <div class="content">
+        <span class="tag">Review milestone</span>
+        <h1>What happens next.</h1>
+        <div class="cols review-grid">
+          <div>
+            <h2>Feedback for this review</h2>
+            <ul>
+              <li>
+                Approve the visual direction or describe what you would change.
+              </li>
+              <li>
+                Confirm whether the navigation and shopping steps feel clear.
+              </li>
+              <li>
+                Identify changes to products, options, photographs, and wording.
+              </li>
+            </ul>
+            <p class="small">
+              A reply with page links or screenshots will help me apply your
+              feedback accurately. You do not need to finalize every launch
+              detail for this review.
+            </p>
+            <h2>Before launch</h2>
+            <p class="small">
+              We will work through revisions, final products and stock, shipping
+              and tax arrangements, policies, live payment setup, and launch
+              checks. Service running costs, account handover, and training will
+              also be confirmed.
+            </p>
+          </div>
+          <div>
+            <figure>
+              <a href="https://www.iyayusufspantry.com/checkout"
+                ><img
+                  src="{{CHECKOUT}}"
+                  alt="Stripe test checkout preview with sample cart"
+              /></a>
+              <figcaption>
+                Test checkout · No real payment or shipment.
+              </figcaption>
+            </figure>
+            <p class="note">
+              Please do not enter real card details. Contact and newsletter
+              forms are active and save submissions; submitting them is optional
+              for this review. See the
+              <a href="https://www.iyayusufspantry.com/privacy"
+                >current privacy notice</a
+              >.
+            </p>
+            <p class="small">
+              This PDF is a dated snapshot. Use the
+              <a href="https://www.iyayusufspantry.com">website preview</a> for
+              the full, interactive pages.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <span>Prepared by Zulzidan · Feedback before final launch approval</span
+        ><span>04 / 04</span>
+      </footer>
+    </section>
+  </body>
+</html>

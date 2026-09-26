@@ -1,5 +1,12 @@
 # Simbiat development log
 
+## 26 September 2026 — Contentful editor navigation
+
+- Replaced the empty Content Type sidebar folder with a shared **Edit website** folder containing 11 views for products, categories, variants, pages, recipes, articles, policies, FAQs, menus, settings and shared text. Added four helper views under **Linked items (advanced)**; retained existing All/Status views and unrelated workspace settings.
+- Updated 725 published editor labels, including page names and linked text labels. All 871 entries remain present. Compared every entry with the backup: only editor titles changed; customer-facing wording, routes, keys, prices and references are unchanged.
+- Added the repeatable `contentful:workspace` command with preview mode, backups, draft preservation and version checks. A subsequent preview reports no remaining changes. Updated the client editing guide with sidebar navigation and examples.
+- Public browser smoke checks passed for About, Contact and the mobile Shop page (HTTP 200, no browser errors). Workspace configuration was verified through the management API; its appearance in the client's authenticated Contentful session still needs a refresh and visual review.
+
 ## 26 September 2026 — Contentful references for client editing
 
 - Replaced JSON editing with linked Website text, Content section, Navigation link, and Brand or contact value entries. Migrated 52 parent entries and published 764 children; the space now has 15 models, 871 entries, and 16 assets.
