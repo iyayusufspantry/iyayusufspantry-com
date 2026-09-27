@@ -60,6 +60,28 @@ test("unpublished entries disappear without being restored from local fixtures",
   expect(() => mapContent([], assets)).toThrow(/Publish.*settings/);
 });
 
+test("approved articles retain their author and supplied photo without approving sample articles", () => {
+  const { entries, assets } = resources();
+  const articles = entries.filter(
+    (e) => e.sys.contentType?.sys.id === "pantryArticle",
+  );
+  const article = articles[0];
+  article.fields.author = "Yusuf Sanni";
+  article.fields.approvalStatus = "approved";
+  article.fields.image = { sys: { id: assets[0].sys.id } };
+  article.fields.imageAlt = "Portrait of Yusuf Sanni";
+  const result = mapContent(entries, assets);
+  expect(
+    result.posts.find((p) => p.slug === article.fields.slug),
+  ).toMatchObject({ author: "Yusuf Sanni", approved: true });
+  expect(result.journalPhotos[String(article.fields.slug)].alt).toBe(
+    "Portrait of Yusuf Sanni",
+  );
+  expect(
+    result.posts.find((p) => p.slug === articles[1].fields.slug)?.approved,
+  ).toBe(false);
+});
+
 test("invalid prices and unsafe CMS destinations are rejected", () => {
   const { entries, assets } = resources();
   entries.find(

@@ -18,6 +18,7 @@ import {
   Minus,
   Search,
   ShoppingBag,
+  GlassWater,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ const icons = {
   grains: Wheat,
   spices: Sprout,
   specialty: Package,
+  drinks: GlassWater,
 };
 export function MockImage({
   label: suppliedlabel,
@@ -169,7 +171,7 @@ export function CategoryCard({
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/catalog.tsx"];
 
-  const Icon = icons[category.icon as keyof typeof icons];
+  const Icon = icons[category.icon] ?? Package;
   return (
     <Link href={`/shop?category=${category.slug}`} className="category-card">
       <div className="flex items-start justify-between">
@@ -332,9 +334,10 @@ export function BlogCard({ post, index = 0 }: { post: Post; index?: number }) {
         <Link href={`/blog/${post.slug}`}>{post.title}</Link>
       </h3>
       <p>{post.description}</p>
+      {post.author && <p className="mt-2 text-sm">By {post.author}</p>}
       <div className="mt-5 flex items-center justify-between text-xs text-neutral-500">
         <span>
-          {post.date} {copy["copy-12"]}
+          {post.date} {!post.approved && copy["copy-12"]}
         </span>
         <Link
           href={`/blog/${post.slug}`}

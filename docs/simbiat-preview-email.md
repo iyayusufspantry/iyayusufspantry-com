@@ -18,6 +18,8 @@ Useful pages to explore:
 
 I've attached a short PDF with selected desktop and mobile views for an overview. The website link will let you try the navigation and shopping flow; you can browse and use the cart without creating an account.
 
+I've also organised the Contentful editing area into clear sections for products, website pages, recipes, blog articles, and policies, with readable labels to make content updates easier. For this review, you can focus on the website preview; we'll walk through editing together during handover.
+
 At this stage, I'd particularly like your feedback on:
 
 1. **The visual direction:** the logo, colours, page layouts, and overall feel.

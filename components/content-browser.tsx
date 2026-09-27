@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
-  const { recipes, posts, brandPhotos, copy: allCopy } = useContent();
+  const { recipes, posts, journalPhotos, copy: allCopy } = useContent();
   const copy = allCopy["components/content-browser.tsx"];
 
   const [query, setQuery] = useState("");
@@ -45,7 +45,11 @@ export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
       {showFeatured && (
         <article className="featured-article">
           <Link href={`/blog/${posts[0].slug}`}>
-            <MockImage photo={brandPhotos.assortment} kind="article" />
+            <MockImage
+              photo={journalPhotos[posts[0].slug]}
+              kind="article"
+              label={posts[0].title}
+            />
           </Link>
           <div>
             <span className="eyebrow">
@@ -56,9 +60,10 @@ export function ContentBrowser({ kind }: { kind: "recipes" | "blog" }) {
               <Link href={`/blog/${posts[0].slug}`}>{posts[0].title}</Link>
             </h2>
             <p>{posts[0].description}</p>
+            {posts[0].author && <p className="mt-3">By {posts[0].author}</p>}
             <span className="fine-print">
               {posts[0].date} {copy["copy-11"]} {posts[0].readTime}{" "}
-              {copy["copy-12"]}{" "}
+              {!posts[0].approved && copy["copy-12"]}{" "}
             </span>
             <Link className="text-link mt-6" href={`/blog/${posts[0].slug}`}>
               {" "}

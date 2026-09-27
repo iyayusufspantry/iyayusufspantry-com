@@ -211,6 +211,8 @@ export function mapContent(
       category: text(f.category),
       date: text(f.displayDate),
       readTime: text(f.readTime),
+      author: text(f.author),
+      approved: f.approvalStatus === "approved",
       product: text(linked(f.product)?.slug),
       sections: (f.referenceVersion === 1 || f.sectionRefs !== undefined
         ? references(f.sectionRefs, "pantrySection")

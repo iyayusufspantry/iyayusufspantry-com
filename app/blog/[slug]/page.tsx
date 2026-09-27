@@ -20,8 +20,11 @@ export async function generateMetadata({
   const copy = allCopy["app/blog/[slug]/page.tsx"];
 
   const { slug } = await params;
+  const post = posts.find((p) => p.slug === slug);
   return {
-    title: posts.find((p) => p.slug === slug)?.title ?? copy["copy-1"],
+    title: post?.title ?? copy["copy-1"],
+    description: post?.description,
+    ...(post?.author ? { authors: [{ name: post.author }] } : {}),
   };
 }
 export default async function Page({
@@ -45,8 +48,10 @@ export default async function Page({
         <span className="eyebrow">{post.category}</span>
         <h1>{post.title}</h1>
         <p>{post.description}</p>
+        {post.author && <p className="article-byline">By {post.author}</p>}
         <span className="text-sm text-neutral-500">
-          {post.date} {copy["copy-3"]} {post.readTime} {copy["copy-4"]}{" "}
+          {post.date} {copy["copy-3"]} {post.readTime}{" "}
+          {!post.approved && copy["copy-4"]}{" "}
         </span>
       </header>
       <MockImage
@@ -56,10 +61,10 @@ export default async function Page({
         className="editorial-hero"
       />
       <article className="article-body">
-        <p className="notice"> {copy["copy-5"]} </p>
-        {post.sections.map((section) => (
-          <section key={section.heading}>
-            <h2>{section.heading}</h2>
+        {!post.approved && <p className="notice"> {copy["copy-5"]} </p>}
+        {post.sections.map((section, index) => (
+          <section key={index}>
+            {section.heading && <h2>{section.heading}</h2>}
             <p>{section.text}</p>
           </section>
         ))}

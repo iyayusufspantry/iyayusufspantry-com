@@ -9,7 +9,7 @@ export type Category = {
   slug: string;
   name: string;
   description: string;
-  icon: "snacks" | "pantry" | "grains" | "spices" | "specialty";
+  icon: "snacks" | "pantry" | "grains" | "spices" | "specialty" | "drinks";
 };
 export type Policy = {
   title: string;

@@ -265,7 +265,7 @@
   .category-card p {
     font-size: 9px;
   }
-  .category-card:last-child {
+  .category-card:last-child:nth-child(odd) {
     grid-column: 1 / -1;
     height: 128px;
   }
@@ -1096,7 +1096,7 @@
   }
   .category-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 14px;
   }
   .category-card {
