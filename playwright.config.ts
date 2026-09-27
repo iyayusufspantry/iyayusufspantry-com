@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
   testIgnore: [
+    "**/emails.test.ts",
     "**/payments.test.ts",
     "**/operations.test.ts",
     "**/payments-ui.spec.ts",

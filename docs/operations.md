@@ -74,6 +74,18 @@ Newsletter forms require explicit consent. Confirmation links expire after 24 ho
 
 ## Email and maintenance
 
+Website emails use React Email with a shared logo header, cream/green/navy theme, responsive layout, and footer in `lib/emails/layout.tsx`. The newsletter confirmation, contact notification, and sandbox receipt live in `lib/emails/messages.tsx`. Both HTML and plain text are rendered when the message is queued, so retries preserve the original content and links. Existing queued plain-text messages remain valid. The renderer follows the [React Email render API](https://react.email/docs/utilities/render).
+
+Render all three designs locally, or explicitly send sample previews to a chosen address:
+
+```powershell
+pnpm emails:preview
+pnpm emails:preview --send --to zulzdn@gmail.com
+pnpm emails:test
+```
+
+Previews are written to `artifacts/email-previews/react-email/`. They use sample details and inactive newsletter links; they do not create orders, subscribers, or contact messages, or drain the customer outbox. Preview sends use the configured Resend sender and payload-based idempotency keys. Three redesigned previews were accepted by Resend for the requested address on September 27, 2026. Application deployment is still required for new website-generated messages to use these templates; the earlier Vercel author-permission block has not been resolved in this task.
+
 To send the Resend onboarding example, add `RESEND_API_KEY=re_xxxxxxxxx` to your ignored `.env` and replace `re_xxxxxxxxx` with the real API key. Never put this key in client components or a `NEXT_PUBLIC_` variable.
 
 ```powershell

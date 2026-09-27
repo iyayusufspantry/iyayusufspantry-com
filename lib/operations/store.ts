@@ -1,12 +1,14 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { Pool, PoolClient } from "pg";
 import { OperationError, contactInput } from "./validation";
+import { contactEmail, newsletterEmail } from "../emails/messages";
 
 export type MailPayload = {
   from: string;
   to: string[];
   subject: string;
   text: string;
+  html?: string;
   reply_to?: string;
 };
 export const tokenHash = (token: string) =>
@@ -102,7 +104,7 @@ export class OperationsStore {
             to: [notification.to],
             reply_to: input.email,
             subject: `New pantry message: ${input.subject}`,
-            text: `From ${input.name} (${input.email})\n\n${input.message}\n\nReference: ${input.id}`,
+            ...(await contactEmail({ ...input, reference: input.id })),
           },
           db,
         );
@@ -138,7 +140,10 @@ export class OperationsStore {
           from,
           to: [email],
           subject: "Confirm your pantry newsletter subscription",
-          text: `You requested news and recipes from Iya Yusuf's Pantry. Confirm within 24 hours:\n${origin}/newsletter/confirm#token=${confirmation}\n\nIf you did not request this, ignore this email. You will not be subscribed.\n\nYou can unsubscribe using this link:\n${origin}/newsletter/unsubscribe#token=${unsubscribe}`,
+          ...(await newsletterEmail({
+            confirmationUrl: `${origin}/newsletter/confirm#token=${confirmation}`,
+            unsubscribeUrl: `${origin}/newsletter/unsubscribe#token=${unsubscribe}`,
+          })),
         },
         db,
       );

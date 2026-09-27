@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import type { PaymentStore } from "./store";
 import type { PaymentOrder } from "./store";
 import { mailConfigured, operations } from "../operations/runtime";
+import { sandboxOrderEmail } from "../emails/messages";
 
 export async function queueOrderNotification(
   event: Stripe.Event,
@@ -36,7 +37,11 @@ async function queueOrderEmail(order: PaymentOrder) {
     from: process.env.EMAIL_FROM!,
     to: [email],
     subject: "Your pantry test payment is confirmed",
-    text: `Test order ${order.id}\n\nYour sandbox payment of ${(order.quote.subtotalCents / 100).toFixed(2)} ${order.quote.currency} is confirmed.\n\nThis is a test order. No real payment was collected and no goods will be shipped.`,
+    ...(await sandboxOrderEmail({
+      reference: order.id,
+      subtotalCents: order.quote.subtotalCents,
+      currency: order.quote.currency,
+    })),
   });
 }
 

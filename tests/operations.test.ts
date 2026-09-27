@@ -115,9 +115,14 @@ test("newsletter requires confirmation; retries do not spam and unsubscribed lin
     )
   ).rows;
   assert.equal(queued.length, 1);
+  assert.match(queued[0].payload.html, /Confirm my subscription/);
   const body = queued[0].payload.text as string;
   const confirmation = body.match(/confirm#token=([a-f0-9]{64})/)![1];
   const unsubscribe = body.match(/unsubscribe#token=([a-f0-9]{64})/)![1];
+  assert.ok(queued[0].payload.html.includes(`confirm#token=${confirmation}`));
+  assert.ok(
+    queued[0].payload.html.includes(`unsubscribe#token=${unsubscribe}`),
+  );
   let row = (
     await pool.query(`SELECT * FROM ${schema}.subscribers WHERE email=$1`, [
       email,
