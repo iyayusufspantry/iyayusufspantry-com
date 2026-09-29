@@ -60,6 +60,30 @@ test("unpublished entries disappear without being restored from local fixtures",
   expect(() => mapContent([], assets)).toThrow(/Publish.*settings/);
 });
 
+test("approved products use their confirmed variant price and gallery without approving other products", () => {
+  const { entries, assets } = resources();
+  const product = entries.find((e) => e.fields.slug === "kulikuli")!;
+  product.fields.approvalStatus = "approved";
+  product.fields.unit = "16 oz jar";
+  product.fields.photos = assets
+    .slice(0, 2)
+    .map((a) => ({ sys: { id: a.sys.id } }));
+  const variant = entries.find(
+    (e) => e.fields.variantId === "kulikuli:Standard:Vegan",
+  )!;
+  variant.fields.priceCents = 1000;
+  const result = mapContent(entries, assets);
+  expect(result.products.find((p) => p.slug === "kulikuli")).toMatchObject({
+    approved: true,
+    price: 10,
+    unit: "16 oz jar",
+  });
+  expect(result.productGalleries.kulikuli).toHaveLength(2);
+  expect(
+    result.products.find((p) => p.slug === "plantain-chips")?.approved,
+  ).toBe(false);
+});
+
 test("approved articles retain their author and supplied photo without approving sample articles", () => {
   const { entries, assets } = resources();
   const articles = entries.filter(

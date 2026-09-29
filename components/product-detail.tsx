@@ -127,9 +127,11 @@ export function ProductDetail({ product }: { product: Product }) {
               </button>
             ))}
           </div>
-          <p className="fine-print mt-4">
-            {productPhotos[product.name] ? copy["copy-10"] : copy["copy-11"]}
-          </p>
+          {!product.approved && (
+            <p className="fine-print mt-4">
+              {productPhotos[product.name] ? copy["copy-10"] : copy["copy-11"]}
+            </p>
+          )}
         </div>
         <div className="product-detail-copy">
           <span className="eyebrow">{category.name}</span>
@@ -142,8 +144,10 @@ export function ProductDetail({ product }: { product: Product }) {
             </span>
             <span className="text-xs text-neutral-500">
               {" "}
-              {copy["copy-12"]}{" "}
-              {size === "Standard" || size === "Small"
+              {!product.approved && copy["copy-12"]}{" "}
+              {product.sizes?.length === 1 ||
+              size === "Standard" ||
+              size === "Small"
                 ? product.unit
                 : copy["template-2"].replaceAll("{0}", String(size))}
             </span>
@@ -151,10 +155,12 @@ export function ProductDetail({ product }: { product: Product }) {
           <p className="mt-6 text-neutral-500 leading-7">
             {product.description}
           </p>
-          <div className="my-6 flex items-center gap-2 text-xs">
-            <Check size={14} /> {copy["copy-15"]}{" "}
-          </div>
-          {product.sizes && (
+          {!product.approved && (
+            <div className="my-6 flex items-center gap-2 text-xs">
+              <Check size={14} /> {copy["copy-15"]}{" "}
+            </div>
+          )}
+          {product.sizes && product.sizes.length > 1 && (
             <ProductVariantSelector
               label={copy["label-3"]}
               options={product.sizes}
@@ -162,14 +168,15 @@ export function ProductDetail({ product }: { product: Product }) {
               onChange={setSize}
             />
           )}
-          {product.dietary && (
-            <ProductVariantSelector
-              label={copy["label-4"]}
-              options={product.dietary}
-              value={dietary}
-              onChange={setDietary}
-            />
-          )}
+          {product.dietary &&
+            product.dietary.some((option) => option !== "Standard") && (
+              <ProductVariantSelector
+                label={copy["label-4"]}
+                options={product.dietary}
+                value={dietary}
+                onChange={setDietary}
+              />
+            )}
           <div className="mt-7 flex gap-3">
             <QuantitySelector value={quantity} onChange={setQuantity} />
             <Button
@@ -199,7 +206,9 @@ export function ProductDetail({ product }: { product: Product }) {
               {copy["copy-18"]} <span>{copy["copy-19"]}</span>
             </div>
           </div>
-          <p className="fine-print"> {copy["copy-20"]} </p>
+          {!product.approved && (
+            <p className="fine-print"> {copy["copy-20"]} </p>
+          )}
         </div>
       </div>
       <div className="product-info-grid">
@@ -210,8 +219,8 @@ export function ProductDetail({ product }: { product: Product }) {
           {product.allergens && <p>{product.allergens}</p>}
           <p>
             {" "}
-            {copy["copy-22"]} {product.unit}
-            {copy["copy-23"]}{" "}
+            {!product.approved && copy["copy-22"]} {product.unit}
+            {!product.approved && copy["copy-23"]}{" "}
           </p>
         </section>
         <section>

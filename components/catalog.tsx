@@ -208,13 +208,13 @@ export function ProductCard({
         aria-label={copy["template-3"].replaceAll("{0}", String(product.name))}
       >
         <MockImage label={product.name} index={index} />
-        {product.dietary?.[0] && (
+        {product.dietary?.[0] && product.dietary[0] !== "Standard" && (
           <span className="dietary-badge">{product.dietary[0]}</span>
         )}
       </Link>
       <div className="product-meta">
         <span>{categories.find((c) => c.slug === product.category)?.name}</span>
-        {product.sizes && (
+        {product.sizes && product.sizes.length > 1 && (
           <span>
             {product.sizes.length} {copy["copy-5"]}
           </span>
@@ -227,8 +227,8 @@ export function ProductCard({
         <span className="product-price">{money(product.price)}</span>
       </div>
       <p className="product-unit">
-        {product.sizes ? copy["copy-6"] : ""}
-        {product.unit} {copy["copy-7"]}{" "}
+        {product.sizes && product.sizes.length > 1 ? `${copy["copy-6"]} ` : ""}
+        {product.unit} {!product.approved && copy["copy-7"]}{" "}
       </p>
       <div className="product-actions">
         <Link className="text-link text-xs!" href={`/shop/${product.slug}`}>

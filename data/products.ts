@@ -13,6 +13,7 @@ export type Product = {
   recipe?: string;
   ingredients?: string;
   allergens?: string;
+  approved?: boolean;
 };
 export const money = (value: number) =>
   new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(

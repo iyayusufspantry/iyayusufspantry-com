@@ -69,7 +69,9 @@ export function ShopBrowser({
         value={category}
         onChange={setCategory}
       />
-      <p className="fine-print mb-7"> {copy["copy-13"]} </p>
+      {filtered.some((product) => !product.approved) && (
+        <p className="fine-print mb-7"> {copy["copy-13"]} </p>
+      )}
       {filtered.length ? (
         <ProductGrid items={filtered} />
       ) : (

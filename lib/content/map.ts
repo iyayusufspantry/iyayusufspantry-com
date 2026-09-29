@@ -150,6 +150,7 @@ export function mapContent(
       category: text(linked(f.category)?.slug),
       description: text(f.description),
       unit: text(f.unit),
+      approved: f.approvalStatus === "approved",
       usage: text(f.usage),
       ingredients: text(f.ingredients),
       allergens: text(f.allergens),

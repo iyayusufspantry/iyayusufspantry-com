@@ -30,7 +30,7 @@ export default async function Page() {
           </h2>
           <p> {copy["copy-8"]} </p>
           <p> {copy["copy-9"]} </p>
-          <p className="fine-print"> {copy["copy-10"]} </p>
+          <p> {copy["copy-10"]} </p>
         </div>
       </div>
       <section className="section">
