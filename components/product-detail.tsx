@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  MockImage,
   ProductGrid,
   QuantitySelector,
   SectionHeading,
@@ -21,6 +20,7 @@ import {
 } from "@/components/catalog";
 import { useAddToCart } from "@/components/cart-provider";
 import { money, productPrice, type Product } from "@/data/products";
+import { ProductGallery } from "@/components/product-gallery";
 
 export function ProductVariantSelector({
   label,
@@ -77,7 +77,6 @@ export function ProductDetail({ product }: { product: Product }) {
   const [size, setSize] = useState(product.sizes?.[0] ?? "Standard");
   const [dietary, setDietary] = useState(product.dietary?.[0] ?? "Standard");
   const [quantity, setQuantity] = useState(1);
-  const [image, setImage] = useState(0);
   const galleryLabels = gallery.length
     ? gallery.map((p) => p.alt)
     : [copy["copy-7"], copy["copy-8"], copy["copy-9"]];
@@ -104,29 +103,13 @@ export function ProductDetail({ product }: { product: Product }) {
         <span>{product.name}</span>
       </nav>
       <div className="product-detail-grid">
-        <div>
-          <MockImage
-            label={galleryLabels[image]}
-            photo={gallery[image]}
-            className="product-main-image"
-            index={image}
+        <div className="product-gallery-column">
+          <ProductGallery
+            photos={gallery}
+            labels={galleryLabels}
+            productName={product.name}
+            viewImageLabel={copy["template-1"]}
           />
-          <div className="gallery-thumbnails">
-            {galleryLabels.map((label, i) => (
-              <button
-                type="button"
-                key={i}
-                onClick={() => setImage(i)}
-                aria-label={copy["template-1"].replaceAll(
-                  "{0}",
-                  String(label.toLowerCase()),
-                )}
-                aria-pressed={image === i}
-              >
-                <MockImage label={label} index={i} photo={gallery[i]} />
-              </button>
-            ))}
-          </div>
           {!product.approved && (
             <p className="fine-print mt-4">
               {productPhotos[product.name] ? copy["copy-10"] : copy["copy-11"]}
