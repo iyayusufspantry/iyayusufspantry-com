@@ -1,6 +1,8 @@
 # September 29: family story and six products
 
-Implemented locally and saved as Contentful drafts in `master`. **Not deployed or published.** This intake replaces the pending story noted in the September 27 feedback. The follow-up email supplied Donkwa / Adakwa / Tanfiri and Coconut Candy Crunch, bringing the confirmed range to six products.
+**Deployed and published** at [Iya Yusuf’s Pantry](https://www.iyayusufspantry.com). This intake replaces the pending story noted in the September 27 feedback. The follow-up email supplied Donkwa / Adakwa / Tanfiri and Coconut Candy Crunch, bringing the confirmed range to six products.
+
+Application commit `93504ea` deployed successfully to production through Vercel. Both Contentful batches were published at their exact saved versions: 15 photos and 31 entries. Authenticated cache revalidation returned HTTP 200.
 
 ## Content prepared
 
@@ -15,13 +17,13 @@ Implemented locally and saved as Contentful drafts in `master`. **Not deployed o
 
 The source copy and photo mapping are in `scripts/contentful/september-29-content.mjs`. No stock quantities, shelf life, shipping rules, or dietary certifications were supplied or invented. Checkout remains in its existing preview/test mode.
 
-## Review and publication
+## Publication record
 
-The local preview is served at `http://localhost:3102` while the preview process is running. The original batch artifacts are in the ignored `artifacts/client-feedback-2026-09-29/` directory. The follow-up batch, combined six-product preview snapshot, and current screenshots are in `artifacts/client-feedback-2026-09-29-snacks/`.
+The live [About page](https://www.iyayusufspantry.com/about) and [shop](https://www.iyayusufspantry.com/shop) contain the approved content. The original batch artifacts are in the ignored `artifacts/client-feedback-2026-09-29/` directory. The follow-up batch and combined six-product preview snapshot are in `artifacts/client-feedback-2026-09-29-snacks/`; production deployment and verification evidence are in its `live/` subdirectory.
 
 The preview uses a process-local fetch adapter against the saved snapshot. Application code continues to load published Contentful content only.
 
-Deploy the display changes before publishing the content batch, then run:
+The display changes were deployed first, followed by these publication commands:
 
 ```powershell
 node scripts/contentful/september-29.mjs --apply --publish-staged
@@ -32,6 +34,7 @@ Each command checks its saved versions before publishing, rejects later editoria
 
 ## Verification
 
+- Production desktop (1440px) and mobile (390px) checks passed after publication: homepage, complete About story, Drinks filter, all six product pages, gallery selection and image decoding, Donkwa search aliases, and cart persistence. One of each product totals $54. No horizontal overflow or browser errors were detected. Results and screenshots are saved in `artifacts/client-feedback-2026-09-29-snacks/live/`.
 - Production build and TypeScript passed against published content.
 - ESLint and Prettier passed for the changed files.
 - Eight Contentful tests and four reference-mapping tests passed, including approved versus sample products, confirmed variant prices, and galleries.

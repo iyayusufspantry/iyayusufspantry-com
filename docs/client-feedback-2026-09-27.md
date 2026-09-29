@@ -21,7 +21,7 @@ node scripts/contentful/client-feedback.mjs --apply --publish-staged
 
 This uses `artifacts/client-feedback/staged.json`, checks every saved version before publishing, and publishes the portrait and linked entries before the homepage reference. Backups and the preview snapshot are in the same ignored artifacts directory. Do not rerun the original import or restore the archived seed over current editorial content.
 
-The optional Author field was added to the article content model. The article, category, portrait, and text changes are now published. The About story is still awaiting the client.
+The optional Author field was added to the article content model. The article, category, portrait, and text changes are now published. The About story was subsequently supplied and published with the [September 29 intake](client-feedback-2026-09-29.md).
 
 ## Verification
 
