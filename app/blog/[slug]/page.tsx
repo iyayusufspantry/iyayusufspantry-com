@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { BlogCard, MockImage, SectionHeading } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import { StoryInvitation } from "@/components/story-form";
 
 export async function generateStaticParams() {
   const { posts } = await getContent();
@@ -84,6 +85,7 @@ export default async function Page({
           </div>
         )}
       </article>
+      <StoryInvitation />
       <section className="section border-t border-neutral-200">
         <SectionHeading
           eyebrow={copy["copy-10"]}

@@ -40,7 +40,7 @@ test("product photos rotate, pause for inspection, and retain manual selection",
   await expect(thumbnails.nth(1)).toHaveAttribute("aria-pressed", "true");
 });
 
-test("reduced motion starts paused and single photos do not autoplay", async ({
+test("reduced motion starts paused for drink and palm oil galleries", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -55,7 +55,14 @@ test("reduced motion starts paused and single photos do not autoplay", async ({
   ).toHaveAttribute("aria-pressed", "true");
   await page.goto("/shop/palm-oil");
   await expect(page.locator(".product-main-image img")).toBeVisible();
-  await expect(page.locator(".gallery-controls")).toHaveCount(0);
+  await expect(page.locator(".gallery-thumbnails button")).toHaveCount(4);
+  await expect(
+    page.getByRole("button", { name: "Play slideshow" }),
+  ).toBeVisible();
+  await page.clock.runFor(15000);
+  await expect(
+    page.locator(".gallery-thumbnails button").first(),
+  ).toHaveAttribute("aria-pressed", "true");
 });
 
 test("full photos and thumbnails fit the viewport beneath the sticky header", async ({

@@ -38,3 +38,20 @@ CREATE TABLE IF NOT EXISTS simbiat_operations.rate_limits (
   expires_at timestamptz NOT NULL
 );
 CREATE INDEX IF NOT EXISTS mail_pending ON simbiat_operations.mail(next_attempt_at) WHERE status IN ('pending', 'sending');
+
+CREATE TABLE IF NOT EXISTS simbiat_operations.stories (
+  id uuid PRIMARY KEY,
+  fingerprint text NOT NULL,
+  name text NOT NULL,
+  email text NOT NULL,
+  title text NOT NULL,
+  story text NOT NULL,
+  consent_version text NOT NULL,
+  status text NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'published', 'declined')),
+  version integer NOT NULL DEFAULT 1,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  reviewed_by text,
+  reviewed_at timestamptz,
+  published_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS stories_review ON simbiat_operations.stories(status, created_at DESC);

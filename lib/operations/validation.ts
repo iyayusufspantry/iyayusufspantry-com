@@ -58,3 +58,18 @@ export function contactInput(input: Record<string, unknown>) {
     message: textField(input.message, "Message", 10, 5000),
   };
 }
+
+export function storyInput(input: Record<string, unknown>) {
+  if (input.consent !== true)
+    throw new OperationError(
+      400,
+      "Please give permission to publish your story.",
+    );
+  return {
+    id: requestId(input.requestId),
+    name: textField(input.name, "Display name", 2, 80),
+    email: emailAddress(input.email),
+    title: textField(input.title, "Story title", 3, 120),
+    story: textField(input.story, "Your story", 30, 5000),
+  };
+}

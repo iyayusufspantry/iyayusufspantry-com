@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { requireOwner } from "@/lib/owner-auth";
 import { OperationError } from "@/lib/operations/validation";
 import { OwnerDashboard } from "@/components/owner-dashboard";
+import { OwnerStories } from "@/components/owner-stories";
+import { storiesEnabled } from "@/lib/operations/runtime";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -25,5 +27,10 @@ export default async function Page() {
       );
     throw error;
   }
-  return <OwnerDashboard />;
+  return (
+    <>
+      <OwnerDashboard />
+      {storiesEnabled() && <OwnerStories />}
+    </>
+  );
 }

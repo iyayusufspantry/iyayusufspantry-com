@@ -19,6 +19,7 @@ import {
 } from "@/components/catalog";
 import { Newsletter } from "@/components/site-shell";
 import { newsletterEnabled } from "@/lib/operations/runtime";
+import { StoryInvitation } from "@/components/story-form";
 
 // Form availability follows server configuration, including a local test server.
 export const dynamic = "force-dynamic";
@@ -216,6 +217,7 @@ export default async function Home() {
             ))}
         </div>
       </section>
+      <StoryInvitation />
       <Newsletter enabled={newsletterEnabled()} />
     </div>
   );

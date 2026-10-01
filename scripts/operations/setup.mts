@@ -23,7 +23,7 @@ try {
       );
   }
   console.log(
-    "Contact, newsletter, email queue, and rate-limit tables are ready. Local form/maintenance secrets are configured (values hidden). Existing data was preserved.",
+    "Contact, community stories, newsletter, email queue, and rate-limit tables are ready. Local form/maintenance secrets are configured (values hidden). Existing data was preserved.",
   );
 } catch {
   console.error(

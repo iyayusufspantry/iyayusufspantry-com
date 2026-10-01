@@ -196,7 +196,7 @@ export function ProductCard({
   product: Product;
   index?: number;
 }) {
-  const { categories, copy: allCopy } = useContent();
+  const { categories, productGalleries, copy: allCopy } = useContent();
   const copy = allCopy["components/catalog.tsx"];
 
   const add = useAddToCart();
@@ -207,7 +207,11 @@ export function ProductCard({
         className="product-image-link"
         aria-label={copy["template-3"].replaceAll("{0}", String(product.name))}
       >
-        <MockImage label={product.name} index={index} />
+        <MockImage
+          label={product.name}
+          photo={productGalleries[product.slug]?.[0]}
+          index={index}
+        />
         {product.dietary?.[0] && product.dietary[0] !== "Standard" && (
           <span className="dietary-badge">{product.dietary[0]}</span>
         )}

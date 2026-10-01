@@ -1,6 +1,7 @@
 import "server-only";
 import { Pool } from "pg";
 import { OperationsStore } from "./store";
+import { StoryStore } from "./stories";
 
 const globalOperations = globalThis as unknown as { operationsPool?: Pool };
 export function operations() {
@@ -24,6 +25,12 @@ export function siteOrigin() {
   )
     throw new Error("Invalid website origin");
   return url.origin;
+}
+export function stories() {
+  return new StoryStore(operations().pool);
+}
+export function storiesEnabled() {
+  return process.env.STORIES_ENABLED === "true" && contactEnabled();
 }
 export function contactEnabled() {
   return (

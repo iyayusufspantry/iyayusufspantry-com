@@ -9,6 +9,8 @@ import { drainMail, sendWithResend } from "../lib/operations/mail";
 import { contactInput, OperationError } from "../lib/operations/validation";
 import { OwnerStore } from "../lib/payments/owner-store";
 import { isOwner } from "../lib/owner-access";
+import { StoryStore } from "../lib/operations/stories";
+import { storyInput } from "../lib/operations/validation";
 
 loadEnvConfig(process.cwd());
 const schema = `operations_test_${randomUUID().replaceAll("-", "")}`;
@@ -19,6 +21,7 @@ const pool = new Pool({
 });
 const store = new OperationsStore(pool, schema);
 const owner = new OwnerStore(pool, schema);
+const storyStore = new StoryStore(pool, schema);
 const mail = {
   from: "test@example.com",
   to: ["recipient@example.com"],
@@ -57,6 +60,54 @@ test("owner access fails closed and email grants require verified addresses", ()
   assert.equal(isOwner(user, "", "owner@example.com"), true);
   assert.equal(isOwner(user, "other_user", "other@example.com"), false);
   assert.equal(isOwner(user, "user_owner"), true);
+});
+
+test("stories require consent, survive retries, and remain private until owner publication", async () => {
+  const raw = {
+    requestId: randomUUID(),
+    name: "A pantry reader",
+    email: "private@example.com",
+    title: "Sunday in our kitchen",
+    story: "We always gathered in the kitchen to share a snack and a story.",
+    consent: true,
+  };
+  assert.throws(() => storyInput({ ...raw, consent: false }), OperationError);
+  assert.throws(() => storyInput({ ...raw, story: "short" }), OperationError);
+  const input = storyInput(raw);
+  await Promise.all([storyStore.submit(input), storyStore.submit(input)]);
+  assert.equal(
+    (await storyStore.reviewQueue("pending", 0)).filter(
+      (s) => s.id === input.id,
+    ).length,
+    1,
+  );
+  assert.equal((await storyStore.published()).length, 0);
+  await assert.rejects(
+    storyStore.submit({ ...input, title: "Changed" }),
+    OperationError,
+  );
+  await storyStore.moderate(input.id, "published", 1, "owner-test");
+  const visible = (await storyStore.published())[0];
+  assert.deepEqual(Object.keys(visible).sort(), [
+    "id",
+    "name",
+    "story",
+    "title",
+  ]);
+  assert.equal(visible.story, input.story);
+  await assert.rejects(
+    storyStore.moderate(input.id, "declined", 1, "stale-review"),
+    OperationError,
+  );
+  await storyStore.moderate(input.id, "pending", 2, "owner-test");
+  assert.equal((await storyStore.published()).length, 0);
+  await storyStore.moderate(input.id, "declined", 3, "owner-test");
+  assert.equal((await storyStore.reviewQueue("declined", 0))[0].id, input.id);
+  assert.equal((await storyStore.published()).length, 0);
+  await assert.rejects(
+    storyStore.moderate(input.id, "published", 0, "owner-test"),
+    OperationError,
+  );
 });
 test("contact validates fields, saves once on concurrent retries and detects changed payloads", async () => {
   const input = {
