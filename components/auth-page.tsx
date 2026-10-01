@@ -21,7 +21,7 @@ export async function AuthPage({
         </Link>
         <span className="eyebrow">{copy["copy-2"]}</span>
         <h1>
-          {mode === "sign-in" ? copy["copy-3"] : copy["copy-4"]}
+          {mode === "sign-in" ? copy["copy-3"] : copy["copy-4"]}{" "}
           <em>{mode === "sign-in" ? copy["copy-5"] : copy["copy-6"]}</em>
         </h1>
         <p>{mode === "sign-in" ? copy["copy-7"] : copy["copy-8"]}</p>
