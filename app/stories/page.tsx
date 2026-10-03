@@ -2,6 +2,7 @@ import { PageHeading } from "@/components/catalog";
 import { StoryForm } from "@/components/story-form";
 import { stories, storiesEnabled } from "@/lib/operations/runtime";
 import type { PublicStory } from "@/lib/operations/stories";
+import { getContent } from "@/lib/content/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -9,6 +10,10 @@ export const metadata = {
   description: "Food memories and traditions shared by the pantry community.",
 };
 export default async function Page() {
+  const { posts } = await getContent();
+  const editorialStories = posts.filter(
+    (post) => post.approved && post.category === "Community stories",
+  );
   const enabled = storiesEnabled();
   let published: PublicStory[] = [];
   let unavailable = false;
@@ -26,6 +31,23 @@ export default async function Page() {
         title="A taste of home, a story to share"
         description="Food connects us to people and places we love. These are the memories our community brings to the table."
       />
+      {editorialStories.map((post) => (
+        <article
+          key={post.slug}
+          className="article-body mb-10 rounded-2xl border border-border bg-white p-7 break-words"
+        >
+          <h2>{post.title}</h2>
+          {post.author && (
+            <p className="eyebrow normal-case">By {post.author}</p>
+          )}
+          {post.sections.map((section, index) => (
+            <section key={index}>
+              {section.heading && <h3>{section.heading}</h3>}
+              <p>{section.text}</p>
+            </section>
+          ))}
+        </article>
+      ))}
       {unavailable ? (
         <p role="status" className="notice">
           Community stories are temporarily unavailable. Please try again later.
@@ -43,7 +65,7 @@ export default async function Page() {
             </article>
           ))}
         </div>
-      ) : (
+      ) : editorialStories.length ? null : (
         <p className="notice">
           Our community storybook is just beginning. Share a memory for Simbiat
           to review.

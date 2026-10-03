@@ -46,7 +46,7 @@ export default async function RootLayout({
   });
   return (
     <html lang="en" style={brandStyle}>
-      <body>
+      <body id="top">
         <ClerkProvider
           signInUrl="/sign-in"
           signUpUrl="/sign-up"

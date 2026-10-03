@@ -38,7 +38,7 @@ export async function management(
         throw new Error(
           `Contentful management request failed (${response.status})`,
         );
-      return response.json();
+      return response.status === 204 ? null : response.json();
     }
     await new Promise((resolve) => setTimeout(resolve, (attempt + 1) * 1000));
   }

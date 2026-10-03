@@ -20,6 +20,13 @@ import { useCart } from "@/components/cart-provider";
 import { selectCartCount } from "@/lib/cart-store";
 import { AuthControls } from "@/components/auth-controls";
 
+function scrollHomeToTop() {
+  // Next.js can preserve scroll on repeated navigation to the same fragment.
+  if (window.location.pathname === "/") {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }
+}
+
 export function PrototypeBadge() {
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/site-shell.tsx"];
@@ -60,7 +67,15 @@ export function SiteHeader() {
       </div>
       <header className="site-header">
         <div className="site-container flex h-21 items-center justify-between">
-          <Link href="/" aria-label={copy["copy-9"]} className="wordmark">
+          <Link
+            href="/#top"
+            aria-label={copy["copy-9"]}
+            className="wordmark"
+            onNavigate={() => {
+              setOpen(false);
+              scrollHomeToTop();
+            }}
+          >
             <Image
               src={settings.logo.src}
               alt={copy["copy-10"]}
@@ -246,7 +261,12 @@ export function SiteFooter() {
       <div className="site-container">
         <div className="footer-grid">
           <div>
-            <Link href="/" aria-label={copy["copy-26"]} className="wordmark">
+            <Link
+              href="/#top"
+              aria-label={copy["copy-26"]}
+              className="wordmark"
+              onNavigate={scrollHomeToTop}
+            >
               <Image
                 src={settings.logo.src}
                 alt={settings.businessName}
