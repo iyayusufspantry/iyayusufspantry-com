@@ -1,5 +1,7 @@
 # October 1: journal photo and community stories
 
+**October 3 recheck:** the community invitation, story page, and enabled shopper form are now live. See [the current request checklist](client-request-recheck-2026-10-03.md) for fresh verification; the rollout notes below record the original intake status.
+
 ## Photographs
 
 The three new screenshots in `public/assets/1oktober/` identify the journal's center card, the homepage product cards, and the area below the Kookoo roo koo article. The other files repeat the September 30 supplied photographs.

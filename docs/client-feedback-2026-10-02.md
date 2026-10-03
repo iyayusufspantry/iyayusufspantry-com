@@ -1,5 +1,7 @@
 # October 2: community story, pantry products, and homepage links
 
+**October 3 recheck:** logo navigation, the community-page story, and enabled shopper submissions now pass live desktop/mobile checks. See [the current request checklist](client-request-recheck-2026-10-03.md); the earlier deployment notes and proof results below record the original audit status.
+
 ## Supplied content
 
 Simbiat supplied **Rediscovering the Taste of Home**, four product descriptions and prices, four corresponding photographs, a footer screenshot, and one optional photograph of bottled red drinks. Originals remain in `public/assets/2 oktober/`.
