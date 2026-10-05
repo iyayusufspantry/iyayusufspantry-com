@@ -1,5 +1,7 @@
 ﻿# Internal estimate basis — not a client attachment
 
+Historical pricing notes from September 16. The September 18 agreement superseded the US$1,000 opening offer with US$500, and both payments covering the full fee were acknowledged September 21. See the [October 5 email audit](client-email-audit-2026-10-05.md) for the current commercial record. References to a “current” offer below describe the earlier draft.
+
 Updated 16 September 2026. The current two-page proposal and email use a **negotiable US$1,000 opening fee**, with **50%/50% payments based on the final agreed fee**. Zulzidan expressly wants the price open to discussion. US$1,000 was selected from the earlier draft range as a starting offer, not a final commitment. Simbiat has not accepted it. Earlier estimate PDFs are historical, not the current offer. Stripe and the **Amber and John / WaistLess Foods original $700 project** remain the technical and referral context.
 
 ## Evidence reviewed

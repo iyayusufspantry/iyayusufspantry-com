@@ -1,5 +1,7 @@
 # Simbiat email requests — rechecked October 3, 2026
 
+Historical verification snapshot. The [October 5 email audit](client-email-audit-2026-10-05.md) records later supplied spices, confirms the recipe recommendation was sent, and lists current follow-ups.
+
 The supplied website changes are present on the live website. This recheck covers the September 28–October 2 emails pasted into the conversation, including the second egusi-soup-photo email. Earlier intake notes saying the logo fix and community features still require deployment are historical; fresh browser checks now find those features live.
 
 The [22-page visual review PDF](../artifacts/pdf/Iya-Yusufs-Pantry-Request-Review-October-3.pdf) includes the checklist, live desktop/mobile screenshots, complete story wording, all 12 products and selected prices, logo scroll measurements, the egusi recipe image, remaining follow-ups, and the full check matrix. Fresh supplementary screenshots verify all product prices again. All report pages passed layout checks; the actual PDF was verified for page count, numbering, selectable text, and embedded images. Regenerate with `node scripts/export-client-request-proof.mjs`; use `--reuse-screenshots` to rebuild from the preserved evidence.
@@ -42,9 +44,9 @@ The existing egusi and crayfish URLs are retained even though their displayed na
 
 ## Remaining follow-ups
 
-- **Three future spice products:** awaiting names, descriptions, prices, and photos from Simbiat. Her email says she will send them later.
+- **Three future spice products:** subsequently supplied in the October 4 catalog additions (Cameroon Pepper, Pepper Soup Mix and Suya Mix); this earlier dependency is closed.
 - **Drink recipes and step photos:** awaiting Simbiat’s material. Paid recipe sales and digital delivery are not implemented. Her current request is for recommendations, rather than an instruction to activate sales.
-- **Reply with the paid-recipe recommendation:** a proposal is already prepared in [the October 2 intake notes](client-feedback-2026-10-02.md#recommendation-for-paid-drink-recipes). It proposes starting with illustrated downloadable recipe PDFs and a separate digital checkout. This repository does not establish that the recommendation was sent to Simbiat; no message was sent during this audit.
+- **Paid-recipe recommendation:** confirmed sent October 4 at 07:28 WITA in [the developer's reply](https://mail.google.com/mail/u/0/#all/1a10419079f1dc2e). It proposes illustrated PDFs, exact measurements, numbered steps/photos, individual recipes or a collection, and a sample preview. Paid sales/delivery still require a separate scope decision. No message was sent during this recheck.
 - **Optional pictures:** the extra bottled-drink photo and alternate soup photo are preserved in `public/assets/2 oktober/` and `public/assets/2 oct - second/`. Their use was optional, so retaining them is not an unfinished placement request.
 
 ## Evidence and limits

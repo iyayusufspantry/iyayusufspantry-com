@@ -1,5 +1,7 @@
 # October 4 catalog updates and launch follow-up
 
+Historical update: the [October 5 intake](client-email-context-2026-10-05.md) supersedes the Garri photo placeholder and pending ingredient-link deployment statements below. The [complete email audit](client-email-audit-2026-10-05.md) confirms the full US$500 fee was received September 21; the original installment schedule no longer implies a balance due.
+
 The October 4 email supplies eight pantry products, three reference screenshots, seven product photographs and an additional yam-flour photograph in `public/assets/4 october/`. Originals are preserved. The previously optional Zobo photograph in `public/assets/2 oktober/1790911112946blob.jpg` supplies the drinks recipe card identified in the first screenshot and is also added to the Zobo product gallery.
 
 | Product                 | Size / price | Page                      | Photograph                                       |
@@ -29,7 +31,7 @@ The existing `/stories` page shows editorial community stories followed by appro
 
 ## Launch timing
 
-Recipes can be added after launch. The catalog revisions do not establish readiness for real sales. Current code in `lib/payments/config.ts` rejects live Stripe keys; the public store remains a preview/test-payment experience. A firm sales-launch date depends on production checkout and webhook acceptance, actual inventory, shipping/tax configuration, production authentication, approved policies/business details, real email delivery verification, final client review, and the remaining prelaunch copy/indexing changes. The agreed remaining $250 is due after final approval, before launch. Do not promise a launch next week solely from the catalog work.
+Recipes can be added after launch. The catalog revisions do not establish readiness for real sales. Current code in `lib/payments/config.ts` rejects live Stripe keys; the public store remains a preview/test-payment experience. A firm sales-launch date depends on production checkout and webhook acceptance, actual inventory, shipping/tax configuration, production authentication, approved policies/business details, real email delivery verification, final client review, and the remaining prelaunch copy/indexing changes. The full $500 build fee was already acknowledged September 21. Do not promise a launch next week solely from the catalog work.
 
 ## Repeatable workflow
 

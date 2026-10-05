@@ -2,6 +2,8 @@ Subject: Iya Yusuf's Pantry: website progress and review
 
 Hi Simbiat,
 
+<!-- Historical template: matching review correspondence was sent September 26 in message 1a0ddccd8ea857c9. This is not a pending send. See client-email-audit-2026-10-05.md for current status. -->
+
 I've reached the next review stage for Iya Yusuf's Pantry. Your branding is now applied across the main pages, and the shopping journey is in place for you to explore, from browsing categories and choosing product options to the cart and test checkout. The recipes and blog have their own sections too.
 
 You can view the website here:
@@ -35,4 +37,4 @@ Zulzidan
 
 ---
 
-**Sending note (remove before sending):** Attach `Iya-Yusufs-Pantry-Website-Review.pdf` from `artifacts/pdf/`. This is a progress review, not a request for final acceptance or the remaining payment. The PDF is a dated visual snapshot; the live links show subsequent updates. Do not attach the older estimate or foundation reports. Nothing has been sent.
+**Historical sending note:** The review email and PDF were sent September 26 in [message 1a0ddccd8ea857c9](https://mail.google.com/mail/u/0/#all/1a0ddccd8ea857c9). The PDF is a dated visual snapshot; live links show subsequent updates. The full US$500 build fee was already acknowledged September 21. Do not treat this saved template as a pending email or payment request; see the [current audit](client-email-audit-2026-10-05.md).

@@ -6,8 +6,10 @@ Deployed on Vercel at [www.iyayusufspantry.com](https://www.iyayusufspantry.com)
 
 ## Development record
 
+Current client decisions and follow-ups are recorded in the [October 5 email audit](docs/client-email-audit-2026-10-05.md): 90 messages across 19 threads, verified attachments, full US$500 build payment acknowledged, and outstanding launch/handover actions. This record supersedes historical commercial, sample-catalog and account-setup descriptions in this README.
+
 - [Contentful editing guide](docs/contentful-editing.md): edit page text, policy/article sections, menus, colours and contact details through linked entries with ordinary fields. The reference migration preserves existing content and hides the archived JSON editors.
-- [Client context](docs/client-context.md): confirmed branding, supplied logo, latest client decisions, and pending domain/account setup.
+- [Client context](docs/client-context.md): confirmed branding, supplied catalog, payment/account history, and remaining acceptance checks.
 - [Development log](docs/development-log.md): changes, validation results, evidence, and pending client dependencies.
 - [Foundation architecture](docs/production-foundations.md): implementation boundaries, API, inventory/order rules, integration checklist, and repeatable validation.
 - [Content model](docs/content-model.md) and [product intake CSV](docs/product-intake.csv): preparation for client content and CMS setup.

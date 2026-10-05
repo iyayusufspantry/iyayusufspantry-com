@@ -15,6 +15,8 @@ export const photos = {
   ],
   datesHand: ["1791076138285blob.jpg", "A handful of Nigerian dates (dabino)."],
   tigerNuts: ["1791076354384blob.jpg", "Tiger nuts piled in a blue bowl."],
+  tigerNutsHand: ["1791077409334blob.jpg", "A handful of tiger nuts."],
+  garri: ["1791077388401blob.jpg", "Garri piled in a blue bowl."],
   suya: ["1791076596011blob.jpg", "Suya mix (yaji) piled in a white bowl."],
   yam: ["1791076772254blob.jpg", "Yam flour piled in a blue bowl."],
   zobo: [
@@ -94,7 +96,7 @@ export const products = [
     ingredients: "",
     allergens: "",
     variants: [{ size: "1 lb", priceCents: 1000 }],
-    photos: ["tigerNuts"],
+    photos: ["tigerNuts", "tigerNutsHand"],
     learnMoreUrl: "https://www.google.com/search?q=tiger+nuts+edible+tubers",
   },
   {
@@ -136,6 +138,6 @@ export const products = [
     ingredients: "",
     allergens: "",
     variants: [{ size: "1 lb", priceCents: 1000 }],
-    photos: [],
+    photos: ["garri"],
   },
 ];
