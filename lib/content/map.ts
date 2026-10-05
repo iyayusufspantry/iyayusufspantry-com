@@ -28,6 +28,17 @@ const safeHref = (value: unknown) => {
     throw new Error("Invalid Contentful navigation destination");
   return href;
 };
+const externalHref = (value: unknown): string | undefined => {
+  if (!text(value)) return undefined;
+  try {
+    const url = new URL(text(value));
+    if (url.protocol === "https:" && !url.username && !url.password)
+      return url.href;
+  } catch {
+    // Invalid optional editorial links do not become clickable destinations.
+  }
+  return undefined;
+};
 
 export function mapContent(
   entries: CmsResource[],
@@ -95,6 +106,8 @@ export function mapContent(
     photos.set(asset.sys.id, {
       src: url.href,
       alt: text(asset.fields.description) || text(asset.fields.title),
+      width: Number(object(object(file.details).image).width) || undefined,
+      height: Number(object(object(file.details).image).height) || undefined,
     });
   }
   const photo = (value: unknown) => photos.get(linkId(value));
@@ -154,6 +167,7 @@ export function mapContent(
       usage: text(f.usage),
       ingredients: text(f.ingredients),
       allergens: text(f.allergens),
+      learnMoreUrl: externalHref(f.learnMoreUrl),
       sizes: [
         ...new Set([...strings(f.sizes), ...active.map((v) => v.size)]),
       ].filter((size) => active.some((v) => v.size === size)),

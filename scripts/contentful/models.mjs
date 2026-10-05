@@ -62,6 +62,9 @@ export const models = [
     field("usage", "Preparation and storage", "Text"),
     field("ingredients", "Ingredients", "Text"),
     field("allergens", "Allergens", "Text"),
+    field("learnMoreUrl", "Learn more link (HTTPS)", "Symbol", {
+      validations: [{ regexp: { pattern: "^https://" } }],
+    }),
     list("sizes", "Size labels"),
     list("dietary", "Dietary labels — require approval"),
     field("samplePrice", "Sample display price (USD)", "Number", {

@@ -13,6 +13,7 @@ export type Product = {
   recipe?: string;
   ingredients?: string;
   allergens?: string;
+  learnMoreUrl?: string;
   approved?: boolean;
 };
 export const money = (value: number) =>

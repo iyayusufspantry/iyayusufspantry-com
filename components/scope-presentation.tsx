@@ -138,7 +138,7 @@ export function ScopePage() {
   const flow = [
     [copy["copy-8"], "/"],
     [copy["copy-9"], "/shop"],
-    [copy["copy-10"], "/shop/plantain-chips"],
+    [copy["copy-10"], "/shop/zobo-drink"],
     [copy["copy-11"], "/cart"],
     [copy["copy-12"], "/checkout"],
     [copy["copy-13"], "/order-confirmation"],

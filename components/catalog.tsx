@@ -77,6 +77,12 @@ export function MockImage({
               : "(max-width: 767px) 50vw, 33vw"
           }
           className="brand-photo"
+          style={
+            kind === "recipe" &&
+            (suppliedPhoto.height ?? 0) > (suppliedPhoto.width ?? Infinity)
+              ? { objectPosition: "center top" }
+              : undefined
+          }
           preload={kind === "hero"}
         />
       </div>

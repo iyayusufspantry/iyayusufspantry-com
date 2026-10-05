@@ -119,6 +119,30 @@ test("invalid prices and unsafe CMS destinations are rejected", () => {
   expect(() => mapContent(second.entries, second.assets)).toThrow(/navigation/);
 });
 
+test("product information links allow HTTPS and omit unsafe or malformed destinations", () => {
+  for (const [href, expected] of [
+    [
+      "https://www.google.com/search?q=tiger+nuts",
+      "https://www.google.com/search?q=tiger+nuts",
+    ],
+    ["javascript:alert(1)", undefined],
+    ["http://example.com", undefined],
+    ["//example.com", undefined],
+    ["https://user:password@example.com", undefined],
+    ["not a URL", undefined],
+    ["", undefined],
+  ]) {
+    const { entries, assets } = resources();
+    const product = entries.find((entry) => entry.fields.slug === "kulikuli")!;
+    product.fields.learnMoreUrl = href;
+    expect(
+      mapContent(entries, assets).products.find(
+        (item) => item.slug === "kulikuli",
+      )?.learnMoreUrl,
+    ).toBe(expected);
+  }
+});
+
 const config = {
   secret: "test-secret",
   space: "test-space",

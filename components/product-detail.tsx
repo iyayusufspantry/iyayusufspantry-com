@@ -138,6 +138,17 @@ export function ProductDetail({ product }: { product: Product }) {
           <p className="mt-6 text-neutral-500 leading-7">
             {product.description}
           </p>
+          {product.learnMoreUrl && (
+            <a
+              href={product.learnMoreUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-link mt-3"
+            >
+              Learn more about {product.name} <ArrowRight size={14} />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          )}
           {!product.approved && (
             <div className="my-6 flex items-center gap-2 text-xs">
               <Check size={14} /> {copy["copy-15"]}{" "}

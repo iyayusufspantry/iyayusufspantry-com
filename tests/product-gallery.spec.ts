@@ -7,6 +7,7 @@ test("product photos rotate, pause for inspection, and retain manual selection",
   await page.goto("/shop/zobo-drink");
   const gallery = page.getByRole("region", { name: "Zobo Drink photos" });
   const thumbnails = gallery.locator(".gallery-thumbnails button");
+  const photoCount = await thumbnails.count();
   await expect(
     gallery.getByRole("button", { name: "Pause slideshow" }),
   ).toBeVisible();
@@ -20,14 +21,20 @@ test("product photos rotate, pause for inspection, and retain manual selection",
   await page.mouse.move(0, 0);
   await page.clock.runFor(5100);
   await expect(thumbnails.nth(2)).toHaveAttribute("aria-pressed", "true");
-  await page.clock.runFor(5100);
+  await page.clock.runFor((photoCount - 2) * 5100);
   await expect(thumbnails.nth(0)).toHaveAttribute("aria-pressed", "true");
 
   await gallery.getByRole("button", { name: "Previous photo" }).click();
-  await expect(thumbnails.nth(2)).toHaveAttribute("aria-pressed", "true");
+  await expect(thumbnails.nth(photoCount - 1)).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await page.mouse.move(0, 0);
   await page.clock.runFor(10000);
-  await expect(thumbnails.nth(2)).toHaveAttribute("aria-pressed", "true");
+  await expect(thumbnails.nth(photoCount - 1)).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
   await gallery.getByRole("button", { name: "Play slideshow" }).click();
   await page.mouse.move(0, 0);
   await page.clock.runFor(5100);
