@@ -95,11 +95,6 @@
     color: var(--brand-ink);
   }
 }
-@media (min-width: 1500px) {
-  .site-container {
-    max-width: 1280px;
-  }
-}
 @media (max-width: 1100px) {
   .home-hero {
     gap: 32px;
@@ -791,7 +786,7 @@
     text-underline-offset: 3px;
   }
   .site-container {
-    width: min(1200px, calc(100% - 80px));
+    width: min(1600px, calc(100% - 80px));
     margin-inline: auto;
   }
   .page-bottom {

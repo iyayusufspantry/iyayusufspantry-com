@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-provider";
 import { selectCartCount } from "@/lib/cart-store";
 import { AuthControls } from "@/components/auth-controls";
+import { ReadingSettings } from "@/components/reading-settings";
 
 function scrollHomeToTop() {
   // Next.js can preserve scroll on repeated navigation to the same fragment.
@@ -104,6 +105,9 @@ export function SiteHeader() {
             <div className="mr-2 hidden lg:block">
               <AuthControls />
             </div>
+            <div className="hidden md:block">
+              <ReadingSettings />
+            </div>
             <Button variant="ghost" size="icon" asChild>
               <Link href="/search" aria-label={copy["copy-12"]}>
                 <Search size={20} />
@@ -148,6 +152,9 @@ export function SiteHeader() {
               {" "}
               {copy["copy-16"]} <ArrowUpRight size={15} />
             </Link>
+            <div className="md:hidden">
+              <ReadingSettings showLabel />
+            </div>
             <div className="mt-3 border-t border-border pt-4">
               <p className="mb-2 text-xs font-semibold text-muted-foreground">
                 {" "}

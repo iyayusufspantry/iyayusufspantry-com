@@ -1,0 +1,12 @@
+/node_modules/**
+/.git/**
+/.next/**
+/.vercel/**
+.env*
+/artifacts/**
+/output/**
+/tmp/**
+/test-results/**
+/playwright-report/**
+*.tsbuildinfo
+/public/assets/13 oct/**

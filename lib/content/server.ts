@@ -22,12 +22,26 @@ async function collection(kind: "entries" | "assets"): Promise<CmsResource[]> {
       include: "0",
       order: "sys.createdAt,sys.id",
     }).toString();
-    const response = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "force-cache",
-      next: { tags: [CONTENTFUL_TAG], revalidate: 60 },
-      signal: AbortSignal.timeout(15000),
-    });
+    let response: Response | undefined;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        response = await fetch(url, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "force-cache",
+          next: { tags: [CONTENTFUL_TAG], revalidate: 60 },
+          signal: AbortSignal.timeout(15000),
+        });
+        if (response.status !== 429 && response.status < 500) break;
+      } catch {
+        if (attempt === 2)
+          throw new Error(`Contentful ${kind} connection failed`);
+      }
+      if (attempt < 2)
+        await new Promise((resolve) =>
+          setTimeout(resolve, 250 * (attempt + 1)),
+        );
+    }
+    if (!response) throw new Error(`Contentful ${kind} connection failed`);
     if (!response.ok)
       throw new Error(`Contentful ${kind} request failed (${response.status})`);
     const result = await response.json();

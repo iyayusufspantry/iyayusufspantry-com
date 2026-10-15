@@ -20,6 +20,10 @@ import {
 import { Newsletter } from "@/components/site-shell";
 import { newsletterEnabled } from "@/lib/operations/runtime";
 import { StoryInvitation } from "@/components/story-form";
+import {
+  HomeHighlights,
+  type HomeHighlight,
+} from "@/components/home-highlights";
 
 // Form availability follows server configuration, including a local test server.
 export const dynamic = "force-dynamic";
@@ -32,9 +36,57 @@ export default async function Home() {
     recipes,
     posts,
     brandPhotos,
+    recipePhotos,
+    journalPhotos,
     copy: allCopy,
   } = await getContent();
   const copy = allCopy["app/page.tsx"];
+  const recipe = recipes.find((item) => featured.recipes.includes(item.slug));
+  const sourcing =
+    posts.find((item) => item.slug === "closer-to-the-source") ??
+    posts.find((item) => featured.posts.includes(item.slug));
+  const merch = categories.find((item) => item.slug === "merch");
+  const highlights: HomeHighlight[] = [
+    ...(sourcing
+      ? [
+          {
+            title: sourcing.title,
+            description: sourcing.description,
+            href: `/blog/${sourcing.slug}`,
+            action: copy["copy-48"],
+            photo: journalPhotos[sourcing.slug],
+          },
+        ]
+      : []),
+    ...(recipe
+      ? [
+          {
+            title: recipe.title,
+            description: recipe.description,
+            href: `/recipes/${recipe.slug}`,
+            action: copy["copy-44"],
+            photo: recipePhotos[recipe.slug],
+          },
+        ]
+      : []),
+    {
+      title: "What tastes like home to you?",
+      description:
+        "Discover food memories, family recipes and stories from our community.",
+      href: "/stories",
+      action: "Read community stories",
+    },
+    ...(merch
+      ? [
+          {
+            title: merch.name,
+            description: merch.description,
+            href: "/shop?category=merch",
+            action: "Explore merch",
+          },
+        ]
+      : []),
+  ];
   const values = [
     {
       icon: Sprout,
@@ -55,6 +107,7 @@ export default async function Home() {
 
   return (
     <div className="site-container">
+      <HomeHighlights slides={highlights} />
       <section className="home-hero">
         <div className="hero-copy">
           <span className="eyebrow">

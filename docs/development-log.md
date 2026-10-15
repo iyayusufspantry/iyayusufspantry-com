@@ -1,5 +1,22 @@
 # Simbiat development log
 
+## 14 October 2026 — Remaining client website requests
+
+- Implemented rotating CMS-backed homepage highlights, manual/pause/reduced-motion behavior, product hover zoom and 100–300% photo viewer, and persistent Standard/Larger/Largest reading settings. Phones expose reading settings in the menu.
+- Published the Merch category with an empty/coming-soon shop state, and changed only the supplied Chin Chin unit to provisional **7 oz jar**, preserving its $10 price and variants. The preview/apply script backs up touched entries and preserves editor drafts. Added bounded Contentful connection/rate/server retries.
+- Deployed using the connected project-owner account after a Git author-permission block; standalone validated source contains no Git metadata or local credentials. Deployment `dpl_5dCj95o9d6tE1UymGziSBTJQRZYz` built successfully, was checked, and was promoted to the existing domain. No Git author identity or payment mode was changed.
+- Build/TypeScript, full lint/formatting/whitespace, all 40 local account/gallery/CMS/feedback browser checks, 28 routes at ten viewport widths, relevant accessibility checks and all nine payment/database tests passed. Updated and rendered the [23-page website review PDF](../output/pdf/Simbiat-Website-Review-October-14.pdf). See [implementation/evidence](client-feedback-2026-10-14.md) for post-deployment results.
+- Updated the source feedback status, client-context entry point and unsent reply. The owner confirms no actual stock or verified live-Stripe information is available yet; live-sales acceptance, client materials, desktop details and review availability remain pending. No email was sent or appointment booked.
+
+## 13 October 2026 — Desktop spacing, readable storefront text and client context
+
+- Follow-up recheck: fresh build/TypeScript, full lint and repository formatting passed; 28 routes at ten viewport widths passed layout/response checks with no overflow or browser errors. Six homepage/Shop accessibility scans and all 30 account/gallery/CMS checks passed. Created and rendered the [19-page desktop comparison PDF](../output/pdf/Simbiat-Desktop-Size-Review.pdf), covering six widths with overview, hero, categories and product-card views. Evidence is under ignored `artifacts/desktop-review-2026-10-13/`; website changes remain local.
+
+- Expanded the shared responsive container from 1200 to 1600 pixels, removed the obsolete large-screen cap, and retained phone gutters. Increased small storefront captions, metadata, links and footer text to 14 pixels and common body/card text to 16 pixels. Category cards grow with their content, and product metadata/headings/prices can wrap. Paragraph lengths remain constrained.
+- Saved [the supplied client feedback and action register](client-feedback-2026-10-13.md), updated the client-context/README entry points, and prepared an [unsent reply](simbiat-october-13-reply.md) asking for the desktop/monitor, screen size/resolution, browser/zoom and window state, plus review-session availability. Recorded the banner, photo enlargement, merch category, provisional 7-ounce Chin Chin weight and recipe/collage estimate as outstanding work.
+- Validation: production build/TypeScript, targeted lint, formatting and whitespace checks passed. Eight viewport sizes (320–2560 pixels) across ten routes passed response/container/readability/overflow checks without uncaught browser errors. Three homepage accessibility scans and four existing Shop/gallery checks passed. Desktop/mobile screenshots were visually reviewed; evidence is under ignored `artifacts/client-feedback-2026-10-13/`.
+- Changes remain local. No deployment, email send, Contentful write, live payment or appointment booking was performed.
+
 ## 26 September 2026 — Contentful editor navigation
 
 - Replaced the empty Content Type sidebar folder with a shared **Edit website** folder containing 11 views for products, categories, variants, pages, recipes, articles, policies, FAQs, menus, settings and shared text. Added four helper views under **Linked items (advanced)**; retained existing All/Status views and unrelated workspace settings.

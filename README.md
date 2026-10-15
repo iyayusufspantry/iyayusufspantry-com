@@ -6,6 +6,8 @@ Deployed on Vercel at [www.iyayusufspantry.com](https://www.iyayusufspantry.com)
 
 ## Development record
 
+Latest implementation: [October 14 website feedback work](docs/client-feedback-2026-10-14.md) deploys the wider layout, larger text, homepage banner, photo zoom/viewer and reading settings, and publishes Merch plus the provisional 7 oz Chin Chin jar. [Original feedback/current status](docs/client-feedback-2026-10-13.md) and [unsent reply](docs/simbiat-october-13-reply.md) are updated. The owner confirmed no stock/live-Stripe details are available yet; real-sales checks and client materials remain pending. Use this update alongside the correspondence audit below.
+
 Current client decisions and follow-ups are recorded in the [October 5 email audit](docs/client-email-audit-2026-10-05.md): 90 messages across 19 threads, verified attachments, full US$500 build payment acknowledged, and outstanding launch/handover actions. This record supersedes historical commercial, sample-catalog and account-setup descriptions in this README.
 
 - [Contentful editing guide](docs/contentful-editing.md): edit page text, policy/article sections, menus, colours and contact details through linked entries with ordinary fields. The reference migration preserves existing content and hides the archived JSON editors.

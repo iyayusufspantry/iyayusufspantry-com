@@ -23,6 +23,9 @@ export function ShopBrowser({
   );
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("featured");
+  const merchEmpty =
+    category === "Merch" &&
+    !products.some((product) => product.category === "merch");
   const filtered = products.filter(
     (p) =>
       (category === "All" ||
@@ -75,7 +78,14 @@ export function ShopBrowser({
       {filtered.length ? (
         <ProductGrid items={filtered} />
       ) : (
-        <EmptyState title={copy["copy-14"]} description={copy["copy-15"]}>
+        <EmptyState
+          title={merchEmpty ? "Merch is on the way" : copy["copy-14"]}
+          description={
+            merchEmpty
+              ? "Aprons, tote bags, T-shirts, hats and stickers will appear here when they are available."
+              : copy["copy-15"]
+          }
+        >
           <Button
             variant="outline"
             onClick={() => {

@@ -1,5 +1,7 @@
 # Client context
 
+Latest update, October 14, 2026: [remaining website feedback implemented](client-feedback-2026-10-14.md) records deployed desktop/readability changes, rotating homepage highlights, product hover zoom/enlarged viewer, persistent text-size settings, and the published Merch category and provisional **7 oz Chin Chin jar** ($10 price preserved). The [October 13 source email/status](client-feedback-2026-10-13.md) and [unsent reply draft](simbiat-october-13-reply.md) are updated. The owner confirmed no stock counts or verified live-Stripe information are available yet: **none for now**. Real-payment checks and final stock/delivery/tax acceptance await those inputs; current checkout remains sandbox-only. Recipe PDFs, collage, merchandise listings, her desktop setup and review availability are still needed. Read this update alongside the historical audit below.
+
 The [October 5 email audit](client-email-audit-2026-10-05.md) is the current source for client decisions and open actions: 90 messages across 19 threads, including six service emails beyond the [84-message original intake](client-email-context-2026-10-05.md). The full US$500 fee was acknowledged on September 21, the logo/colors were approved, the supplied catalog was published, and the paid-recipe recommendation was sent. The requested launch estimate and customer-story explanation still need a reply. Private account and receipt details remain in ignored artifacts.
 
 Original notes dated September 20, 2026; corrected against the complete correspondence on October 5. These notes record client statements and service email evidence; current account control and renewal settings have not been independently verified.
@@ -45,7 +47,7 @@ Deployment update, 24 September 2026: the user supplied the Vercel production do
 - Confirm registration and renewal details for the deployed `iyayusufspantry.com` domain.
 - Confirm ownership/recovery of the already-created business accounts, Contentful membership/token expiry, and the full business contact address and service costs.
 - Provide Stripe onboarding guidance and obtain appropriate integration access.
-- Confirm actual inventory and Chin Chin net weight; await the sourcing collage and deferred recipes/step photos.
+- Confirm actual inventory and final Chin Chin net weight; the provisional 7 oz jar was published October 14 with its $10 price and variants preserved. Await the sourcing collage and recipe PDFs, estimated by the client to take about a week.
 - Reply to the requested launch estimate and customer-story appearance questions; see the current audit's action register.
 
 See the [development log](development-log.md) for implementation progress and the [email audit](client-email-audit-2026-10-05.md) for current acceptance/handover obligations. Account creation, Vercel setup and domain payment are evidenced; live-sales readiness, ownership/recovery and renewal settings still need acceptance.

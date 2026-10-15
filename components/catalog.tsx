@@ -37,6 +37,7 @@ const icons = {
   spices: Sprout,
   specialty: Package,
   drinks: GlassWater,
+  merch: ShoppingBag,
 };
 export function MockImage({
   label: suppliedlabel,
@@ -241,7 +242,7 @@ export function ProductCard({
         {product.unit} {!product.approved && copy["copy-7"]}{" "}
       </p>
       <div className="product-actions">
-        <Link className="text-link text-xs!" href={`/shop/${product.slug}`}>
+        <Link className="text-link" href={`/shop/${product.slug}`}>
           {" "}
           {copy["copy-8"]} <ArrowUpRight size={13} />
         </Link>

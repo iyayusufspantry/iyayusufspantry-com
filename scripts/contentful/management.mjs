@@ -9,7 +9,7 @@ export const environment = process.env.CONTENTFUL_ENVIRONMENT || "master";
 export const environmentPath = `/environments/${encodeURIComponent(environment)}`;
 export async function management(
   resource,
-  { method = "GET", body, version } = {},
+  { method = "GET", body, version, contentType } = {},
 ) {
   if (!space || !process.env.CMA_TOKEN)
     throw new Error("Contentful management configuration is missing");
@@ -25,6 +25,9 @@ export async function management(
             Authorization: `Bearer ${process.env.CMA_TOKEN}`,
             "Content-Type": "application/vnd.contentful.management.v1+json",
             ...(version ? { "X-Contentful-Version": String(version) } : {}),
+            ...(contentType
+              ? { "X-Contentful-Content-Type": contentType }
+              : {}),
           },
           ...(body ? { body: JSON.stringify(body) } : {}),
         },
