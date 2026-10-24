@@ -21,6 +21,7 @@ import {
 import { useAddToCart } from "@/components/cart-provider";
 import { money, productPrice, type Product } from "@/data/products";
 import { ProductGallery } from "@/components/product-gallery";
+import { IngredientLinks } from "@/components/ingredient-links";
 
 export function ProductVariantSelector({
   label,
@@ -209,7 +210,11 @@ export function ProductDetail({ product }: { product: Product }) {
         <section>
           <h2>{copy["copy-21"]}</h2>
           <p>{product.description}</p>
-          {product.ingredients && <p>{product.ingredients}</p>}
+          {product.ingredients && (
+            <p>
+              <IngredientLinks text={product.ingredients} />
+            </p>
+          )}
           {product.allergens && <p>{product.allergens}</p>}
           <p>
             {" "}

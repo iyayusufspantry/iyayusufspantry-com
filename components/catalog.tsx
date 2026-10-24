@@ -64,6 +64,18 @@ export function MockImage({
     return (
       <div
         className={cn("mock-image brand-photograph", `mock-${kind}`, className)}
+        style={
+          kind === "article" &&
+          className?.includes("editorial-hero") &&
+          suppliedPhoto.width &&
+          suppliedPhoto.height &&
+          suppliedPhoto.width >= suppliedPhoto.height * 2
+            ? {
+                aspectRatio: `${suppliedPhoto.width} / ${suppliedPhoto.height}`,
+                height: "auto",
+              }
+            : undefined
+        }
       >
         <Image
           src={suppliedPhoto.src}

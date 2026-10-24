@@ -109,12 +109,14 @@ test("larger reading text persists across navigation and mobile layouts", async 
   }
 });
 
-test("the supplied Chin Chin jar displays its provisional weight and existing price", async ({
+test("the supplied Chin Chin jar displays its corrected jar size and existing price", async ({
   page,
 }) => {
   await page.goto("/shop/classic-chin-chin");
   await expect(
-    page.locator(".product-detail-copy").getByText("7 oz jar", { exact: true }),
+    page
+      .locator(".product-detail-copy")
+      .getByText("16 oz jar", { exact: true }),
   ).toBeVisible();
   await expect(
     page.locator(".product-detail-copy").getByText("$10.00", { exact: true }),

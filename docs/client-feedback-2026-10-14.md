@@ -1,5 +1,7 @@
 # October 14, 2026 - remaining website feedback implemented
 
+Subsequent correction: the [October 16 follow-up](client-feedback-2026-10-16.md) supersedes the provisional 7 oz jar with the client's **16 oz jar** label, now published. It also supplies monitor/browser details and three possible review dates. The implementation, test and PDF notes below describe October 14; the [October 16 reply](simbiat-october-16-reply.md) is the current unsent draft.
+
 This follows the [October 13 client email](client-feedback-2026-10-13.md). The project owner asked to fix all remaining items, then confirmed that Simbiat has not supplied actual stock quantities or verified live-Stripe account details: **none for now**. Those launch inputs remain pending. No client email was sent or review appointment booked.
 
 ## Website changes

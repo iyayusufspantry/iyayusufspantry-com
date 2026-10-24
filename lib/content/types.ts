@@ -36,7 +36,8 @@ export type SiteContent = {
   brandPhotos: Record<
     "assortment" | "snackJars" | "coconut" | "drinks" | "palmOil",
     BrandPhoto
-  >;
+  > &
+    Partial<Record<"community" | "merch", BrandPhoto>>;
   settings: {
     businessName: string;
     tagline: string;

@@ -1,5 +1,100 @@
 /* October client review: promotions, product inspection and reading controls. */
 @layer components {
+  .ingredient-link {
+    color: var(--brand-deep);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ingredient-link svg {
+    display: inline;
+    margin-left: 3px;
+    vertical-align: baseline;
+  }
+  .story-search {
+    max-width: 480px;
+    margin-bottom: 28px;
+  }
+  .story-search label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .story-search input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--brand-muted);
+    border-radius: 10px;
+    background: white;
+  }
+  .story-search p {
+    margin-top: 8px;
+    color: var(--brand-muted);
+  }
+  .community-story-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  @media (max-width: 1000px) {
+    .community-story-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 640px) {
+    .community-story-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .community-story-card {
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid var(--brand-border);
+    border-radius: 18px;
+    background: white;
+    overflow-wrap: anywhere;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .community-story-card h2 {
+    font-size: 24px;
+    line-height: 1.3;
+  }
+  .community-story-excerpt {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    line-height: 1.7;
+    color: var(--brand-muted);
+  }
+  .community-story-card .text-link {
+    margin-top: auto;
+    min-height: 44px;
+  }
+  .community-story-dialog {
+    overflow-wrap: anywhere;
+  }
+  .community-story-dialog .dialog-scroll {
+    min-height: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-top: 24px;
+    overscroll-behavior: contain;
+  }
+  .community-story-dialog .dialog-scroll > section:first-child {
+    margin-top: 0;
+  }
+  .story-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 28px;
+  }
   .home-highlights {
     display: grid;
     grid-template-columns: 200px minmax(0, 1fr) auto;

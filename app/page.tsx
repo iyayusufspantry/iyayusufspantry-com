@@ -75,6 +75,7 @@ export default async function Home() {
         "Discover food memories, family recipes and stories from our community.",
       href: "/stories",
       action: "Read community stories",
+      photo: brandPhotos.community,
     },
     ...(merch
       ? [
@@ -83,6 +84,7 @@ export default async function Home() {
             description: merch.description,
             href: "/shop?category=merch",
             action: "Explore merch",
+            photo: brandPhotos.merch,
           },
         ]
       : []),

@@ -1,0 +1,380 @@
+{
+  "receivedOn": "2026-10-24",
+  "source": "Client email and local images supplied in chat; original sent date unverified",
+  "status": "intake-only",
+  "quantityBasis": "20 units per active size variant for egusi, ogbono and palm oil (40 per product); 50 total per other approved product",
+  "appliedToInventory": false,
+  "products": [
+    {
+      "productId": "pantry-product-661fd7e6533bef25c5acb46a",
+      "slug": "classic-chin-chin",
+      "name": "Chin Chin",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-c327726b21a6e43b2940374b"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-c327726b21a6e43b2940374b",
+          "variantId": "classic-chin-chin:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-8e0edacdf73b1523f2003b24",
+      "slug": "coconut-candy-crunch",
+      "name": "Coconut Candy Crunch",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-f8cac6c6de0fd796b3ab5b78"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-f8cac6c6de0fd796b3ab5b78",
+          "variantId": "coconut-candy-crunch:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-11c778c6b7199379b11cd0cd",
+      "slug": "donkwa",
+      "name": "Donkwa / Adakwa / Tanfiri",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-50388a7b3e121b172ff7a7ff"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-50388a7b3e121b172ff7a7ff",
+          "variantId": "donkwa:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-38a56dd028e5da2a47ed0ae6",
+      "slug": "dried-crayfish",
+      "name": "Smoked Large Red Crayfish",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-894330811ae1abe85937d391"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-894330811ae1abe85937d391",
+          "variantId": "dried-crayfish:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-63654b758216d6cc47b3f17e",
+      "slug": "dried-hibiscus",
+      "name": "Dried Hibiscus Flower",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-c7e37ad26451293f00fb029b"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-c7e37ad26451293f00fb029b",
+          "variantId": "dried-hibiscus:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-8259f3bb274307f740aa50b1",
+      "slug": "ground-egusi",
+      "name": "Whole Egusi (Melon seeds)",
+      "startingQuantity": 40,
+      "variantEntryIds": [
+        "pantry-variant-8795d2e0eb9a95841e939e3f",
+        "pantry-variant-98015e50dc56f01642f7c1d2"
+      ],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-8795d2e0eb9a95841e939e3f",
+          "variantId": "ground-egusi:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 20
+        },
+        {
+          "entryId": "pantry-variant-98015e50dc56f01642f7c1d2",
+          "variantId": "ground-egusi:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 20
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-45d6e339965085672b0cf15f",
+      "slug": "ground-pepper",
+      "name": "Ground Cameroon Pepper",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-f09ee1f21ccd2aa0840943d0"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-f09ee1f21ccd2aa0840943d0",
+          "variantId": "ground-pepper:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-d36c44e3baf86c02c18d68c4",
+      "slug": "honey-beans",
+      "name": "Nigerian Beans",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-a95783358ab12a1750416a98"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-a95783358ab12a1750416a98",
+          "variantId": "honey-beans:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-f69c136fc4d3acbc3350a932",
+      "slug": "kulikuli",
+      "name": "Kuli Kuli",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-1bbf0fb582da5277573fc817"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-1bbf0fb582da5277573fc817",
+          "variantId": "kulikuli:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-9949c50585c5408393375947",
+      "slug": "lightly-salted-roasted-groundnut",
+      "name": "Lightly Salted Roasted Groundnut",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-58b00b40cd60005dd21a9344"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-58b00b40cd60005dd21a9344",
+          "variantId": "lightly-salted-roasted-groundnut:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-17be69f30bc6e94a53e6caf0",
+      "slug": "nigerian-dates",
+      "name": "Nigerian Dates (Dabino)",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-29e421f3a539b85196fe1b76"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-29e421f3a539b85196fe1b76",
+          "variantId": "nigerian-dates:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-1fe54d2779670435f14f29ff",
+      "slug": "ogbono",
+      "name": "Whole Ogbono Seeds",
+      "startingQuantity": 40,
+      "variantEntryIds": [
+        "pantry-variant-cea1a164274f859d8002d027",
+        "pantry-variant-d911801c2a41180d40be1407"
+      ],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-cea1a164274f859d8002d027",
+          "variantId": "ogbono:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 20
+        },
+        {
+          "entryId": "pantry-variant-d911801c2a41180d40be1407",
+          "variantId": "ogbono:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 20
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-0422267b1fc8a08a20c36e86",
+      "slug": "palm-oil",
+      "name": "African Red Palm Oil",
+      "startingQuantity": 40,
+      "variantEntryIds": [
+        "pantry-variant-19d0571d996d6ffd95ab8b44",
+        "pantry-variant-f045af123090d8bee44bd623"
+      ],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-19d0571d996d6ffd95ab8b44",
+          "variantId": "palm-oil:32 oz:Standard",
+          "size": "32 oz",
+          "startingQuantity": 20
+        },
+        {
+          "entryId": "pantry-variant-f045af123090d8bee44bd623",
+          "variantId": "palm-oil:1/2 gallon (64 oz):Standard",
+          "size": "1/2 gallon (64 oz)",
+          "startingQuantity": 20
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-b91fbdf61f1aca6fc8b3891a",
+      "slug": "pepper-soup-spice",
+      "name": "Pepper Soup Mix",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-4b5a41022e3c6a933841e60e"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-4b5a41022e3c6a933841e60e",
+          "variantId": "pepper-soup-spice:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-1d2b98467a85cd6d9d5e37aa",
+      "slug": "smoked-catfish",
+      "name": "Smoked Catfish",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-aed6ff9376bf79b6b7cb876e"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-aed6ff9376bf79b6b7cb876e",
+          "variantId": "smoked-catfish:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-dd3e7346ef688548b20c4b84",
+      "slug": "suya-spice",
+      "name": "Suya Mix (Yaji)",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-981b909151f78a6ad098026f"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-981b909151f78a6ad098026f",
+          "variantId": "suya-spice:1 oz:Standard",
+          "size": "1 oz",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-119895c28a1b36718c72fd9c",
+      "slug": "tiger-nut-drink",
+      "name": "Tiger Nut Drink",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-c5004541bf215db44b33fbb5"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-c5004541bf215db44b33fbb5",
+          "variantId": "tiger-nut-drink:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-c0ac0b3ae6664b5a390a62fa",
+      "slug": "tiger-nuts",
+      "name": "Tiger Nuts",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-5544bd4521f30c4ddfcfff30"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-5544bd4521f30c4ddfcfff30",
+          "variantId": "tiger-nuts:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-244eca4116c1d16026538415",
+      "slug": "white-garri",
+      "name": "Garri",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-1d3bafd8a56f566b2094caba"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-1d3bafd8a56f566b2094caba",
+          "variantId": "white-garri:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-a3dc80af51695cc3fb9bd827",
+      "slug": "yam-flour",
+      "name": "Yam Flour",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-3d5f28973e0f55b540a8fcad"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-3d5f28973e0f55b540a8fcad",
+          "variantId": "yam-flour:1 lb:Standard",
+          "size": "1 lb",
+          "startingQuantity": 50
+        }
+      ]
+    },
+    {
+      "productId": "pantry-product-d7313ca4b769b3e0504c72a1",
+      "slug": "zobo-drink",
+      "name": "Zobo Drink",
+      "startingQuantity": 50,
+      "variantEntryIds": ["pantry-variant-081644db58f54a05cf7ffa3e"],
+      "allocationStatus": "confirmed; ready for future live inventory mapping",
+      "variantAllocations": [
+        {
+          "entryId": "pantry-variant-081644db58f54a05cf7ffa3e",
+          "variantId": "zobo-drink:Standard:Standard",
+          "size": "Standard",
+          "startingQuantity": 50
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "productId": "pantry-product-eede391834a32519299991b6",
+      "slug": "dried-ugu",
+      "reason": "Catalog status is sample"
+    }
+  ],
+  "supersedes": "starting-stock-2026-10-22.json"
+}

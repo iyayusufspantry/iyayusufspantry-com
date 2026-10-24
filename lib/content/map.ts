@@ -275,6 +275,8 @@ export function mapContent(
       coconut: requiredPhoto(settings.coconutImage),
       drinks: requiredPhoto(settings.drinksImage),
       palmOil: requiredPhoto(settings.palmOilImage),
+      community: photo(settings.communityImage),
+      merch: photo(settings.merchImage),
     },
     settings: {
       businessName: text(settings.businessName),

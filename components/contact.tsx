@@ -11,6 +11,11 @@ export function ContactPage({ enabled = false }: { enabled?: boolean }) {
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/contact.tsx"];
   const { faqs, settings } = useContent();
+  const phone = String(settings.contactDetails.phone);
+  const phoneNumber = phone.replace(/[\s()-]/g, "");
+  const phoneHref = /^\+?[0-9]{7,15}$/.test(phoneNumber)
+    ? `tel:${phoneNumber}`
+    : undefined;
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const submission = useRef<{ fingerprint: string; id: string } | null>(null);
@@ -156,20 +161,21 @@ export function ContactPage({ enabled = false }: { enabled?: boolean }) {
             {
               icon: Phone,
               title: copy["copy-34"],
-              detail: String(settings.contactDetails.phone),
+              detail: phone,
+              href: phoneHref,
             },
             {
               icon: MessageCircle,
               title: copy["copy-36"],
               detail: String(settings.contactDetails.whatsapp),
             },
-          ].map(({ icon: Icon, title, detail }) => (
+          ].map(({ icon: Icon, title, detail, href }) => (
             <div className="contact-channel" key={title}>
               <Icon size={20} strokeWidth={1.4} />
               <div>
                 <h3>{title}</h3>
-                <span>{detail}</span>
-                <small>{copy["copy-38"]}</small>
+                <span>{href ? <a href={href}>{detail}</a> : detail}</span>
+                {!href && <small>{copy["copy-38"]}</small>}
               </div>
             </div>
           ))}

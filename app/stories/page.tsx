@@ -1,5 +1,6 @@
 import { PageHeading } from "@/components/catalog";
 import { StoryForm } from "@/components/story-form";
+import { CommunityStories } from "@/components/community-stories";
 import { stories, storiesEnabled } from "@/lib/operations/runtime";
 import type { PublicStory } from "@/lib/operations/stories";
 import { getContent } from "@/lib/content/server";
@@ -31,41 +32,35 @@ export default async function Page() {
         title="A taste of home, a story to share"
         description="Food connects us to people and places we love. These are the memories our community brings to the table."
       />
-      {editorialStories.map((post) => (
-        <article
-          key={post.slug}
-          className="article-body mb-10 rounded-2xl border border-border bg-white p-7 break-words"
-        >
-          <h2>{post.title}</h2>
-          {post.author && (
-            <p className="eyebrow normal-case">By {post.author}</p>
-          )}
-          {post.sections.map((section, index) => (
-            <section key={index}>
-              {section.heading && <h3>{section.heading}</h3>}
-              <p>{section.text}</p>
-            </section>
-          ))}
-        </article>
-      ))}
+      {(editorialStories.length > 0 || published.length > 0) && (
+        <CommunityStories
+          stories={[
+            ...editorialStories.map((post) => ({
+              id: `editorial-${post.slug}`,
+              title: post.title,
+              author: post.author ?? "",
+              excerpt: post.description,
+              sections: post.sections,
+              href: `/blog/${post.slug}`,
+            })),
+            ...published.map((item) => ({
+              id: item.id,
+              title: item.title,
+              author: item.name,
+              excerpt:
+                item.story.length > 180
+                  ? `${item.story.slice(0, 180).trimEnd()}…`
+                  : item.story,
+              sections: [{ text: item.story }],
+            })),
+          ]}
+        />
+      )}
       {unavailable ? (
         <p role="status" className="notice">
           Community stories are temporarily unavailable. Please try again later.
         </p>
-      ) : published.length ? (
-        <div className="grid gap-6 md:grid-cols-2">
-          {published.map((item) => (
-            <article
-              key={item.id}
-              className="rounded-2xl border border-border bg-white p-7 min-w-0 break-words"
-            >
-              <h2>{item.title}</h2>
-              <p className="eyebrow mt-3 normal-case">By {item.name}</p>
-              <p className="whitespace-pre-wrap leading-8">{item.story}</p>
-            </article>
-          ))}
-        </div>
-      ) : editorialStories.length ? null : (
+      ) : published.length || editorialStories.length ? null : (
         <p className="notice">
           Our community storybook is just beginning. Share a memory for Simbiat
           to review.

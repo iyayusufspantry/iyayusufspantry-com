@@ -2,23 +2,25 @@
 
 Source: Simbiat's email pasted into the development chat on October 13, with two screenshots in `public/assets/13 oct/`. This is supplied correspondence, not a newly fetched mailbox audit.
 
-## Completion status — checked October 14, 2026
+## Completion status — updated October 16, 2026
+
+Latest: [October 16 supplied follow-up](client-feedback-2026-10-16.md) confirms a KTC 24-inch QHD monitor and Chrome, corrects Chin Chin to a **16 oz jar** (published), and offers October 23/24/25 at 2 pm “CST.” The owner approved **2560 × 1440** as the working monitor resolution. Zoom/scaling/window details remain unknown; the intended time zone still needs confirmation. No appointment is booked. The [October 16 reply](simbiat-october-16-reply.md) supersedes the older unsent draft and explains the remaining client and developer Stripe work.
 
 **The website feature work is implemented and deployed.** Live-sales acceptance and client-supplied materials remain pending. The owner confirmed on October 14 that no stock counts or verified live-Stripe account information are available yet. See [October 14 implementation and deployment](client-feedback-2026-10-14.md) and the [updated 23-page review PDF](../output/pdf/Simbiat-Website-Review-October-14.pdf). The October 13 implementation/test notes below are historical.
 
-| Item                                                                        | Status                                                                                  |
-| --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Wider desktop layout and larger small text                                  | Implemented, tested and deployed                                                        |
-| Desktop comparison PDF                                                      | Refreshed October 14; 23 pages including new controls and Merch                         |
-| Saved feedback/context and reply asking for desktop details                 | Updated; reply remains unsent                                                           |
-| Client desktop details and review appointment                               | Not supplied; no appointment booked                                                     |
-| Deployment of layout/text changes                                           | Complete; production deployment `dpl_5dCj95o9d6tE1UymGziSBTJQRZYz`                      |
-| Rotating promotional banner on the landing page                             | Complete; five-second rotation, controls, pause and reduced-motion support              |
-| Product-image enlargement and optional text magnification                   | Complete; hover zoom, enlarged photo viewer and persistent text-size settings           |
-| Merch category and merchandise listings                                     | Category published and empty state implemented; listings await supplied details/assets  |
-| Provisional 7-ounce Chin Chin weight                                        | Published as 7 oz jar; $10 price and variants preserved; final weight still provisional |
-| Live-payment checks, confirmed stock/delivery settings and final acceptance | Awaiting actual stock/live-account/tax/fulfillment inputs; sandbox checks passed        |
-| Recipe PDFs and sourcing collage                                            | Awaiting client materials                                                               |
+| Item                                                                        | Status                                                                                          |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| Wider desktop layout and larger small text                                  | Implemented, tested and deployed                                                                |
+| Desktop comparison PDF                                                      | Refreshed October 14; 23 pages including new controls and Merch                                 |
+| Saved feedback/context and reply asking for desktop details                 | Updated; reply remains unsent                                                                   |
+| Client desktop details and review appointment                               | KTC 24-inch QHD / Chrome supplied; three dates proposed; time zone unresolved; no booking       |
+| Deployment of layout/text changes                                           | Complete; production deployment `dpl_5dCj95o9d6tE1UymGziSBTJQRZYz`                              |
+| Rotating promotional banner on the landing page                             | Complete; five-second rotation, controls, pause and reduced-motion support                      |
+| Product-image enlargement and optional text magnification                   | Complete; hover zoom, enlarged photo viewer and persistent text-size settings                   |
+| Merch category and merchandise listings                                     | Category published and empty state implemented; listings await supplied details/assets          |
+| Chin Chin jar size                                                          | Corrected to 16 oz jar on October 16; $10 price and variants preserved; shipping weight unknown |
+| Live-payment checks, confirmed stock/delivery settings and final acceptance | Awaiting actual stock/live-account/tax/fulfillment inputs; sandbox checks passed                |
+| Recipe PDFs and sourcing collage                                            | Awaiting client materials                                                                       |
 
 ## Client statements and requests
 
@@ -31,7 +33,7 @@ Source: Simbiat's email pasted into the development chat on October 13, with two
 - Enlarge small text; she suggests optional hover magnification for text and product photos, including customers needing extra-large print.
 - Add a merch category for aprons, tote bags, T-shirts, hats, stickers, etc. Actual merchandise listings, photos, prices and inventory are not yet supplied.
 
-## Screenshot findings
+## Screenshot findings (October 13, historical)
 
 - `1791863258967blob.jpg`: 2530 × 714 image; homepage header and hero occupy roughly half its width.
 - `1791863824756blob.jpg`: 3298 × 1266 image; hero footer, values strip and category heading illustrate small text.
@@ -61,14 +63,14 @@ The [desktop size review PDF](../output/pdf/Simbiat-Desktop-Size-Review.pdf) con
 - Local evidence is Git-ignored under `artifacts/client-feedback-2026-10-13/`: `layout-results.json`, `hero-1440.png`, `hero-2560.png`, `hero-390.png`, `categories-390.png`, `product-320.png`, full-page screenshots and the one-off check/capture scripts.
 - No deployment or external catalog update occurred. No email was sent and no appointment was booked. These checks do not establish the client's exact desktop view, live payments, actual stock or delivery settings.
 
-## Follow-up register (updated October 14)
+## Follow-up register (updated October 16)
 
-1. Obtain desktop/laptop or monitor model, screen size/resolution if known, browser, zoom level, and whether the window was maximized. Reproduce the client's viewport after her reply.
+1. Use the owner-approved **2560 × 1440** working resolution for the supplied KTC 24-inch QHD monitor and Chrome. Existing browser checks cover that size. Ask about scaling, browser zoom and window state if the layout issue persists; further resolution confirmation is not a prerequisite.
 2. Obtain client acceptance of the deployed desktop layout, banner, photo enlargement and reading controls. Implementation/deployment are complete.
 3. Collect approved merchandise descriptions, photos, prices, sizes/options and stock before publishing sale listings. The Merch category is ready.
-4. Obtain final Chin Chin net weight confirmation; the authorized provisional 7 oz jar is already published. Packed shipping weight is separate.
-5. Confirm physical stock, delivery coverage/rates, tax/ship-from details and final policies. No new stock/live-account information is available, as confirmed by the owner on October 14.
-6. Arrange the payment/stock/delivery/final-review session once the client supplies the inputs. Current checkout remains sandbox-only; no live-payment check or real charge has been performed.
-7. Follow up on recipe PDFs and sourcing collage in about a week, without treating the estimate as a delivery commitment or creating a schedule automatically.
+4. The client corrected the jar size to 16 oz; that label is published. Net food weight and packed shipping weight remain separate and unverified.
+5. Confirm physical stock, delivery coverage/rates, tax/ship-from details and final policies. The client will send starting quantities; none are supplied yet. Live Stripe status is unknown and the new draft explains the account steps and outstanding website implementation.
+6. Choose from October 23, 24 or 25 at 2 pm only after confirming the intended “CST” time zone and the developer's availability. No appointment is booked. Current checkout remains sandbox-only; no live-payment check or real charge has been performed.
+7. The client plans to work on recipe PDFs, collage and merchandise details over the weekend. No firm delivery deadline or automatic schedule is agreed.
 
-Unsent reply: [October 13 draft](simbiat-october-13-reply.md). Earlier confirmed history: [October 5 email audit](client-email-audit-2026-10-05.md).
+Current unsent reply: [October 16 draft](simbiat-october-16-reply.md). The [October 13 draft](simbiat-october-13-reply.md) is historical. Earlier confirmed history: [October 5 email audit](client-email-audit-2026-10-05.md).

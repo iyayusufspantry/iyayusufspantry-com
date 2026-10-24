@@ -158,6 +158,8 @@ export const models = [
     ...["assortment", "snackJars", "coconut", "drinks", "palmOil"].map((role) =>
       asset(`${role}Image`, `${role} image`),
     ),
+    asset("communityImage", "Community stories highlight cover"),
+    asset("merchImage", "Merch highlight cover"),
     required("businessName", "Business name"),
     field("tagline", "Tagline"),
     asset("logo", "Horizontal logo"),

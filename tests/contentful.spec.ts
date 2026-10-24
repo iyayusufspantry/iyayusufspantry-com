@@ -20,6 +20,25 @@ function resources() {
   };
 }
 
+test("highlight covers follow CMS selections and tolerate an unpublished optional cover", () => {
+  const { entries, assets } = resources();
+  const settings = entries.find(
+    (entry) => entry.sys.contentType?.sys.id === "pantrySiteSettings",
+  )!;
+  settings.fields.communityImage = {
+    sys: { type: "Link", linkType: "Asset", id: assets[0].sys.id },
+  };
+  settings.fields.merchImage = {
+    sys: { type: "Link", linkType: "Asset", id: "unpublished-cover" },
+  };
+  const content = mapContent(entries, assets);
+  expect(content.brandPhotos.community?.src).toBe(
+    (assets[0].fields.file as { url: string }).url,
+  );
+  expect(content.brandPhotos.merch).toBeUndefined();
+  expect(content.brandPhotos.assortment).toBeDefined();
+});
+
 test("published CMS values drive prices, copy, menus and media", () => {
   const { entries, assets } = resources();
   const variant = entries.find(

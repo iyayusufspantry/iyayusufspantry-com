@@ -1,3 +1,5 @@
+Historical draft — superseded by the [October 16 reply](simbiat-october-16-reply.md). Do not send the old jar-size or missing-monitor/availability requests below.
+
 Hi Simbiat,
 
 Welcome back, and thank you for the feedback. I'm glad the photos and descriptions are now showing correctly.
