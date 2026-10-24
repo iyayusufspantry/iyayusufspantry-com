@@ -208,7 +208,8 @@ test("category, search, sorting, empty states, and cross-content search", async 
   await expect(page.locator(".product-card")).toHaveCount(3);
   await page.getByRole("button", { name: "All", exact: true }).click();
   await expect(page.locator(".product-card")).toHaveCount(15);
-  await page.getByLabel("Sort products").selectOption("price-low");
+  await page.getByRole("combobox", { name: "Sort products" }).click();
+  await page.getByRole("option", { name: /low to high/i }).click();
   await expect(page.locator(".product-card").first()).toContainText(
     "Ground Dry Pepper",
   );

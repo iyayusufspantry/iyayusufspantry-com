@@ -472,16 +472,31 @@
     border-radius: 14px;
     padding: 18px;
   }
-  .filter-chips button {
-    border-radius: 30px;
-    padding: 11px 17px;
+  .shop-toolbar {
+    gap: 16px;
   }
-  .filter-chips button[aria-pressed="true"] {
-    background: var(--brand-deep);
-    border-color: var(--brand-deep);
+  .shop-toolbar .search-field {
+    flex: 1;
+    width: 100%;
+    max-width: 400px;
   }
-  .filter-chips button:hover {
-    border-color: var(--brand-deep);
+  .shop-toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+  .shop-product-count {
+    color: var(--brand-muted);
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+  .shop-sort-content {
+    max-width: calc(100vw - 32px);
+  }
+  .shop-sort-content [data-slot="select-item"] {
+    min-height: 44px;
   }
   .product-main-image {
     border-radius: 24px;
@@ -923,9 +938,6 @@
   }
   .filter-chips {
     gap: 7px;
-  }
-  .filter-chips button {
-    padding: 10px 13px;
   }
   .site-footer {
     padding-top: 38px;

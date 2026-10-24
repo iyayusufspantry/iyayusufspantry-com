@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAddToCart } from "@/components/cart-provider";
 
 import { money, type Product } from "@/data/products";
@@ -447,8 +448,9 @@ export function SearchField({
 
   return (
     <div className="search-field">
-      <Search size={17} />
-      <input
+      <Search size={17} aria-hidden="true" className="pointer-events-none" />
+      <Input
+        className="h-11 rounded-lg bg-white pl-10"
         aria-label={label}
         type="search"
         value={value}
@@ -474,14 +476,15 @@ export function FilterChips({
     <div className="filter-chips" aria-label={copy["copy-16"]}>
       <SlidersHorizontal size={16} className="mr-2 shrink-0 text-neutral-500" />
       {["All", ...options].map((option) => (
-        <button
+        <Button
           key={option}
           type="button"
+          variant={value === option ? "default" : "outline"}
           aria-pressed={value === option}
           onClick={() => onChange(option)}
         >
           {option === "All" ? copy["copy-17"] : option}
-        </button>
+        </Button>
       ))}
     </div>
   );

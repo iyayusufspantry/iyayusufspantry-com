@@ -10,6 +10,13 @@ import {
   SearchField,
 } from "@/components/catalog";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 export function ShopBrowser({
   initialCategory = "All",
 }: {
@@ -45,26 +52,37 @@ export function ShopBrowser({
         title={copy["copy-5"]}
         description={copy["copy-6"]}
       />
-      <div className="catalog-toolbar">
+      <div className="catalog-toolbar shop-toolbar">
         <SearchField value={query} onChange={setQuery} />
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-neutral-500" aria-live="polite">
-            {filtered.length} {copy["copy-7"]}{" "}
-          </span>
-          <label className="sr-only" htmlFor="sort">
-            {" "}
-            {copy["copy-8"]}{" "}
-          </label>
-          <select
-            id="sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
+        <div className="shop-toolbar-actions">
+          <span
+            className="shop-product-count"
+            aria-live="polite"
+            aria-atomic="true"
           >
-            <option value="featured">{copy["copy-9"]}</option>
-            <option value="price-low">{copy["copy-10"]}</option>
-            <option value="price-high">{copy["copy-11"]}</option>
-            <option value="name">{copy["copy-12"]}</option>
-          </select>
+            {filtered.length} {copy["copy-7"]}
+          </span>
+          <label className="sr-only" htmlFor="shop-sort">
+            {copy["copy-8"]}
+          </label>
+          <Select value={sort} onValueChange={setSort}>
+            <SelectTrigger
+              id="shop-sort"
+              className="min-h-11 min-w-0 flex-[1_0_208px] rounded-lg bg-white px-3.5 py-2.5 data-[size=default]:h-auto"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent
+              position="popper"
+              align="end"
+              className="shop-sort-content rounded-xl"
+            >
+              <SelectItem value="featured">{copy["copy-9"]}</SelectItem>
+              <SelectItem value="price-low">{copy["copy-10"]}</SelectItem>
+              <SelectItem value="price-high">{copy["copy-11"]}</SelectItem>
+              <SelectItem value="name">{copy["copy-12"]}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <FilterChips
