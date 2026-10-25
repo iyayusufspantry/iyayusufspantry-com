@@ -28,17 +28,6 @@ function scrollHomeToTop() {
   }
 }
 
-export function PrototypeBadge() {
-  const { copy: allCopy } = useContent();
-  const copy = allCopy["components/site-shell.tsx"];
-
-  return (
-    <span className="prototype-badge">
-      <span className="size-1.5 rounded-full bg-neutral-500" />{" "}
-      {copy["copy-6"]}{" "}
-    </span>
-  );
-}
 export function SiteHeader() {
   const { copy: allCopy } = useContent();
   const copy = allCopy["components/site-shell.tsx"];
@@ -54,18 +43,6 @@ export function SiteHeader() {
         {" "}
         {copy["copy-7"]}{" "}
       </a>
-      <div className="prototype-bar">
-        <div className="site-container flex items-center justify-between gap-3">
-          <PrototypeBadge />
-          <Link
-            href="/scope"
-            className="inline-flex items-center gap-1.5 text-xs"
-          >
-            {" "}
-            {copy["copy-8"]} <ArrowUpRight size={13} />
-          </Link>
-        </div>
-      </div>
       <header className="site-header">
         <div className="site-container flex h-21 items-center justify-between">
           <Link

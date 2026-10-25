@@ -52,14 +52,6 @@
 }
 
 @layer components {
-  .prototype-bar {
-    color: var(--brand-ink);
-    background: var(--brand-mint);
-    border-bottom: 0;
-  }
-  .prototype-badge > span {
-    background: var(--brand-deep);
-  }
   .site-header {
     position: sticky;
     top: 0;

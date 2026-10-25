@@ -23,7 +23,7 @@ for (const screen of [
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(
       page.getByText("Project Scope Prototype", { exact: true }),
-    ).toBeVisible();
+    ).toHaveCount(0);
     if (screen.href === "/cart" || screen.href === "/checkout") {
       await page
         .getByRole("button", { name: "Load sample cart", exact: true })

@@ -165,12 +165,6 @@
   .site-container {
     width: calc(100% - 40px);
   }
-  .prototype-badge {
-    font-size: 8px;
-  }
-  .prototype-bar a {
-    font-size: 9px;
-  }
   .site-header > div {
     height: 72px;
   }
@@ -755,9 +749,6 @@
     width: 100%;
     max-width: none;
   }
-  .prototype-bar {
-    display: block;
-  }
   .scope-section,
   .scope-feature,
   .directory-card {
@@ -787,19 +778,6 @@
   }
   .page-bottom {
     padding-bottom: 90px;
-  }
-  .prototype-bar {
-    background: var(--brand-surface);
-    border-bottom: 1px solid var(--brand-border);
-    padding: 10px 0;
-    color: var(--brand-muted);
-  }
-  .prototype-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 10px;
-    letter-spacing: 0.4px;
   }
   .site-header {
     background: white;
