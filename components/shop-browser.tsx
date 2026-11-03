@@ -31,6 +31,7 @@ export function ShopBrowser({
   );
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("featured");
+  const isMerch = category === "Merch";
   const merchEmpty =
     category === "Merch" &&
     !products.some((product) => product.category === "merch");
@@ -57,11 +58,17 @@ export function ShopBrowser({
   if (sort === "price-high") filtered.sort((a, b) => b.price - a.price);
   if (sort === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
   return (
-    <div className="site-container page-bottom">
+    <div
+      className={`site-container page-bottom${isMerch ? " shop-merch" : ""}`}
+    >
       <PageHeading
-        eyebrow={copy["copy-4"]}
-        title={copy["copy-5"]}
-        description={copy["copy-6"]}
+        eyebrow={isMerch ? "Pantry People" : copy["copy-4"]}
+        title={isMerch ? "Meet the merch" : copy["copy-5"]}
+        description={
+          isMerch
+            ? "A little pantry pride, wherever you go. Explore our T-shirts and cap."
+            : copy["copy-6"]
+        }
       />
       <div className="catalog-toolbar shop-toolbar">
         <SearchField value={query} onChange={setQuery} />

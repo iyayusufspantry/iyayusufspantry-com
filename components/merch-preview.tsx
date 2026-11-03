@@ -9,22 +9,16 @@ export function MerchPreview({
   items: SiteContent["merchPreviews"];
 }) {
   return (
-    <section className="merch-preview" aria-labelledby="merch-preview-title">
-      <div className="merch-preview-heading">
-        <p className="eyebrow">Coming soon</p>
-        <h2 id="merch-preview-title">Meet the merch</h2>
-        <p>
-          A little pantry pride, wherever you go. Take a look at our upcoming
-          T-shirts and cap.
-        </p>
-        <p className="fine-print">
-          These items are not yet available to order.
-        </p>
+    <section className="merch-preview" aria-label="Upcoming merchandise">
+      <div className="merch-preview-note">
+        <span>Coming soon</span>
+        <p>These items are not yet available to order.</p>
       </div>
       <div className="merch-preview-grid">
         {items.map((item) => (
           <article className="merch-preview-card" key={item.slug}>
             <ProductGallery
+              compact
               photos={item.photos}
               labels={item.photos.map((photo) => photo.alt)}
               productName={item.name}

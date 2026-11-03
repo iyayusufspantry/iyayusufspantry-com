@@ -28,11 +28,13 @@ export function ProductGallery({
   labels,
   productName,
   viewImageLabel,
+  compact = false,
 }: {
   photos: BrandPhoto[];
   labels: string[];
   productName: string;
   viewImageLabel: string;
+  compact?: boolean;
 }) {
   const [image, setImage] = useState(0);
   const [playback, setPlayback] = useState<boolean | null>(null);
@@ -47,7 +49,7 @@ export function ProductGallery({
     () => window.matchMedia(motionQuery).matches,
     () => true,
   );
-  const playing = playback ?? !reducedMotion;
+  const playing = !compact && (playback ?? !reducedMotion);
   const canRotate = photos.length > 1;
 
   useEffect(() => {
@@ -76,7 +78,9 @@ export function ProductGallery({
   return (
     <div
       ref={root}
-      className="product-gallery"
+      className={
+        compact ? "product-gallery gallery-compact" : "product-gallery"
+      }
       role="region"
       aria-roledescription="carousel"
       aria-label={`${productName} photos`}
@@ -91,7 +95,7 @@ export function ProductGallery({
           setPlayback(false);
       }}
     >
-      {canRotate && (
+      {canRotate && !compact && (
         <div className="gallery-controls">
           <button
             type="button"
@@ -158,10 +162,18 @@ export function ProductGallery({
                 photo={photos[image]}
                 className="product-main-image"
                 index={image}
+                sizes={
+                  compact
+                    ? "(max-width: 639px) calc(100vw - 40px), (max-width: 959px) 44vw, 380px"
+                    : undefined
+                }
               />
               {photos[image] && (
                 <span className="photo-enlarge-label">
-                  <ZoomIn size={18} /> Enlarge photo
+                  <ZoomIn size={18} aria-hidden="true" />
+                  <span className={compact ? "sr-only" : undefined}>
+                    Enlarge photo
+                  </span>
                 </span>
               )}
             </button>
@@ -275,7 +287,12 @@ export function ProductGallery({
               aria-label={viewImageLabel.replaceAll("{0}", label.toLowerCase())}
               aria-pressed={image === index}
             >
-              <MockImage label={label} index={index} photo={photos[index]} />
+              <MockImage
+                label={label}
+                index={index}
+                photo={photos[index]}
+                sizes={compact ? "44px" : undefined}
+              />
             </button>
           ))}
         </div>

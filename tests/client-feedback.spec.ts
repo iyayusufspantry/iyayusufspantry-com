@@ -8,6 +8,34 @@ test("merch previews show confirmed shirt sizes, all cap views and searchable na
   await page.goto("/shop?category=merch");
   const cards = page.locator(".merch-preview-card");
   await expect(cards).toHaveCount(3);
+  const frames = await page
+    .locator(".merch-preview-card .product-main-image")
+    .evaluateAll((elements) =>
+      elements.map((element) => {
+        const { top, height } = element.getBoundingClientRect();
+        return { top, height };
+      }),
+    );
+  expect(frames.every((frame) => frame.height <= 340)).toBe(true);
+  for (const label of await page
+    .locator(".merch-preview .photo-enlarge-label")
+    .all()) {
+    const box = await label.boundingBox();
+    expect(box!.height).toBeLessThanOrEqual(48);
+    expect(box!.width).toBeLessThanOrEqual(48);
+  }
+  if ((page.viewportSize()?.width ?? 0) >= 1000) {
+    expect(
+      Math.max(...frames.map((frame) => frame.top)) -
+        Math.min(...frames.map((frame) => frame.top)),
+    ).toBeLessThan(2);
+    const titleTops = await cards
+      .locator("h3")
+      .evaluateAll((elements) =>
+        elements.map((element) => element.getBoundingClientRect().top),
+      );
+    expect(Math.max(...titleTops) - Math.min(...titleTops)).toBeLessThan(2);
+  }
   await expect(
     page.getByText("Sizes: Medium, Large, Extra-large, XX-large", {
       exact: true,
@@ -35,12 +63,12 @@ test("merch previews show confirmed shirt sizes, all cap views and searchable na
     has: page.getByRole("heading", { name: "Pantry People Cap", exact: true }),
   });
   await expect(cap.locator(".gallery-thumbnails button")).toHaveCount(3);
-  await cap.getByRole("button", { name: "Next photo", exact: true }).click();
+  await cap.locator(".gallery-thumbnails button").nth(1).click();
   await expect(cap.locator(".product-main-image img")).toHaveAttribute(
     "alt",
     /Side of the olive-green cap/,
   );
-  await cap.getByRole("button", { name: "Next photo", exact: true }).click();
+  await cap.locator(".gallery-thumbnails button").nth(2).click();
   await expect(cap.locator(".product-main-image img")).toHaveAttribute(
     "alt",
     /Since March 2024/,

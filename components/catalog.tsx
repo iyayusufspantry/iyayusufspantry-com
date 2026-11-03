@@ -46,12 +46,14 @@ export function MockImage({
   className,
   index = 0,
   photo,
+  sizes: suppliedSizes,
 }: {
   label?: string;
   kind?: "product" | "hero" | "recipe" | "story" | "article";
   className?: string;
   index?: number;
   photo?: BrandPhoto;
+  sizes?: string;
 }) {
   const { productPhotos, copy: allCopy } = useContent();
   const copy = allCopy["components/catalog.tsx"];
@@ -83,12 +85,13 @@ export function MockImage({
           alt={suppliedPhoto.alt}
           fill
           sizes={
-            kind === "hero" ||
+            suppliedSizes ??
+            (kind === "hero" ||
             kind === "story" ||
             className?.includes("product-main-image") ||
             className?.includes("editorial-hero")
               ? "(max-width: 1000px) 100vw, 60vw"
-              : "(max-width: 767px) 50vw, 33vw"
+              : "(max-width: 767px) 50vw, 33vw")
           }
           className="brand-photo"
           style={
