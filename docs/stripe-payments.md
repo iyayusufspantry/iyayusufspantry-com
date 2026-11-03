@@ -1,5 +1,7 @@
 # Local Stripe sandbox checkout
 
+October 31 update: [live checkout preparation](stripe-live-readiness-2026-10-31.md) is implemented and deployed alongside the preserved sandbox. Separate credentials, stock/orders and webhook routes are in place, and a genuine unpaid live session-expiration check passed. Public sales remain gated pending tax decisions. The sandbox-only restrictions below describe the original test flow; current configuration supports explicit `STRIPE_PAYMENT_MODE=live` with a live key and separate signing secret. See the current readiness record for activation requirements and validation.
+
 The app has a test-only Stripe-hosted checkout, PostgreSQL order/stock persistence, and a signed webhook at `POST /api/stripe/webhook`. Live keys and live events are rejected. Shipping and tax are explicitly $0 **for sandbox testing only**. Nothing in this change enables live sales.
 
 ## Start locally
