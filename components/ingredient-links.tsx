@@ -12,6 +12,7 @@ const ingredientNames = [
   "Uziza Seeds",
   "Cameroon pepper",
   "Aidan fruit",
+  "Nigerian dates",
   "tiger nuts?",
   "groundnuts",
   "cornmeal",

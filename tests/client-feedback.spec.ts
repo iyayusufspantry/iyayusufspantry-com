@@ -1,6 +1,89 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("merch previews show confirmed shirt sizes, all cap views and searchable names without sale actions", async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/shop?category=merch");
+  const cards = page.locator(".merch-preview-card");
+  await expect(cards).toHaveCount(3);
+  await expect(
+    page.getByText("Sizes: Medium, Large, Extra-large, XX-large", {
+      exact: true,
+    }),
+  ).toHaveCount(2);
+  await expect(
+    page.getByText("These items are not yet available to order."),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /add to bag|buy now/i }),
+  ).toHaveCount(0);
+  for (const card of await cards.all()) {
+    await expect
+      .poll(() =>
+        card
+          .locator(".product-main-image img")
+          .evaluate(
+            (image: HTMLImageElement) =>
+              image.complete && image.naturalWidth > 0,
+          ),
+      )
+      .toBe(true);
+  }
+  const cap = cards.filter({
+    has: page.getByRole("heading", { name: "Pantry People Cap", exact: true }),
+  });
+  await expect(cap.locator(".gallery-thumbnails button")).toHaveCount(3);
+  await cap.getByRole("button", { name: "Next photo", exact: true }).click();
+  await expect(cap.locator(".product-main-image img")).toHaveAttribute(
+    "alt",
+    /Side of the olive-green cap/,
+  );
+  await cap.getByRole("button", { name: "Next photo", exact: true }).click();
+  await expect(cap.locator(".product-main-image img")).toHaveAttribute(
+    "alt",
+    /Since March 2024/,
+  );
+  await cap
+    .getByRole("button", { name: "Enlarge Pantry People Cap photo" })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Pantry People Cap", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Escape");
+  const search = page.getByRole("searchbox");
+  await search.fill("roots");
+  await expect(cards).toHaveCount(1);
+  await expect(
+    page.getByRole("heading", {
+      name: "My Roots Have Flavor T-shirt",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await search.fill("no matching merchandise");
+  await expect(cards).toHaveCount(0);
+  await expect(
+    page.getByText("Merch is on the way", { exact: true }),
+  ).toHaveCount(0);
+  await search.fill("");
+  const accessibility = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  expect(accessibility.violations.map((item) => item.id)).toEqual([]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.mouse.move(0, 0);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({
+    path: `artifacts/client-feedback-2026-11-03/merch-${test.info().project.name}.png`,
+    fullPage: true,
+  });
+});
+
 test("homepage highlights rotate, pause while being read and support manual navigation", async ({
   page,
 }) => {
@@ -27,7 +110,7 @@ test("homepage highlights rotate, pause while being read and support manual navi
   );
   await banner.getByRole("link").click();
   await expect(
-    page.getByRole("heading", { name: "Merch is on the way" }),
+    page.getByRole("heading", { name: "Meet the merch" }),
   ).toBeVisible();
   await expect(page.locator(".product-card")).toHaveCount(0);
 });

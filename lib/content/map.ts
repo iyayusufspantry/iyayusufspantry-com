@@ -259,6 +259,21 @@ export function mapContent(
   )?.fields;
   const home = rows("pantryPage").find((e) => e.fields.route === "/")?.fields;
   return {
+    merchPreviews: rows("pantryMerchPreview").flatMap(({ fields: f }) => {
+      const gallery = list(f.photos)
+        .map(photo)
+        .filter((p): p is BrandPhoto => Boolean(p));
+      if (!gallery.length) return [];
+      return [
+        {
+          slug: text(f.slug),
+          name: text(f.name),
+          description: text(f.description),
+          sizes: strings(f.sizes),
+          photos: gallery,
+        },
+      ];
+    }),
     products,
     variants,
     categories,

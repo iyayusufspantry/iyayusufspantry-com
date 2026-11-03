@@ -1,6 +1,7 @@
 "use client";
 import { useContent } from "@/components/content-provider";
 import { useState } from "react";
+import { MerchPreview } from "@/components/merch-preview";
 
 import {
   EmptyState,
@@ -22,7 +23,7 @@ export function ShopBrowser({
 }: {
   initialCategory?: string;
 }) {
-  const { products, categories, copy: allCopy } = useContent();
+  const { products, categories, merchPreviews, copy: allCopy } = useContent();
   const copy = allCopy["components/shop-browser.tsx"];
 
   const [category, setCategory] = useState(
@@ -33,6 +34,16 @@ export function ShopBrowser({
   const merchEmpty =
     category === "Merch" &&
     !products.some((product) => product.category === "merch");
+  const previews =
+    category === "Merch"
+      ? merchPreviews.filter((item) =>
+          [item.name, item.description, item.sizes.join(" ")]
+            .join(" ")
+            .toLowerCase()
+            .includes(query.toLowerCase()),
+        )
+      : [];
+  if (sort === "name") previews.sort((a, b) => a.name.localeCompare(b.name));
   const filtered = products.filter(
     (p) =>
       (category === "All" ||
@@ -60,7 +71,9 @@ export function ShopBrowser({
             aria-live="polite"
             aria-atomic="true"
           >
-            {filtered.length} {copy["copy-7"]}
+            {filtered.length || !previews.length
+              ? `${filtered.length} ${copy["copy-7"]}`
+              : `${previews.length} merch previews`}
           </span>
           <label className="sr-only" htmlFor="shop-sort">
             {copy["copy-8"]}
@@ -78,8 +91,12 @@ export function ShopBrowser({
               className="shop-sort-content rounded-xl"
             >
               <SelectItem value="featured">{copy["copy-9"]}</SelectItem>
-              <SelectItem value="price-low">{copy["copy-10"]}</SelectItem>
-              <SelectItem value="price-high">{copy["copy-11"]}</SelectItem>
+              {!merchEmpty && (
+                <SelectItem value="price-low">{copy["copy-10"]}</SelectItem>
+              )}
+              {!merchEmpty && (
+                <SelectItem value="price-high">{copy["copy-11"]}</SelectItem>
+              )}
               <SelectItem value="name">{copy["copy-12"]}</SelectItem>
             </SelectContent>
           </Select>
@@ -88,18 +105,26 @@ export function ShopBrowser({
       <FilterChips
         options={categories.map((c) => c.name)}
         value={category}
-        onChange={setCategory}
+        onChange={(next) => {
+          setCategory(next);
+          if (next === "Merch") setSort("featured");
+        }}
       />
       {filtered.some((product) => !product.approved) && (
         <p className="fine-print mb-7"> {copy["copy-13"]} </p>
       )}
+      {previews.length > 0 && <MerchPreview items={previews} />}
       {filtered.length ? (
         <ProductGrid items={filtered} />
-      ) : (
+      ) : !previews.length ? (
         <EmptyState
-          title={merchEmpty ? "Merch is on the way" : copy["copy-14"]}
+          title={
+            merchEmpty && !merchPreviews.length
+              ? "Merch is on the way"
+              : copy["copy-14"]
+          }
           description={
-            merchEmpty
+            merchEmpty && !merchPreviews.length
               ? "Aprons, tote bags, T-shirts, hats and stickers will appear here when they are available."
               : copy["copy-15"]
           }
@@ -115,7 +140,7 @@ export function ShopBrowser({
             {copy["copy-16"]}{" "}
           </Button>
         </EmptyState>
-      )}
+      ) : null}
     </div>
   );
 }

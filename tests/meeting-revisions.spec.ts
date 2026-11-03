@@ -49,7 +49,7 @@ test("ingredient searches preserve the supplied ingredients and allergen text", 
   await page.goto("/shop/tiger-nut-drink");
   const ingredients = page.locator(".product-info-grid section").first();
   await expect(ingredients.locator("p").nth(1)).toHaveText(
-    "Ingredients: tiger nuts, water, ginger, cloves, cinnamon, and honey.",
+    "Ingredients: tiger nuts, Nigerian dates, water, ginger, cloves, cinnamon, and honey.",
   );
   const tigerNuts = ingredients.getByRole("link", {
     name: "Search Google for tiger nuts (opens in a new tab)",
@@ -61,6 +61,16 @@ test("ingredient searches preserve the supplied ingredients and allergen text", 
   );
   await expect(tigerNuts).toHaveAttribute("target", "_blank");
   await expect(tigerNuts).toHaveAttribute("rel", "noopener noreferrer");
+  const dates = ingredients.getByRole("link", {
+    name: "Search Google for Nigerian dates (opens in a new tab)",
+    exact: true,
+  });
+  await expect(dates).toHaveAttribute(
+    "href",
+    "https://www.google.com/search?q=Nigerian%20dates%20ingredient",
+  );
+  await expect(dates).toHaveAttribute("target", "_blank");
+  await expect(dates.locator("svg")).toBeVisible();
   await expect(
     ingredients.getByRole("link", { name: /Search Google for water/ }),
   ).toHaveCount(0);

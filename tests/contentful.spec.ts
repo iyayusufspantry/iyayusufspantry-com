@@ -20,6 +20,46 @@ function resources() {
   };
 }
 
+test("merch previews use published photos and sizes without creating sale products or restoring unpublished previews", () => {
+  const { entries, assets } = resources();
+  const preview: CmsResource = {
+    sys: {
+      id: "test-merch",
+      contentType: { sys: { id: "pantryMerchPreview" } },
+    },
+    fields: {
+      slug: "test-shirt",
+      name: "Test shirt",
+      description: "Supplied design",
+      sizes: ["Medium", "XX-large"],
+      photos: [
+        { sys: { id: "unpublished-photo" } },
+        { sys: { id: assets[0].sys.id } },
+      ],
+    },
+  };
+  const before = mapContent(entries, assets);
+  const after = mapContent([...entries, preview], assets);
+  expect(after.merchPreviews[0]).toMatchObject({
+    slug: "test-shirt",
+    sizes: ["Medium", "XX-large"],
+  });
+  expect(after.merchPreviews[0].photos).toHaveLength(1);
+  expect(after.products).toEqual(before.products);
+  expect(after.variants).toEqual(before.variants);
+  expect(mapContent(entries, assets).merchPreviews).toEqual([]);
+  const withoutPublishedPhoto = {
+    ...preview,
+    fields: {
+      ...preview.fields,
+      photos: [{ sys: { id: "unpublished-photo" } }],
+    },
+  };
+  expect(
+    mapContent([...entries, withoutPublishedPhoto], assets).merchPreviews,
+  ).toEqual([]);
+});
+
 test("highlight covers follow CMS selections and tolerate an unpublished optional cover", () => {
   const { entries, assets } = resources();
   const settings = entries.find(

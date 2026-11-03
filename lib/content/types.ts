@@ -24,6 +24,13 @@ export type Policy = {
   sections: [string, string][];
 };
 export type SiteContent = {
+  merchPreviews: {
+    slug: string;
+    name: string;
+    description: string;
+    sizes: string[];
+    photos: BrandPhoto[];
+  }[];
   products: Product[];
   variants: Variant[];
   categories: Category[];
