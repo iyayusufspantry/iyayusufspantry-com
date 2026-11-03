@@ -23,6 +23,7 @@ export type ContactEmailProps = PreviewProps & {
   reference: string;
 };
 export type OrderEmailProps = PreviewProps & {
+  live?: boolean;
   reference: string;
   subtotalCents: number;
   currency: string;
@@ -199,6 +200,7 @@ export function ContactEmail({
 }
 
 export function SandboxOrderEmail({
+  live = false,
   reference,
   subtotalCents,
   currency,
@@ -207,15 +209,26 @@ export function SandboxOrderEmail({
   const amount = `${(subtotalCents / 100).toFixed(2)} ${currency.toUpperCase()}`;
   return (
     <EmailLayout
-      preview="Your pantry sandbox payment is confirmed. No real charge or shipment."
-      eyebrow="SANDBOX ORDER CONFIRMATION"
-      title="Your test payment is confirmed."
-      reason="You received this receipt for a sandbox checkout using this email address."
+      preview={
+        live
+          ? "Your pantry payment is confirmed. Thank you for your order."
+          : "Your pantry sandbox payment is confirmed. No real charge or shipment."
+      }
+      eyebrow={live ? "ORDER CONFIRMATION" : "SANDBOX ORDER CONFIRMATION"}
+      title={
+        live ? "Your payment is confirmed." : "Your test payment is confirmed."
+      }
+      reason={
+        live
+          ? "You received this confirmation for an order placed using this email address."
+          : "You received this receipt for a sandbox checkout using this email address."
+      }
       previewOnly={previewOnly}
     >
       <Text style={paragraph}>
-        Thank you for trying Iya Yusuf&apos;s Pantry. Your sandbox checkout has
-        been completed successfully.
+        {live
+          ? "Thank you for shopping with Iya Yusuf's Pantry. Your payment has been received and your order is being prepared."
+          : "Thank you for trying Iya Yusuf's Pantry. Your sandbox checkout has been completed successfully."}
       </Text>
       <Section style={panel}>
         <Text
@@ -227,7 +240,7 @@ export function SandboxOrderEmail({
             margin: "0 0 10px",
           }}
         >
-          TEST PAYMENT CONFIRMED
+          {live ? "PAYMENT CONFIRMED" : "TEST PAYMENT CONFIRMED"}
         </Text>
         <Text
           style={{
@@ -241,7 +254,9 @@ export function SandboxOrderEmail({
           {amount}
         </Text>
         <Text style={{ ...small, margin: "0 0 20px" }}>
-          Item subtotal · Sandbox checkout
+          {live
+            ? "Order total, including shipping and tax"
+            : "Item subtotal · Sandbox checkout"}
         </Text>
         <Text style={{ ...small, margin: "0", wordBreak: "break-all" }}>
           Order reference
@@ -250,10 +265,14 @@ export function SandboxOrderEmail({
         </Text>
       </Section>
       <Text style={{ ...paragraph, color: emailBrand.ink, fontWeight: "bold" }}>
-        This is a test order.
+        {live
+          ? "Keep your order reference for any questions."
+          : "This is a test order."}
       </Text>
       <Text style={paragraph}>
-        No real payment was collected and no goods will be shipped.
+        {live
+          ? "Contact the pantry if you need help with your order."
+          : "No real payment was collected and no goods will be shipped."}
       </Text>
       <EmailButton href={`${emailBrand.origin}/shop`}>
         Back to the pantry

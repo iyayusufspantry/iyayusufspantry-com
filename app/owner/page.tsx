@@ -4,6 +4,7 @@ import { OperationError } from "@/lib/operations/validation";
 import { OwnerDashboard } from "@/components/owner-dashboard";
 import { OwnerStories } from "@/components/owner-stories";
 import { storiesEnabled } from "@/lib/operations/runtime";
+import { paymentMode } from "@/lib/payments/config";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -29,7 +30,7 @@ export default async function Page() {
   }
   return (
     <>
-      <OwnerDashboard />
+      <OwnerDashboard live={paymentMode() === "live"} />
       {storiesEnabled() && <OwnerStories />}
     </>
   );

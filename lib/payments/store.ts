@@ -33,12 +33,19 @@ export const checkoutEvents = new Set([
 // A separate schema keeps all sandbox orders and sample inventory out of live data.
 export class PaymentStore {
   private readonly schema: string;
+  readonly live: boolean;
+  readonly integration: string;
   constructor(
     private readonly pool: Pool,
     schema = "simbiat_checkout_test",
+    options: { live?: boolean } = {},
   ) {
     if (!/^[a-z_][a-z0-9_]*$/.test(schema)) throw new Error("Invalid schema");
     this.schema = schema;
+    this.live = options.live === true;
+    if (this.live && schema === "simbiat_checkout_test")
+      throw new Error("Live orders require separate inventory");
+    this.integration = this.live ? "simbiat-live-v1" : "simbiat-sandbox-v1";
   }
   private async transaction<T>(work: (db: PoolClient) => Promise<T>) {
     const db = await this.pool.connect();
@@ -88,23 +95,31 @@ export class PaymentStore {
       const available: Record<string, number> = {};
       const seed = sampleStock(variants);
       for (const item of items) {
-        if (!seed[item.variantId])
+        if (!variants.some((v) => v.id === item.variantId && v.active))
           throw new CommerceError(
             "UNAVAILABLE_VARIANT",
             "An item is no longer available.",
           );
         // Seed each variant once, only in this sandbox schema. Never reset sold stock.
-        await db.query(
-          `INSERT INTO ${this.schema}.stock (variant_id, on_hand) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
-          [item.variantId, seed[item.variantId].onHand],
-        );
+        if (!this.live)
+          await db.query(
+            `INSERT INTO ${this.schema}.stock (variant_id, on_hand) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+            [item.variantId, seed[item.variantId].onHand],
+          );
         const stock = await db.query(
           `SELECT on_hand - reserved AS available FROM ${this.schema}.stock WHERE variant_id = $1 FOR UPDATE`,
           [item.variantId],
         );
-        available[item.variantId] = stock.rows[0].available;
+        available[item.variantId] = stock.rows[0]?.available ?? 0;
       }
       const quote = quoteCart(items, variants, available);
+      const shippingCents = this.live && quote.subtotalCents < 6000 ? 699 : 0;
+      if (this.live)
+        Object.assign(quote, {
+          shippingCents,
+          taxCents: 0,
+          totalCents: quote.subtotalCents + shippingCents,
+        });
       if (quote.subtotalCents < 50)
         throw new CommerceError(
           "MINIMUM_TOTAL",
@@ -115,14 +130,15 @@ export class PaymentStore {
         adaptive_pricing: { enabled: false },
         payment_method_types: ["card"],
         client_reference_id: id,
-        metadata: { order_id: id, integration: "simbiat-sandbox-v1" },
+        metadata: { order_id: id, integration: this.integration },
         payment_intent_data: {
-          metadata: { order_id: id, integration: "simbiat-sandbox-v1" },
+          metadata: { order_id: id, integration: this.integration },
         },
         line_items: quote.lines.map((line) => ({
           quantity: line.quantity,
           price_data: {
             currency: "usd",
+            ...(this.live ? { tax_behavior: "exclusive" as const } : {}),
             unit_amount: line.unitPriceCents,
             product_data: {
               name: `${names[line.productSlug] || line.productSlug} (${variants.find((v) => v.id === line.variantId)?.size})`,
@@ -130,11 +146,29 @@ export class PaymentStore {
           },
         })),
         shipping_address_collection: { allowed_countries: ["US"] },
-        automatic_tax: { enabled: false },
+        automatic_tax: { enabled: this.live },
+        ...(this.live
+          ? {
+              billing_address_collection: "required" as const,
+              shipping_options: [
+                {
+                  shipping_rate_data: {
+                    display_name: shippingCents
+                      ? "Standard shipping"
+                      : "Free standard shipping",
+                    type: "fixed_amount" as const,
+                    fixed_amount: { amount: shippingCents, currency: "usd" },
+                    tax_behavior: "exclusive" as const,
+                  },
+                },
+              ],
+            }
+          : {}),
         custom_text: {
           submit: {
-            message:
-              "Sandbox test only. No goods will be shipped. Shipping and tax are $0 for this test.",
+            message: this.live
+              ? "US delivery. Your final shipping and tax are shown before payment."
+              : "Sandbox test only. No goods will be shipped. Shipping and tax are $0 for this test.",
           },
         },
         expires_at: Math.floor(Date.now() / 1000) + 3600,
@@ -155,7 +189,11 @@ export class PaymentStore {
   }
 
   async attachSession(orderId: string, session: Stripe.Checkout.Session) {
-    if (session.livemode || session.metadata?.order_id !== orderId)
+    if (
+      session.livemode !== this.live ||
+      session.metadata?.order_id !== orderId ||
+      session.metadata?.integration !== this.integration
+    )
       throw new Error("Session mismatch");
     await this.pool.query(
       `UPDATE ${this.schema}.orders SET session_id = $2, checkout_url = $3, updated_at = now() WHERE id = $1 AND (session_id IS NULL OR session_id = $2)`,
@@ -187,17 +225,16 @@ export class PaymentStore {
 
   async processEvent(event: Stripe.Event) {
     if (!checkoutEvents.has(event.type)) return "ignored";
-    if (event.livemode) throw new Error("Live events are disabled");
+    if (event.livemode !== this.live) throw new Error("Payment mode mismatch");
     const session = event.data.object as Stripe.Checkout.Session;
     // A Stripe account may be shared with other integrations.
-    if (session.metadata?.integration !== "simbiat-sandbox-v1")
-      return "ignored";
+    if (session.metadata?.integration !== this.integration) return "ignored";
     if (
-      session.livemode ||
+      session.livemode !== this.live ||
       session.mode !== "payment" ||
-      !session.id.startsWith("cs_test_")
+      !session.id.startsWith(this.live ? "cs_live_" : "cs_test_")
     )
-      throw new Error("Invalid sandbox session");
+      throw new Error("Invalid checkout session");
     const orderId = session.metadata.order_id;
     if (!orderId || session.client_reference_id !== orderId)
       throw new Error("Invalid order reference");
@@ -227,14 +264,26 @@ export class PaymentStore {
           typeof session.payment_intent === "string"
             ? session.payment_intent
             : session.payment_intent?.id;
+        const shipping = session.total_details?.amount_shipping ?? 0;
+        const tax = session.total_details?.amount_tax ?? 0;
+        const expectedShipping = this.live ? order.quote.shippingCents : 0;
+        const total = order.quote.subtotalCents + shipping + tax;
         if (
           !paymentId ||
           session.amount_subtotal !== order.quote.subtotalCents ||
-          session.amount_total !== order.quote.subtotalCents ||
+          session.amount_total !== total ||
+          !Number.isSafeInteger(total) ||
+          !Number.isSafeInteger(shipping) ||
+          shipping < 0 ||
+          !Number.isSafeInteger(tax) ||
+          tax < 0 ||
+          shipping !== expectedShipping ||
           session.currency?.toUpperCase() !== order.quote.currency ||
           (session.total_details?.amount_discount ?? 0) !== 0 ||
-          (session.total_details?.amount_tax ?? 0) !== 0 ||
-          (session.total_details?.amount_shipping ?? 0) !== 0
+          (!this.live && tax !== 0) ||
+          (this.live &&
+            (!session.automatic_tax?.enabled ||
+              session.automatic_tax.status !== "complete"))
         )
           throw new Error("Payment amount or currency mismatch");
         if (order.payment_id && order.payment_id !== paymentId)
@@ -250,7 +299,7 @@ export class PaymentStore {
             );
         }
         await db.query(
-          `UPDATE ${this.schema}.orders SET status = $2, payment_id = $3, customer_details = $4, shipping_details = $5, updated_at = now() WHERE id = $1`,
+          `UPDATE ${this.schema}.orders SET status = $2, payment_id = $3, customer_details = $4, shipping_details = $5, quote = $6, updated_at = now() WHERE id = $1`,
           [
             order.id,
             order.status === "cancelled" ? "review" : "paid",
@@ -258,6 +307,16 @@ export class PaymentStore {
             JSON.stringify(session.customer_details),
             JSON.stringify(
               session.collected_information?.shipping_details ?? null,
+            ),
+            JSON.stringify(
+              this.live
+                ? {
+                    ...order.quote,
+                    shippingCents: shipping,
+                    taxCents: tax,
+                    totalCents: total,
+                  }
+                : order.quote,
             ),
           ],
         );

@@ -11,12 +11,22 @@ import { findVariant } from "@/lib/commerce/catalog";
 import { selectCartSubtotal } from "@/lib/cart-store";
 import { money } from "@/data/products";
 
-export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
+export function StripeCheckout({
+  cancelled,
+  live = false,
+}: {
+  cancelled: boolean;
+  live?: boolean;
+}) {
   const { variants, products } = useContent();
   const items = useCart((state) => state.items);
   const ready = useCart((state) => state.ready);
   const subtotal = useCart(selectCartSubtotal);
   const loadDemo = useLoadDemoCart();
+  const shipping = live && subtotal < 60 ? 6.99 : 0;
+  const requestStorageKey = live
+    ? "simbiat-live-checkout-request"
+    : "simbiat-checkout-request";
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const inFlight = useRef(false);
@@ -40,7 +50,7 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
       if (!request.current) {
         try {
           request.current = JSON.parse(
-            sessionStorage.getItem("simbiat-checkout-request") || "null",
+            sessionStorage.getItem(requestStorageKey) || "null",
           );
         } catch {
           /* Storage is optional. */
@@ -50,7 +60,7 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
         request.current = { fingerprint, id: crypto.randomUUID() };
       try {
         sessionStorage.setItem(
-          "simbiat-checkout-request",
+          requestStorageKey,
           JSON.stringify(request.current),
         );
       } catch {
@@ -70,7 +80,7 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
         if (response.status === 409) {
           request.current = null;
           try {
-            sessionStorage.removeItem("simbiat-checkout-request");
+            sessionStorage.removeItem(requestStorageKey);
           } catch {
             /* Storage is optional. */
           }
@@ -101,11 +111,17 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
     <div className="site-container page-bottom">
       <PageHeading
         eyebrow="Checkout"
-        title="Try a test checkout"
-        description="Complete a sandbox purchase with Stripe. No real money will be charged or goods shipped."
+        title={live ? "Checkout" : "Try a test checkout"}
+        description={
+          live
+            ? "Secure payment for your pantry order. US delivery only."
+            : "Complete a sandbox purchase with Stripe. No real money will be charged or goods shipped."
+        }
       />
       <p className="notice mb-7">
-        Sandbox only · Sample inventory · Test shipping $0.00 · Test tax $0.00
+        {live
+          ? "Standard shipping $6.99. Free shipping on orders of $60 or more. Tax is calculated at Stripe checkout."
+          : "Sandbox only - Sample inventory - Test shipping $0.00 - Test tax $0.00"}
       </p>
       {cancelled && (
         <p className="notice mb-7" role="status">
@@ -120,19 +136,23 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
             <LockKeyhole size={24} /> Secure checkout with Stripe
           </h2>
           <p className="mt-4">
-            Enter your email, US delivery address, and test card on Stripe’s
-            payment page.
+            {live
+              ? "Enter your email, US delivery address and payment details on Stripe's secure payment page."
+              : "Enter your email, US delivery address, and test card on Stripe's payment page."}
           </p>
-          <p className="mt-4">
-            For a successful test, use card <strong>4242 4242 4242 4242</strong>
-            , any future expiry date, and any three-digit CVC. Use fictional
-            contact and delivery details.
-          </p>
+          {!live && (
+            <p className="mt-4">
+              For a successful test, use card{" "}
+              <strong>4242 4242 4242 4242</strong>, any future expiry date, and
+              any three-digit CVC. Use fictional contact and delivery details.
+            </p>
+          )}
           <p className="fine-print mt-4">
-            Test orders and delivery details are saved so we can verify the
-            checkout. Confirmation emails are not enabled yet.
+            {live
+              ? "Your contact and delivery details are saved to process your order. A confirmation email follows verified payment."
+              : "Test orders and delivery details are saved so we can verify the checkout. Confirmation emails are not enabled yet."}
           </p>
-          {!items.length && ready && (
+          {!live && !items.length && ready && (
             <Button className="mt-6" variant="outline" onClick={loadDemo}>
               Load sample cart
             </Button>
@@ -142,7 +162,11 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
             disabled={!ready || !items.length || busy}
             onClick={checkout}
           >
-            {busy ? "Opening Stripe…" : "Continue to Stripe — test payment"}
+            {busy
+              ? "Opening Stripe…"
+              : live
+                ? "Continue to secure payment"
+                : "Continue to Stripe — test payment"}
             <ArrowRight />
           </Button>
           {error && (
@@ -155,7 +179,7 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
           </Link>
         </section>
         <aside className="order-summary">
-          <h2>Your test order</h2>
+          <h2>{live ? "Your order" : "Your test order"}</h2>
           <div className="summary-items">
             {items.map((item) => {
               const variant = findVariant(
@@ -188,17 +212,17 @@ export function StripeCheckout({ cancelled }: { cancelled: boolean }) {
               <dd>{money(subtotal)}</dd>
             </div>
             <div>
-              <dt>Test shipping</dt>
-              <dd>$0.00</dd>
+              <dt>{live ? "Shipping" : "Test shipping"}</dt>
+              <dd>{money(shipping)}</dd>
             </div>
             <div>
-              <dt>Test tax</dt>
-              <dd>$0.00</dd>
+              <dt>{live ? "Tax" : "Test tax"}</dt>
+              <dd>{live ? "Calculated at checkout" : "$0.00"}</dd>
             </div>
             <div className="summary-total">
-              <dt>Test total</dt>
+              <dt>{live ? "Before tax" : "Test total"}</dt>
               <dd>
-                {money(subtotal)} <small>USD</small>
+                {money(subtotal + shipping)} <small>USD</small>
               </dd>
             </div>
           </dl>
@@ -217,6 +241,7 @@ type OrderStatus = {
   totalCents: number;
 };
 export function StripeConfirmation({ sessionId }: { sessionId: string }) {
+  const live = sessionId.startsWith("cs_live_");
   const [order, setOrder] = useState<OrderStatus | null>(null);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -239,7 +264,11 @@ export function StripeConfirmation({ sessionId }: { sessionId: string }) {
         setError("");
         if (result.status !== "pending") {
           try {
-            sessionStorage.removeItem("simbiat-checkout-request");
+            sessionStorage.removeItem(
+              live
+                ? "simbiat-live-checkout-request"
+                : "simbiat-checkout-request",
+            );
           } catch {
             /* Storage is optional. */
           }
@@ -263,22 +292,32 @@ export function StripeConfirmation({ sessionId }: { sessionId: string }) {
       abort.abort();
       clearTimeout(timer);
     };
-  }, [sessionId, attempt]);
+  }, [sessionId, attempt, live]);
   const title =
     order?.status === "paid"
-      ? "Test payment confirmed"
+      ? live
+        ? "Payment confirmed"
+        : "Test payment confirmed"
       : order?.status === "cancelled"
-        ? "Test checkout ended"
+        ? live
+          ? "Checkout ended"
+          : "Test checkout ended"
         : order?.status === "review"
-          ? "Test payment needs review"
-          : "Confirming your test payment";
+          ? live
+            ? "Payment needs review"
+            : "Test payment needs review"
+          : live
+            ? "Confirming your payment"
+            : "Confirming your test payment";
   return (
     <div className="confirmation-page site-container">
-      <span className="eyebrow">Stripe sandbox</span>
+      <span className="eyebrow">{live ? "Your order" : "Stripe sandbox"}</span>
       <h1>{title}</h1>
       <div className="notice mt-6" role="status">
         {order?.status === "paid"
-          ? "Your test order is saved and sample stock has been updated. No real money was charged."
+          ? live
+            ? "Thank you. Your payment is confirmed and your order has been saved."
+            : "Your test order is saved and sample stock has been updated. No real money was charged."
           : order?.status === "cancelled"
             ? "This checkout expired or its payment failed. The reserved stock has been released."
             : order?.status === "review"
@@ -289,7 +328,8 @@ export function StripeConfirmation({ sessionId }: { sessionId: string }) {
         <section className="confirmation-card">
           <p>Order reference: {order.reference}</p>
           <p className="mt-4">
-            Test total: <strong>{money(order.totalCents / 100)} USD</strong>
+            {live ? "Order total" : "Test total"}:{" "}
+            <strong>{money(order.totalCents / 100)} USD</strong>
           </p>
         </section>
       )}
@@ -307,8 +347,9 @@ export function StripeConfirmation({ sessionId }: { sessionId: string }) {
         </Button>
       )}
       <p className="fine-print mt-6">
-        This is a sandbox order. No goods will be shipped and no confirmation
-        email is sent.
+        {live
+          ? "Keep your order reference. Contact the pantry if you need help with your order."
+          : "This is a sandbox order. No goods will be shipped and no confirmation email is sent."}
       </p>
       <Link className="text-link mt-6" href="/shop">
         Continue shopping <ArrowRight size={16} />

@@ -35,6 +35,9 @@ export type Quote = {
   currency: "USD";
   lines: QuoteLine[];
   subtotalCents: number;
+  shippingCents?: number;
+  taxCents?: number;
+  totalCents?: number;
 };
 
 export class CommerceError extends Error {
@@ -110,7 +113,7 @@ export function quoteCart(
     if (!Number.isSafeInteger(stock) || stock < quantity)
       throw new CommerceError(
         "INSUFFICIENT_STOCK",
-        `Not enough sample stock for ${variant.productSlug} (${variant.size}, ${variant.dietary}).`,
+        `Not enough stock for ${variant.productSlug} (${variant.size}, ${variant.dietary}).`,
       );
     const lineTotalCents = variant.priceCents * quantity;
     if (!Number.isSafeInteger(lineTotalCents))

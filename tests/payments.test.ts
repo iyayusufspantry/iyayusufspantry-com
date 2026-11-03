@@ -8,7 +8,7 @@ import Stripe from "stripe";
 import { PaymentStore } from "../lib/payments/store";
 import { reconcilePayments } from "../lib/payments/reconcile";
 import { receiveWebhook } from "../lib/payments/http";
-import { paymentConfig } from "../lib/payments/config";
+import { paymentConfig, checkoutEnabled } from "../lib/payments/config";
 import type { Variant } from "../lib/commerce/catalog";
 
 loadEnvConfig(process.cwd());
@@ -19,6 +19,8 @@ const pool = new Pool({
   max: 4,
 });
 const store = new PaymentStore(pool, schema);
+const liveSchema = `${schema}_live`;
+const liveStore = new PaymentStore(pool, liveSchema, { live: true });
 const stripe = new Stripe("sk_test_unit_test_only");
 const secret = "whsec_unit_test_only";
 const variant: Variant = {
@@ -94,6 +96,7 @@ before(async () => {
   );
   const sql = await readFile("lib/payments/schema.sql", "utf8");
   await pool.query(sql.replaceAll("simbiat_checkout_test", schema));
+  await pool.query(sql.replaceAll("simbiat_checkout_test", liveSchema));
 });
 
 test("reconciliation rotates unresolved orders and recovers an expired reservation", async () => {
@@ -139,6 +142,7 @@ after(async () => {
   // Only this run's randomly named test schema is removed.
   assert.match(schema, /^payment_test_[a-f0-9]{32}$/);
   await pool.query(`DROP SCHEMA IF EXISTS ${schema} CASCADE`);
+  await pool.query(`DROP SCHEMA IF EXISTS ${liveSchema} CASCADE`);
   await pool.end();
 });
 
@@ -150,6 +154,256 @@ test("live keys cannot activate sandbox checkout", () => {
   } finally {
     process.env.STRIPE_SECRET_KEY = previous;
   }
+});
+
+async function liveReservation(priceCents = 800, quantity = 2) {
+  const v = { ...variant, id: randomUUID(), priceCents };
+  await pool.query(
+    `INSERT INTO ${liveSchema}.stock(variant_id,on_hand) VALUES($1,10)`,
+    [v.id],
+  );
+  const order = await liveStore.reserve(
+    randomUUID(),
+    [{ variantId: v.id, quantity }],
+    [v],
+    "https://pantry.example",
+    {},
+  );
+  return { order, variant: v };
+}
+function liveEvent(
+  order: PaymentOrderLike,
+  overrides: Record<string, unknown> = {},
+) {
+  const shipping = order.quote.shippingCents ?? 0;
+  return {
+    ...event(order, "checkout.session.completed", {
+      id: `cs_live_${order.id.replaceAll("-", "")}`,
+      livemode: true,
+      metadata: { order_id: order.id, integration: "simbiat-live-v1" },
+      amount_total: order.quote.subtotalCents + shipping + 179,
+      total_details: {
+        amount_shipping: shipping,
+        amount_tax: 179,
+        amount_discount: 0,
+      },
+      automatic_tax: { enabled: true, status: "complete" },
+      ...overrides,
+    }),
+    livemode: true,
+  } as Stripe.Event;
+}
+type PaymentOrderLike = Awaited<ReturnType<typeof reserve>>;
+
+test("live checkout requires explicit mode and tax readiness, and keeps its credentials separate", () => {
+  const names = [
+    "STRIPE_PAYMENT_MODE",
+    "STRIPE_API_KEY",
+    "STRIPE_LIVE_WEBHOOK_SECRET",
+    "STRIPE_CHECKOUT_ENABLED",
+    "STRIPE_LIVE_TAX_READY",
+    "APP_URL",
+  ] as const;
+  const saved = Object.fromEntries(names.map((key) => [key, process.env[key]]));
+  try {
+    Object.assign(process.env, {
+      STRIPE_PAYMENT_MODE: "live",
+      STRIPE_API_KEY: "sk_live_unit_only",
+      STRIPE_LIVE_WEBHOOK_SECRET: secret,
+      STRIPE_CHECKOUT_ENABLED: "true",
+      APP_URL: "https://pantry.example",
+    });
+    delete process.env.STRIPE_LIVE_TAX_READY;
+    assert.equal(checkoutEnabled(), false);
+    assert.equal(paymentConfig().schema, "simbiat_checkout_live");
+    assert.equal(paymentConfig().key, "sk_live_unit_only");
+    process.env.STRIPE_LIVE_TAX_READY = "true";
+    assert.equal(checkoutEnabled(), true);
+    process.env.STRIPE_API_KEY = "sk_test_wrong_mode";
+    assert.equal(checkoutEnabled(), false);
+    assert.throws(
+      () => new PaymentStore(pool, "simbiat_checkout_test", { live: true }),
+      /separate/,
+    );
+  } finally {
+    for (const key of names) {
+      if (saved[key] === undefined) delete process.env[key];
+      else process.env[key] = saved[key];
+    }
+  }
+});
+
+test("live checkout never seeds sample stock and calculates approved shipping server-side", async () => {
+  const [v] = catalog();
+  await assert.rejects(
+    liveStore.reserve(
+      randomUUID(),
+      [{ variantId: v.id, quantity: 1 }],
+      [v],
+      "https://pantry.example",
+      {},
+    ),
+    /Not enough stock/,
+  );
+  assert.equal(
+    (
+      await pool.query(
+        `SELECT * FROM ${liveSchema}.stock WHERE variant_id=$1`,
+        [v.id],
+      )
+    ).rowCount,
+    0,
+  );
+  const { order } = await liveReservation();
+  assert.equal(order.quote.shippingCents, 699);
+  assert.equal(order.stripe_params.automatic_tax?.enabled, true);
+  assert.equal(order.stripe_params.metadata?.integration, "simbiat-live-v1");
+  const free = await liveReservation(3000, 2);
+  assert.equal(free.order.quote.shippingCents, 0);
+  assert.equal(
+    free.order.stripe_params.shipping_options?.[0].shipping_rate_data
+      ?.fixed_amount?.amount,
+    0,
+  );
+});
+
+test("live payment records shipping and tax exactly once without touching sandbox stock", async () => {
+  const { order, variant: v } = await liveReservation();
+  await pool.query(
+    `INSERT INTO ${schema}.stock(variant_id,on_hand) VALUES($1,99)`,
+    [v.id],
+  );
+  const paid = liveEvent(order);
+  const replies = await Promise.all(
+    [1, 2].map(() =>
+      receiveWebhook(
+        signedRequest(JSON.stringify(paid)),
+        stripe,
+        secret,
+        (e) => liveStore.processEvent(e),
+        true,
+      ),
+    ),
+  );
+  assert.deepEqual(
+    replies.map((r) => r.status),
+    [200, 200],
+  );
+  const saved = await liveStore.findSession(
+    (paid.data.object as Stripe.Checkout.Session).id,
+  );
+  assert.equal(saved.status, "paid");
+  assert.equal(saved.quote.totalCents, 2478);
+  assert.equal(saved.quote.taxCents, 179);
+  assert.equal(saved.quote.shippingCents, 699);
+  assert.equal(
+    (
+      await pool.query(
+        `SELECT on_hand FROM ${liveSchema}.stock WHERE variant_id=$1`,
+        [v.id],
+      )
+    ).rows[0].on_hand,
+    8,
+  );
+  assert.equal(
+    (
+      await pool.query(
+        `SELECT on_hand FROM ${schema}.stock WHERE variant_id=$1`,
+        [v.id],
+      )
+    ).rows[0].on_hand,
+    99,
+  );
+  await assert.rejects(store.processEvent(paid), /mode mismatch/);
+});
+
+test("live webhook rejects wrong shipping, incomplete tax, discounts and mismatched totals", async () => {
+  const { order } = await liveReservation();
+  for (const override of [
+    { amount_total: 1 },
+    {
+      amount_total: 1779,
+      total_details: {
+        amount_shipping: 0,
+        amount_tax: 179,
+        amount_discount: 0,
+      },
+    },
+    { automatic_tax: { enabled: true, status: "requires_location_inputs" } },
+    {
+      total_details: {
+        amount_shipping: 699,
+        amount_tax: -1,
+        amount_discount: 0,
+      },
+      amount_total: 2298,
+    },
+    {
+      total_details: {
+        amount_shipping: 699,
+        amount_tax: 179,
+        amount_discount: 10,
+      },
+    },
+    { currency: "eur" },
+  ])
+    await assert.rejects(
+      liveStore.processEvent(liveEvent(order, override)),
+      /amount or currency mismatch/,
+    );
+  assert.equal(
+    (
+      await pool.query(`SELECT status FROM ${liveSchema}.orders WHERE id=$1`, [
+        order.id,
+      ])
+    ).rows[0].status,
+    "pending",
+  );
+  const payload = JSON.stringify(liveEvent(order));
+  assert.equal(
+    (
+      await receiveWebhook(signedRequest(payload), stripe, secret, (e) =>
+        liveStore.processEvent(e),
+      )
+    ).status,
+    400,
+  );
+});
+
+test("live expiration releases only its reservation and late payment requires review", async () => {
+  const { order, variant: v } = await liveReservation();
+  const expired = liveEvent(order, {
+    payment_status: "unpaid",
+    status: "expired",
+  });
+  expired.type = "checkout.session.expired";
+  await liveStore.processEvent(expired);
+  await liveStore.processEvent(expired);
+  const row = (
+    await pool.query(
+      `SELECT on_hand,reserved FROM ${liveSchema}.stock WHERE variant_id=$1`,
+      [v.id],
+    )
+  ).rows[0];
+  assert.deepEqual(row, { on_hand: 10, reserved: 0 });
+  await liveStore.processEvent(liveEvent(order));
+  assert.equal(
+    (
+      await liveStore.findSession(
+        (expired.data.object as Stripe.Checkout.Session).id,
+      )
+    ).status,
+    "review",
+  );
+  assert.deepEqual(
+    (
+      await pool.query(
+        `SELECT on_hand,reserved FROM ${liveSchema}.stock WHERE variant_id=$1`,
+        [v.id],
+      )
+    ).rows[0],
+    row,
+  );
 });
 test("webhook rejects missing, tampered, stale and oversized signatures before processing", async () => {
   let calls = 0;

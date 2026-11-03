@@ -5,7 +5,7 @@ import { queueOrderNotification } from "@/lib/payments/notifications";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
   try {
-    const { stripe, config, store } = payments();
+    const { stripe, config, store } = payments("test");
     return receiveWebhook(
       request,
       stripe,

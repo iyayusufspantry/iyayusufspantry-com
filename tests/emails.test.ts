@@ -60,3 +60,21 @@ test("sandbox receipt keeps the test disclaimer, correct cents, and order refere
     assert.match(body, /Item subtotal/);
   }
 });
+
+test("live receipt states the full paid total without a sandbox disclaimer", async () => {
+  const content = await sandboxOrderEmail({
+    reference: "live-order-123",
+    subtotalCents: 2478,
+    currency: "USD",
+    live: true,
+  });
+  for (const body of [content.html, content.text]) {
+    assert.match(body, /24\.78 USD/);
+    assert.match(body, /live-order-123/);
+    assert.match(body, /Order total, including shipping and tax/);
+    assert.doesNotMatch(
+      body,
+      /sandbox|test order|No real payment|No goods will be shipped/i,
+    );
+  }
+});

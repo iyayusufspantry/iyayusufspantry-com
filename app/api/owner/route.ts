@@ -14,13 +14,13 @@ export async function GET(request: Request) {
     const page = Number(new URL(request.url).searchParams.get("page") || 0);
     if (!Number.isSafeInteger(page) || page < 0 || page > 10000)
       throw new OperationError(400, "Invalid page.");
-    const { pool } = payments();
+    const { pool, config } = payments();
     const [checkout, communication, content] = await Promise.all([
-      new OwnerStore(pool).overview(page),
+      new OwnerStore(pool, config.schema).overview(page),
       operations().overview(),
       getContent(),
     ]);
-    const samples = sampleStock(content.variants);
+    const samples = config.live ? {} : sampleStock(content.variants);
     const stock = content.variants
       .filter((v) => v.active)
       .map((v) => {
@@ -33,7 +33,13 @@ export async function GET(request: Request) {
           initialized: !!existing,
         };
       });
-    return json({ ...checkout, stock, ...communication, page });
+    return json({
+      ...checkout,
+      stock,
+      ...communication,
+      page,
+      mode: config.mode,
+    });
   } catch (error) {
     return operationFailure(error);
   }
@@ -45,8 +51,8 @@ export async function POST(request: Request) {
     if (body.action === "handle-message") {
       await operations().handleMessage(requestId(body.id));
     } else {
-      const { pool } = payments();
-      const store = new OwnerStore(pool);
+      const { pool, config } = payments();
+      const store = new OwnerStore(pool, config.schema);
       if (body.action === "fulfill")
         await store.fulfill(requestId(body.id), actor);
       else if (body.action === "stock") {

@@ -32,6 +32,7 @@ export async function receiveWebhook(
   stripe: Stripe,
   secret: string,
   processEvent: (event: Stripe.Event) => Promise<string>,
+  live = false,
 ) {
   const signature = request.headers.get("stripe-signature");
   if (!signature)
@@ -52,9 +53,9 @@ export async function receiveWebhook(
       },
     );
   }
-  if (event.livemode)
+  if (event.livemode !== live)
     return Response.json(
-      { error: "Only sandbox events are accepted" },
+      { error: "Payment mode mismatch" },
       { status: 400, headers: privateHeaders },
     );
   try {

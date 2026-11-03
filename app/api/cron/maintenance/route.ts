@@ -1,5 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { payments } from "@/lib/payments/runtime";
+import { paymentConfig } from "@/lib/payments/config";
 import { reconcilePayments } from "@/lib/payments/reconcile";
 import {
   queueOrderNotification,
@@ -22,13 +23,30 @@ export async function GET(request: Request) {
   )
     return json({ error: "Unauthorized" }, 401);
   try {
-    const { stripe, store } = payments();
-    const reconciliation = await reconcilePayments(
-      stripe,
-      store,
-      (event) => queueOrderNotification(event, store),
-      10,
-    );
+    const reconciliation = {
+      checked: 0,
+      updated: 0,
+      manualReviewRequired: 0,
+      failed: 0,
+    };
+    for (const mode of ["test", "live"] as const) {
+      try {
+        paymentConfig(mode);
+      } catch {
+        continue;
+      }
+      const { stripe, store } = payments(mode);
+      const result = await reconcilePayments(
+        stripe,
+        store,
+        (event) => queueOrderNotification(event, store),
+        10,
+      );
+      for (const key of Object.keys(
+        reconciliation,
+      ) as (keyof typeof reconciliation)[])
+        reconciliation[key] += result[key];
+    }
     const ops = operations();
     await recoverOrderNotifications();
     const mail = mailConfigured()

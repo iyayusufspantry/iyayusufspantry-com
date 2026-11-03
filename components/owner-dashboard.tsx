@@ -56,13 +56,13 @@ type Overview = {
   }[];
 };
 
-const sections = [
+const baseSections = [
   { id: "orders", label: "Test orders", icon: ShoppingBag },
   { id: "stock", label: "Sandbox stock", icon: Package },
   { id: "inbox", label: "Contact inbox", icon: Inbox },
   { id: "email", label: "Newsletter & email", icon: Mail },
 ] as const;
-type Section = (typeof sections)[number]["id"];
+type Section = (typeof baseSections)[number]["id"];
 
 function StatusBadge({ status }: { status: string }) {
   const tone = ["paid", "fulfilled", "confirmed", "sent", "handled"].includes(
@@ -98,7 +98,16 @@ function CountList({ counts, empty }: { counts: Count[]; empty: string }) {
   );
 }
 
-export function OwnerDashboard() {
+export function OwnerDashboard({ live = false }: { live?: boolean }) {
+  const sections = baseSections.map((s) => ({
+    ...s,
+    label:
+      live && s.id === "orders"
+        ? "Orders"
+        : live && s.id === "stock"
+          ? "Stock"
+          : s.label,
+  }));
   const { products } = useContent();
   const [data, setData] = useState<Overview | null>(null);
   const [page, setPage] = useState(0);
@@ -206,15 +215,15 @@ export function OwnerDashboard() {
     data?.messages.filter((message) => !message.handled_at).length ?? 0;
   const metrics = [
     {
-      label: "Total test orders",
+      label: live ? "Total orders" : "Total test orders",
       value: totalOrders,
       detail: "Across all order statuses",
       icon: ShoppingBag,
     },
     {
-      label: "Paid test orders",
+      label: live ? "Paid orders" : "Paid test orders",
       value: paidOrders,
-      detail: "Sandbox payments",
+      detail: live ? "Verified payments" : "Sandbox payments",
       icon: Check,
     },
     {
@@ -252,14 +261,16 @@ export function OwnerDashboard() {
           {loading ? "Refreshing…" : "Refresh dashboard"}
         </Button>
       </header>
-      <aside className={styles.notice} aria-label="Sandbox information">
-        <Info size={18} aria-hidden="true" />
-        <p>
-          <strong>Sandbox workspace.</strong> Orders and stock are saved test
-          records; fulfillment does not ship goods. Contact messages and
-          newsletter preferences are real submissions when enabled.
-        </p>
-      </aside>
+      {!live && (
+        <aside className={styles.notice} aria-label="Sandbox information">
+          <Info size={18} aria-hidden="true" />
+          <p>
+            <strong>Sandbox workspace.</strong> Orders and stock are saved test
+            records; fulfillment does not ship goods. Contact messages and
+            newsletter preferences are real submissions when enabled.
+          </p>
+        </aside>
+      )}
       <div className={styles.feedback}>
         {error && (
           <p role="alert" className={styles.error}>
@@ -310,7 +321,9 @@ export function OwnerDashboard() {
             </h2>
             <p>
               {section === "orders"
-                ? "Review your recent orders and manage test fulfillment."
+                ? live
+                  ? "Review your recent orders and manage fulfillment."
+                  : "Review your recent orders and manage test fulfillment."
                 : section === "stock"
                   ? "Update stock quantities. Reserved units cannot be removed."
                   : section === "inbox"
@@ -320,7 +333,9 @@ export function OwnerDashboard() {
           </div>
           <span className={styles.sectionTag}>
             {section === "orders" || section === "stock"
-              ? "SANDBOX"
+              ? live
+                ? "LIVE"
+                : "SANDBOX"
               : "COMMUNICATIONS"}
           </span>
         </div>
@@ -343,14 +358,18 @@ export function OwnerDashboard() {
             {data.orders.length === 0 ? (
               <div className={styles.empty}>
                 <ShoppingBag aria-hidden="true" />
-                <h3>No test orders yet</h3>
-                <p>Your sandbox orders will appear here.</p>
+                <h3>{live ? "No orders yet" : "No test orders yet"}</h3>
+                <p>
+                  {live
+                    ? "Your customer orders will appear here."
+                    : "Your sandbox orders will appear here."}
+                </p>
               </div>
             ) : (
               <div className={styles.tableWrapper}>
                 <table className={styles.orders}>
                   <caption className="sr-only">
-                    Test orders, page {page + 1}
+                    {live ? "Orders" : "Test orders"}, page {page + 1}
                   </caption>
                   <thead>
                     <tr>
@@ -408,7 +427,10 @@ export function OwnerDashboard() {
                               />
                             </td>
                             <td className={styles.amount}>
-                              {money(order.quote.subtotalCents / 100)}
+                              {money(
+                                (order.quote.totalCents ??
+                                  order.quote.subtotalCents) / 100,
+                              )}
                             </td>
                             <td className={styles.dateColumn}>
                               <time dateTime={order.created_at}>
@@ -499,7 +521,9 @@ export function OwnerDashboard() {
                                     {order.fulfilled_at ? (
                                       <p className={styles.fulfilled}>
                                         <Check size={16} aria-hidden="true" />
-                                        Fulfilled in sandbox
+                                        {live
+                                          ? "Fulfilled"
+                                          : "Fulfilled in sandbox"}
                                       </p>
                                     ) : (
                                       order.status === "paid" && (
@@ -520,7 +544,9 @@ export function OwnerDashboard() {
                                         >
                                           {pendingAction === order.id
                                             ? "Saving…"
-                                            : "Mark test order fulfilled"}
+                                            : live
+                                              ? "Mark order fulfilled"
+                                              : "Mark test order fulfilled"}
                                         </Button>
                                       )
                                     )}
@@ -623,7 +649,9 @@ export function OwnerDashboard() {
                   </Button>
                 </div>
                 {!stock.initialized && (
-                  <p className={styles.sampleStock}>Default sample stock</p>
+                  <p className={styles.sampleStock}>
+                    {live ? "Not stocked" : "Default sample stock"}
+                  </p>
                 )}
               </form>
             ))}

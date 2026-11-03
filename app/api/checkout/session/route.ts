@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 export async function POST(request: Request) {
   const reply = (status: number, error: string) =>
     Response.json({ error }, { status, headers: privateHeaders });
-  if (!checkoutEnabled()) return reply(503, "Sandbox checkout is not enabled.");
+  if (!checkoutEnabled()) return reply(503, "Checkout is not enabled yet.");
   try {
     const { config, stripe, store } = payments();
     if (request.headers.get("origin") !== config.origin)
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     if (error instanceof SyntaxError) return reply(400, "Invalid JSON.");
     if (error instanceof CommerceError) return reply(409, error.message);
     console.error(
-      "Sandbox checkout could not be created. Check Stripe and database connectivity.",
+      "Checkout could not be created. Check Stripe and database connectivity.",
     );
     return reply(
       503,

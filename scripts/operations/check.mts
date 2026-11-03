@@ -64,7 +64,7 @@ check(
   "local",
   "Stripe test key",
   /^(sk|rk)_test_/.test(process.env.STRIPE_SECRET_KEY || ""),
-  "This implementation supports sandbox payments only.",
+  "This probe checks the sandbox connection. Use scripts/payments/live-setup.mts for live-account readiness.",
 );
 
 // A database outage must not hide public endpoint results.
