@@ -270,6 +270,9 @@ export function mapContent(
           name: text(f.name),
           description: text(f.description),
           sizes: strings(f.sizes),
+          ...(Number.isSafeInteger(f.priceCents) && Number(f.priceCents) >= 0
+            ? { priceCents: Number(f.priceCents) }
+            : {}),
           photos: gallery,
         },
       ];

@@ -32,6 +32,7 @@ test("merch previews use published photos and sizes without creating sale produc
       name: "Test shirt",
       description: "Supplied design",
       sizes: ["Medium", "XX-large"],
+      priceCents: 2500,
       photos: [
         { sys: { id: "unpublished-photo" } },
         { sys: { id: assets[0].sys.id } },
@@ -43,10 +44,20 @@ test("merch previews use published photos and sizes without creating sale produc
   expect(after.merchPreviews[0]).toMatchObject({
     slug: "test-shirt",
     sizes: ["Medium", "XX-large"],
+    priceCents: 2500,
   });
   expect(after.merchPreviews[0].photos).toHaveLength(1);
   expect(after.products).toEqual(before.products);
   expect(after.variants).toEqual(before.variants);
+  for (const priceCents of [undefined, -1, 25.5, "2500"]) {
+    const invalid = {
+      ...preview,
+      fields: { ...preview.fields, priceCents },
+    };
+    expect(
+      mapContent([...entries, invalid], assets).merchPreviews[0],
+    ).not.toHaveProperty("priceCents");
+  }
   expect(mapContent(entries, assets).merchPreviews).toEqual([]);
   const withoutPublishedPhoto = {
     ...preview,

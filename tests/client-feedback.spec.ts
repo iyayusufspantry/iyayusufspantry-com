@@ -44,6 +44,11 @@ test("merch previews show confirmed shirt sizes, all cap views and searchable na
   await expect(
     page.getByText("These items are not yet available to order."),
   ).toBeVisible();
+  await expect(cards.getByText("$25.00", { exact: true })).toHaveCount(2);
+  await expect(cards.getByText("$35.00", { exact: true })).toHaveCount(1);
+  await expect(
+    cards.getByText("Size: One size (adjustable)", { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: /add to bag|buy now/i }),
   ).toHaveCount(0);

@@ -29,6 +29,7 @@ export type SiteContent = {
     name: string;
     description: string;
     sizes: string[];
+    priceCents?: number;
     photos: BrandPhoto[];
   }[];
   products: Product[];

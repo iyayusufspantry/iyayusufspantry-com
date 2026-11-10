@@ -23,7 +23,13 @@ export function ShopBrowser({
 }: {
   initialCategory?: string;
 }) {
-  const { products, categories, merchPreviews, copy: allCopy } = useContent();
+  const {
+    products,
+    categories,
+    merchPreviews,
+    productGalleries,
+    copy: allCopy,
+  } = useContent();
   const copy = allCopy["components/shop-browser.tsx"];
 
   const [category, setCategory] = useState(
@@ -35,9 +41,21 @@ export function ShopBrowser({
   const merchEmpty =
     category === "Merch" &&
     !products.some((product) => product.category === "merch");
+  const merchItems = new Map(merchPreviews.map((item) => [item.slug, item]));
+  for (const product of products.filter((item) => item.category === "merch")) {
+    merchItems.set(product.slug, {
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      sizes: product.sizes ?? [],
+      photos: productGalleries[product.slug]?.length
+        ? productGalleries[product.slug]
+        : (merchItems.get(product.slug)?.photos ?? []),
+    });
+  }
   const previews =
     category === "Merch"
-      ? merchPreviews.filter((item) =>
+      ? [...merchItems.values()].filter((item) =>
           [item.name, item.description, item.sizes.join(" ")]
             .join(" ")
             .toLowerCase()
@@ -45,6 +63,15 @@ export function ShopBrowser({
         )
       : [];
   if (sort === "name") previews.sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "price-low" || sort === "price-high") {
+    previews.sort((a, b) => {
+      const aPrice = products.find((product) => product.slug === a.slug)?.price;
+      const bPrice = products.find((product) => product.slug === b.slug)?.price;
+      if (aPrice === undefined) return bPrice === undefined ? 0 : 1;
+      if (bPrice === undefined) return -1;
+      return sort === "price-low" ? aPrice - bPrice : bPrice - aPrice;
+    });
+  }
   const filtered = products.filter(
     (p) =>
       (category === "All" ||
@@ -78,9 +105,9 @@ export function ShopBrowser({
             aria-live="polite"
             aria-atomic="true"
           >
-            {filtered.length || !previews.length
-              ? `${filtered.length} ${copy["copy-7"]}`
-              : `${previews.length} merch previews`}
+            {isMerch
+              ? `${previews.length} items`
+              : `${filtered.length} ${copy["copy-7"]}`}
           </span>
           <label className="sr-only" htmlFor="shop-sort">
             {copy["copy-8"]}
@@ -121,7 +148,7 @@ export function ShopBrowser({
         <p className="fine-print mb-7"> {copy["copy-13"]} </p>
       )}
       {previews.length > 0 && <MerchPreview items={previews} />}
-      {filtered.length ? (
+      {!isMerch && filtered.length ? (
         <ProductGrid items={filtered} />
       ) : !previews.length ? (
         <EmptyState

@@ -1,0 +1,33 @@
+{
+  "receivedOn": "2026-11-10",
+  "source": "Simbiat's pasted follow-up; email sent date unverified",
+  "supersedes": "starting-stock-merch-2026-11-04.json",
+  "quantityBasis": "User confirmed 12 per T-shirt design and 12 caps; shirt size split still pending",
+  "status": "Product draft totals and display prices; shirt size allocation pending",
+  "appliedToContentful": true,
+  "appliedToOperationalInventory": false,
+  "totalUnits": 36,
+  "products": [
+    {
+      "slug": "i-rock-with-iya-yusufs-pantry-shirt",
+      "startingQuantity": 12,
+      "priceCents": 2500,
+      "sizes": ["Medium", "Large", "Extra-large", "XX-large"],
+      "allocationStatus": "Unallocated across sizes"
+    },
+    {
+      "slug": "my-roots-have-flavor-shirt",
+      "startingQuantity": 12,
+      "priceCents": 2500,
+      "sizes": ["Medium", "Large", "Extra-large", "XX-large"],
+      "allocationStatus": "Unallocated across sizes"
+    },
+    {
+      "slug": "pantry-people-cap",
+      "startingQuantity": 12,
+      "priceCents": 3500,
+      "sizes": ["One size (adjustable)"],
+      "allocationStatus": "Single confirmed size"
+    }
+  ]
+}

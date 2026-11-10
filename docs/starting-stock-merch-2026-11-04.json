@@ -1,0 +1,29 @@
+{
+  "receivedOn": "2026-11-04",
+  "source": "User instruction to apply the earlier 50-per-product starting quantity to the merch",
+  "quantityBasis": "50 total per design or product, not 50 per shirt size",
+  "status": "Saved in Contentful product drafts; sale prices and shirt size allocation pending",
+  "appliedToContentful": true,
+  "appliedToOperationalInventory": false,
+  "totalUnits": 150,
+  "products": [
+    {
+      "slug": "i-rock-with-iya-yusufs-pantry-shirt",
+      "startingQuantity": 50,
+      "sizes": ["Medium", "Large", "Extra-large", "XX-large"],
+      "allocationStatus": "unallocated across sizes"
+    },
+    {
+      "slug": "my-roots-have-flavor-shirt",
+      "startingQuantity": 50,
+      "sizes": ["Medium", "Large", "Extra-large", "XX-large"],
+      "allocationStatus": "unallocated across sizes"
+    },
+    {
+      "slug": "pantry-people-cap",
+      "startingQuantity": 50,
+      "sizes": [],
+      "allocationStatus": "cap size or adjustable fit pending"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Simbiat · Storefront and Production Foundations
 
+November 10 follow-up: [latest confirmed merch details and permit status](docs/client-feedback-2026-11-10.md), [current unsent reply](docs/simbiat-november-10-reply.md). **12 per T-shirt design at $25 each; 12 caps at $35 each, one adjustable size.** Shirt-size allocation remains pending. The Texas permit application is submitted and awaiting approval; checkout stays in test mode.
+
 November 3 follow-up: [client requests, merch mappings and tax research](docs/client-feedback-2026-11-03.md), [unsent reply](docs/simbiat-november-3-reply.md). Nigerian dates now has the existing Google search link. Three CMS merch previews use all five supplied photos and confirmed shirt sizes M/L/XL/XXL; prices, stock and cap sizing await Simbiat’s details. Deployed through GitHub using the project account; all six public desktop/mobile checks passed. Simbiat confirms **no active Texas sales-tax permit or other-state registrations**. Public checkout remains in test mode.
 
 October 31 live-payment preparation: [implementation, deployment and launch gate](docs/stripe-live-readiness-2026-10-31.md). Live checkout support, signed webhook, receipts and separate 24-variant/1,020-unit inventory are deployed. A genuine unpaid live expiration check passed and restored stock; no charge was made. Public purchases remain in test mode pending confirmed tax registrations/product treatment; the user does not know those details.
