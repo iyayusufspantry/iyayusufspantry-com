@@ -9,6 +9,7 @@ import {
   type Variant,
 } from "../commerce/catalog";
 import { sampleStock } from "../commerce/sample";
+import { productTaxCode } from "./product-tax";
 
 export type PaymentOrder = {
   id: string;
@@ -142,6 +143,9 @@ export class PaymentStore {
             unit_amount: line.unitPriceCents,
             product_data: {
               name: `${names[line.productSlug] || line.productSlug} (${variants.find((v) => v.id === line.variantId)?.size})`,
+              ...(this.live
+                ? { tax_code: productTaxCode(line.productSlug) }
+                : {}),
             },
           },
         })),

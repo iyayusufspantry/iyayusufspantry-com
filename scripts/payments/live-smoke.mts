@@ -36,7 +36,7 @@ const pool = new Pool({
   max: 1,
 });
 const store = new PaymentStore(pool, "simbiat_checkout_live", { live: true });
-const folder = "artifacts/stripe-live-readiness-2026-10-31";
+const folder = `artifacts/live-payment-smoke/${Date.now()}`;
 await mkdir(folder, { recursive: true });
 let sessionId: string | undefined;
 const orderId = randomUUID();
@@ -44,7 +44,14 @@ try {
   const snapshot = JSON.parse(
     await readFile("docs/starting-stock-2026-10-24.json", "utf8"),
   );
-  const allocation = snapshot.products[0].variantAllocations[0];
+  const product = snapshot.products.find(
+    (p: { slug: string }) => p.slug === "palm-oil",
+  );
+  assert.ok(
+    product,
+    "A reviewed product is required for live smoke verification",
+  );
+  const allocation = product.variantAllocations[0];
   const url = `https://cdn.contentful.com/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT || "master"}/entries/${allocation.entryId}`;
   const response = await fetch(url, {
     headers: {
@@ -55,7 +62,7 @@ try {
   const { fields } = await response.json();
   const variant: Variant = {
     id: fields.variantId,
-    productSlug: snapshot.products[0].slug,
+    productSlug: product.slug,
     size: fields.size,
     dietary: fields.dietary,
     priceCents: fields.priceCents,
@@ -73,7 +80,7 @@ try {
     [{ variantId: variant.id, quantity: 1 }],
     [variant],
     "https://www.iyayusufspantry.com",
-    { [variant.productSlug]: snapshot.products[0].name },
+    { [variant.productSlug]: product.name },
   );
   await writeFile(
     `${folder}/live-smoke-pending.json`,

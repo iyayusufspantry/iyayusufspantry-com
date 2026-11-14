@@ -157,7 +157,12 @@ test("live keys cannot activate sandbox checkout", () => {
 });
 
 async function liveReservation(priceCents = 800, quantity = 2) {
-  const v = { ...variant, id: randomUUID(), priceCents };
+  const v = {
+    ...variant,
+    id: randomUUID(),
+    productSlug: "i-rock-with-iya-yusufs-pantry-shirt",
+    priceCents,
+  };
   await pool.query(
     `INSERT INTO ${liveSchema}.stock(variant_id,on_hand) VALUES($1,10)`,
     [v.id],
@@ -258,6 +263,10 @@ test("live checkout never seeds sample stock and calculates approved shipping se
   assert.equal(order.quote.shippingCents, 699);
   assert.equal(order.stripe_params.automatic_tax?.enabled, true);
   assert.equal(order.stripe_params.metadata?.integration, "simbiat-live-v1");
+  assert.equal(
+    order.stripe_params.line_items?.[0].price_data?.product_data?.tax_code,
+    "txcd_30011000",
+  );
   const free = await liveReservation(3000, 2);
   assert.equal(free.order.quote.shippingCents, 0);
   assert.equal(
@@ -265,6 +274,97 @@ test("live checkout never seeds sample stock and calculates approved shipping se
       ?.fixed_amount?.amount,
     0,
   );
+});
+
+test("unreviewed and new live products reject the entire mixed cart without reserving stock", async () => {
+  for (const slug of [
+    "tiger-nut-drink",
+    "classic-chin-chin",
+    "new-product",
+    "toString",
+  ]) {
+    const id = randomUUID();
+    const items = [
+      { ...variant, id: randomUUID(), productSlug: "palm-oil" },
+      { ...variant, id: randomUUID(), productSlug: slug },
+    ];
+    for (const v of items)
+      await pool.query(
+        `INSERT INTO ${liveSchema}.stock(variant_id,on_hand) VALUES($1,10)`,
+        [v.id],
+      );
+    await assert.rejects(
+      liveStore.reserve(
+        id,
+        items.map((v) => ({ variantId: v.id, quantity: 1 })),
+        items,
+        "https://pantry.example",
+        {},
+      ),
+      (error: unknown) =>
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "TAX_REVIEW_REQUIRED",
+    );
+    assert.equal(
+      (
+        await pool.query(`SELECT id FROM ${liveSchema}.orders WHERE id=$1`, [
+          id,
+        ])
+      ).rowCount,
+      0,
+    );
+    const stock = await pool.query(
+      `SELECT on_hand,reserved FROM ${liveSchema}.stock WHERE variant_id=ANY($1::text[])`,
+      [items.map((v) => v.id)],
+    );
+    assert.deepEqual(stock.rows, [
+      { on_hand: 10, reserved: 0 },
+      { on_hand: 10, reserved: 0 },
+    ]);
+  }
+});
+
+test("mixed live carts preserve distinct food/apparel/candy tax codes and free-shipping threshold", async () => {
+  const items = [
+    { ...variant, id: randomUUID(), productSlug: "palm-oil", priceCents: 2500 },
+    {
+      ...variant,
+      id: randomUUID(),
+      productSlug: "pantry-people-cap",
+      priceCents: 3500,
+    },
+    {
+      ...variant,
+      id: randomUUID(),
+      productSlug: "coconut-candy-crunch",
+      priceCents: 1000,
+    },
+  ];
+  for (const v of items)
+    await pool.query(
+      `INSERT INTO ${liveSchema}.stock(variant_id,on_hand) VALUES($1,10)`,
+      [v.id],
+    );
+  const order = await liveStore.reserve(
+    randomUUID(),
+    items.map((v) => ({ variantId: v.id, quantity: 1 })),
+    items,
+    "https://pantry.example",
+    {},
+  );
+  const codes = order.stripe_params.line_items
+    ?.map((line) => line.price_data?.product_data?.tax_code)
+    .sort();
+  assert.deepEqual(codes, ["txcd_30060006", "txcd_40020002", "txcd_40100001"]);
+  assert.equal(order.quote.subtotalCents, 7000);
+  assert.equal(order.quote.shippingCents, 0);
+  assert.ok(
+    order.stripe_params.line_items?.every(
+      (line) => line.price_data?.tax_behavior === "exclusive",
+    ),
+  );
+  assert.equal(order.stripe_params.automatic_tax?.enabled, true);
 });
 
 test("live payment records shipping and tax exactly once without touching sandbox stock", async () => {
