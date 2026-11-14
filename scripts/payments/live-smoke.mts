@@ -114,13 +114,18 @@ try {
   await stripe.checkout.sessions.expire(session.id);
   let confirmed = false;
   for (let i = 0; i < 20; i++) {
-    const response = await fetch(
-      `https://www.iyayusufspantry.com/api/checkout/status?session_id=${session.id}`,
-      { cache: "no-store", signal: AbortSignal.timeout(15000) },
-    );
-    if (response.ok && (await response.json()).status === "cancelled") {
-      confirmed = true;
-      break;
+    try {
+      const response = await fetch(
+        `https://www.iyayusufspantry.com/api/checkout/status?session_id=${session.id}`,
+        { cache: "no-store", signal: AbortSignal.timeout(5000) },
+      );
+      if (response.ok && (await response.json()).status === "cancelled") {
+        confirmed = true;
+        break;
+      }
+    } catch {
+      // Keep checking the saved session after a transient network timeout.
+      // The final assertion still requires verified webhook delivery.
     }
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }
